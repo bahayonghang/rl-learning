@@ -15,7 +15,7 @@
 - Export all guide steps and feedback, including collapsed content, plus the mathematical primer, research, glossary and full kiln model appendix. In Markdown symbol tables, convert TeX norm/absolute-value pipes to named `\Vert` / `\vert` delimiters before table escaping; check the resulting parsed table columns.
 - Distinguish a reward received at step H (`gamma^(H-1)` under the first-reward convention) from the tail value after H steps (`gamma^H`). Display approximations honestly and avoid substituting rounded intermediate numbers into an apparent exact equality.
 - Research articles live in `src/research/` with full bilingual bodies and stable IDs. Separate primary theory, simulation, first-party operational reports and proposed research; names of existing models do not establish the performance of a new combination.
-- Figure records use the typed `src/concept-plates.ts` registry for 21 generated academic plates, plus seven preserved original illustrations. Keep stable IDs and standard authored Markdown image references. Translate titles, alt text, panel explanations and exact relationship guides; shared raster labels are short English terms. Do not interpret illustrative curves or node counts as measured performance or exact architecture. The original Mermaid inventory is provenance only, never live content or a download control.
+- Figure records use the typed `src/concept-plates.ts` registry for 21 generated academic plates, plus seven preserved original illustrations. Keep stable IDs and standard authored Markdown image references. Translate titles, alt text, panel explanations and exact relationship guides; all 21 concept plates have separate Chinese and English rasters. Chinese (`zh`/`zh-*`) uses `images/diagrams/zh-CN/`; every other image locale uses English originals. The journey scene has a Chinese title variant; six text-free scenes remain language-neutral. Use `src/image-locales.ts` consistently in reading, gallery, viewer, downloads and exports; captions alone are not image localization. Do not interpret illustrative curves or node counts as measured performance or exact architecture. The original Mermaid inventory is provenance only, never live content or a download control.
 - Resource URLs may be deduplicated, but every source ID and its chapter/research relationships must survive. Translate explanatory notes while retaining searchable bibliographic identities.
 
 ## Locales and persistence
@@ -25,6 +25,14 @@
 - The current `text(zh, en)` and edition filename helpers are explicitly bilingual. A third locale requires extending these interfaces and their callers, not only the locale registry. See `rl-learning-web/docs/i18n.md`.
 - Language switching remounts the current route and attempts scroll restoration. Do not claim that experiment parameters, simulation histories or workbench clocks persist across that remount.
 - Store only version 2 chapter completion, theme, text size and locale under `rl-atlas-preferences-v2`. When falling back to `rl-atlas-learning-v1`, extract supported preferences only; do not delete the old key or restore, display or rewrite notes, bookmarks or last-read fields. Notes/bookmarks/resume controls and study-data import/export are removed; content downloads remain supported.
+
+## Worked formula cases
+
+- Formula cases live in `src/formula-cases.ts` with pure solvers in `src/formula-case-math.ts` and reusable views. Keep the same case IDs, input meanings, presets and calculations across languages. Reuse established numerical kernels without modifying simulator contracts.
+- Show the scenario, labelled inputs/units, original equation, numerical substitution, intermediate values and interpretation. Reject blank/nonfinite/out-of-domain inputs explicitly and remove stale successful results. Presets and reset must update controls and computed output together.
+- Genuine termination removes bootstrap; an external time limit retains it. A GAE trace must stop at an episode reset. PPO clipping depends on advantage sign. SAC uses the minimum target critic and an explicit entropy term. A discrete CQL illustration is not a continuous-action implementation.
+- Keep energy/action regularity and independent quality/oxygen costs separate. Lagrange rankings illustrate average-budget optimization, never permission to skip hard execution gates or a claim of pathwise safety.
+- Export complete static worked examples for every chapter/research placement. Case fragments must not introduce duplicate anchors or unresolved application-only routes into Markdown. Test independent hand calculations, boundaries, both language exports and actual input interactions.
 
 ## Cement teaching workbench
 

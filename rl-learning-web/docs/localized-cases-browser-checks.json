@@ -1,0 +1,341 @@
+{
+  "version": "localized-figures-and-formula-cases",
+  "environment": "Production build served on loopback in the managed Chromium environment",
+  "ppo": {
+    "negativeMetrics": [
+      "0.5",
+      "-1.6",
+      "1.6"
+    ],
+    "blankInputHidesResults": true,
+    "blankInputDisablesDownload": true,
+    "customPositiveMetrics": [
+      "0.5",
+      "1",
+      "-1"
+    ],
+    "exportedSnapshot": "Browser download verified against edited inputs: old probability 0.2, new probability 0.1, advantage 2."
+  },
+  "cases": [
+    {
+      "href": "http://127.0.0.1:4175/#/cases/return-bootstrap",
+      "title": "Three-step return: what remains after a cutoff?",
+      "metrics": [
+        "Observed discounted rewards3.23",
+        "Tail contribution2.916",
+        "Three-step target6.146"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/bellman-expectation",
+      "title": "Bellman expectation: weight two possible futures",
+      "metrics": [
+        "Recovery contribution5.25",
+        "No-recovery contribution-0.33",
+        "Action-value target4.92"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/td-update",
+      "title": "One TD update: target, error and new estimate",
+      "metrics": [
+        "Learning target-0.1",
+        "TD error-2.1",
+        "Updated estimate1.58"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/gae",
+      "title": "GAE: carry three TD residuals backward",
+      "metrics": [
+        "Advantage Â02.84432",
+        "Advantage Â12.006",
+        "Advantage Â22.3"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/ppo-clip",
+      "title": "PPO: which side clips for each advantage sign?",
+      "metrics": [
+        "Probability ratio1.5",
+        "Maximized surrogate2.4",
+        "Negative surrogate for minimization-2.4"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/sac-target",
+      "title": "SAC target: combine twin critics and entropy",
+      "metrics": [
+        "Smaller target Q5",
+        "Entropy term −α log π0.24",
+        "SAC regression target6.1876"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/cql-regularizer",
+      "title": "Discrete CQL: why penalize unsupported values?",
+      "metrics": [
+        "Conservative gap3.065884",
+        "Weighted regularizer3.065884",
+        "Total teaching loss3.190884"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/setpoint-response",
+      "title": "From action to temperature: why SP differs from PV",
+      "metrics": [
+        "Executed increment1°C",
+        "New setpoint SP881°C",
+        "Teaching PV after five minutes879.56°C"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/energy-reward",
+      "title": "Industrial reward: keep energy and constraint costs separate",
+      "metrics": [
+        "Reward0.375",
+        "Quality violation cost0percentage points",
+        "Oxygen violation cost0percentage points"
+      ],
+      "mathErrors": 0
+    },
+    {
+      "href": "http://127.0.0.1:4175/#/cases/constraint-lagrangian",
+      "title": "Lagrangian trade-offs: why a high score can be infeasible",
+      "metrics": [
+        "Preferred relaxed scoreA",
+        "Preferred within the budgetB",
+        "Updated multiplier2.1"
+      ],
+      "mathErrors": 0
+    }
+  ],
+  "images": [
+    {
+      "location": "chapter-01/en",
+      "source": "./images/diagrams/chapter-01-diagram-1.webp"
+    },
+    {
+      "location": "chapter-01/zh-CN",
+      "source": "./images/diagrams/zh-CN/chapter-01-diagram-1.webp",
+      "viewerSameLanguage": true,
+      "actualSizeScroll": {
+        "canvas": 1221,
+        "image": 1536
+      },
+      "escapeCloses": true,
+      "focusRestored": true
+    },
+    {
+      "location": "gallery/zh-CN",
+      "figureCount": 28,
+      "chineseConceptCount": 21,
+      "journey": "./images/zh-CN/journey.webp"
+    },
+    {
+      "location": "gallery/en",
+      "figureCount": 28,
+      "chineseImageCount": 0
+    },
+    {
+      "location": "roadmap/en",
+      "source": "./images/diagrams/roadmap-learning.webp"
+    },
+    {
+      "location": "roadmap/zh-CN",
+      "source": "./images/diagrams/zh-CN/roadmap-learning.webp"
+    }
+  ],
+  "responsive": [
+    {
+      "route": "cases/return-bootstrap",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 4,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/return-bootstrap",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 4,
+      "locale": "en",
+      "scrollWidth": 753
+    },
+    {
+      "route": "cases/gae",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/gae",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "en",
+      "scrollWidth": 753
+    },
+    {
+      "route": "cases/ppo-clip",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 4,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/ppo-clip",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 4,
+      "locale": "en",
+      "scrollWidth": 753
+    },
+    {
+      "route": "cases/sac-target",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 4,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/sac-target",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 4,
+      "locale": "en",
+      "scrollWidth": 753
+    },
+    {
+      "route": "cases/cql-regularizer",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/cql-regularizer",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "en",
+      "scrollWidth": 753
+    },
+    {
+      "route": "cases/setpoint-response",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/setpoint-response",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "en",
+      "scrollWidth": 753
+    },
+    {
+      "route": "cases/energy-reward",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 7,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/energy-reward",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 7,
+      "locale": "en",
+      "scrollWidth": 753
+    },
+    {
+      "route": "cases/constraint-lagrangian",
+      "viewport": 375,
+      "clientWidth": 360,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "zh-CN",
+      "scrollWidth": 360
+    },
+    {
+      "route": "cases/constraint-lagrangian",
+      "viewport": 768,
+      "clientWidth": 753,
+      "errors": 0,
+      "formulaRegions": 5,
+      "locale": "en",
+      "scrollWidth": 753
+    }
+  ],
+  "research": {
+    "image": "./images/diagrams/zh-CN/research-objectives-diagram-1.webp",
+    "embeddedCase": "energy-reward",
+    "options": [
+      "工业奖励：能耗收益与约束成本分开算",
+      "拉格朗日权衡：高得分为何仍会不可行？"
+    ]
+  },
+  "mobileViewer": {
+    "canvasScrollWidth": 1536,
+    "canvasWidth": 312,
+    "dialogWidth": 357,
+    "pageClientWidth": 360,
+    "pageScrollWidth": 360,
+    "source": "./images/diagrams/zh-CN/chapter-01-diagram-1.webp",
+    "focusRestored": true
+  },
+  "console": {
+    "applicationErrorsObserved": [],
+    "extensionMetadataDiagnostics": 78
+  },
+  "timestamp": "2026-11-14T12:21:25.521Z",
+  "notes": [
+    "The initial executor browser could not start; browser acceptance used the supported managed Chromium desktop and a loopback-only static server.",
+    "Responsive measurements use real same-origin frames, not a physical-device claim.",
+    "The final navigation calculator icon was visually corrected and the production build was rebuilt and rechecked."
+  ],
+  "imageDownload": {
+    "file": "chapter-01-diagram-1.zh-CN.webp",
+    "bytes": 101790,
+    "sha256": "f53b0df6d78414ae569d222597453505a0f54dad6c153cd6804b82432390bfd2",
+    "matchesRepositoryAsset": true
+  },
+  "screenshots": [
+    "atlas-v4-chinese-figure-dark.jpg",
+    "atlas-v4-ppo-case-light.jpg",
+    "atlas-v4-formula-responsive.jpg"
+  ]
+}

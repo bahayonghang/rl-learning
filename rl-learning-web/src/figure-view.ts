@@ -1,6 +1,7 @@
 import { escapeHtml as esc } from './html';
 import { getLocale, text as t } from './i18n';
 import { conceptPlateFromImage, conceptPlateNotice, localizedConceptPlate } from './concept-plates';
+import { imageDownloadName } from './image-locales';
 
 export interface ImageFigure {
   id: string;
@@ -17,7 +18,14 @@ export function figureImage(figure: ImageFigure, lazy = true): string {
 }
 
 export function figureActions(figure: ImageFigure): string {
-  return `<div class="figure-actions"><button class="text-button" type="button" data-zoom-figure="${esc(figure.id)}">${t('放大查看', 'Enlarge')}</button><a href="${esc(figure.image)}" target="_blank" rel="noopener noreferrer">${t('打开原图', 'Open full-size image')} ↗</a><a href="${esc(figure.image)}" download="${esc(figure.id)}.webp">${t('下载 WebP', 'Download WebP')} ↓</a></div>`;
+  return `<div class="figure-actions"><button class="text-button" type="button" data-zoom-figure="${esc(figure.id)}">${t('放大查看', 'Enlarge')}</button><a href="${esc(figure.image)}" target="_blank" rel="noopener noreferrer">${t('打开原图', 'Open full-size image')} ↗</a><a href="${esc(figure.image)}" download="${esc(imageDownloadName(figure.id, figure.image))}">${t('下载 WebP', 'Download WebP')} ↓</a></div>`;
+}
+
+export function closeFigureViewers(): void {
+  document.querySelectorAll<HTMLDialogElement>('.figure-viewer').forEach(dialog => {
+    if (dialog.open) dialog.close();
+    else dialog.remove();
+  });
 }
 
 let dialogSequence = 0;
@@ -31,7 +39,7 @@ export function openFigureViewer(figure: ImageFigure, trigger: HTMLElement): voi
   dialog.className = 'figure-viewer';
   dialog.setAttribute('aria-labelledby', titleId);
   dialog.setAttribute('aria-describedby', helpId);
-  dialog.innerHTML = `<div class="figure-viewer-header"><h2 id="${titleId}">${esc(figure.title)}</h2><button class="button outline" type="button" data-close autofocus>${t('关闭', 'Close')} <span aria-hidden="true">×</span></button></div><div class="figure-viewer-tools"><button type="button" class="button outline" data-native-size aria-pressed="false">${t('原始尺寸', 'Actual size')}</button><a href="${esc(figure.image)}" target="_blank" rel="noopener noreferrer">${t('打开原图', 'Open full-size image')} ↗</a><a href="${esc(figure.image)}" download="${esc(figure.id)}.webp">${t('下载 WebP', 'Download WebP')} ↓</a></div><p id="${helpId}" class="figure-viewer-help">${t('按 Esc 关闭。原始尺寸下可滚动查看；图片中的英文术语由正文读图说明解释。', 'Press Esc to close. Scroll at actual size; the accompanying reading guide explains the short English labels.')}</p><div class="figure-viewer-canvas" tabindex="0" role="region" aria-label="${esc(t('可滚动的完整图片', 'Scrollable full-size image'))}"><img src="${esc(figure.image)}" alt="${esc(figure.alt)}" width="${figure.width}" height="${figure.height}"/></div>`;
+  dialog.innerHTML = `<div class="figure-viewer-header"><h2 id="${titleId}">${esc(figure.title)}</h2><button class="button outline" type="button" data-close autofocus>${t('关闭', 'Close')} <span aria-hidden="true">×</span></button></div><div class="figure-viewer-tools"><button type="button" class="button outline" data-native-size aria-pressed="false">${t('原始尺寸', 'Actual size')}</button><a href="${esc(figure.image)}" target="_blank" rel="noopener noreferrer">${t('打开原图', 'Open full-size image')} ↗</a><a href="${esc(figure.image)}" download="${esc(imageDownloadName(figure.id, figure.image))}">${t('下载 WebP', 'Download WebP')} ↓</a></div><p id="${helpId}" class="figure-viewer-help">${t('按 Esc 关闭。原始尺寸下可滚动查看；下方读图说明可帮助理解图中概念。', 'Press Esc to close. Scroll at actual size; the accompanying reading guide explains the concepts.')}</p><div class="figure-viewer-canvas" tabindex="0" role="region" aria-label="${esc(t('可滚动的完整图片', 'Scrollable full-size image'))}"><img src="${esc(figure.image)}" alt="${esc(figure.alt)}" width="${figure.width}" height="${figure.height}"/></div>`;
   document.body.append(dialog);
   const close = () => dialog.close();
   const dispose = () => {
@@ -67,9 +75,13 @@ export function decorateConceptPlates(host: HTMLElement): void {
   const locale = getLocale();
   host.querySelectorAll<HTMLImageElement>('img').forEach(image => {
     const record = conceptPlateFromImage(image.getAttribute('src') ?? '');
-    const parent = image.parentElement;
-    if (!record || !parent || parent.tagName !== 'P' || parent.children.length !== 1 || parent.textContent?.trim()) return;
+    if (!record) return;
     const plate = localizedConceptPlate(record.id, locale)!;
+    // Resolve the edition even for an inline image that does not receive a card.
+    image.setAttribute('src', plate.image);
+    image.setAttribute('alt', plate.alt);
+    const parent = image.parentElement;
+    if (!parent || parent.tagName !== 'P' || parent.children.length !== 1 || parent.textContent?.trim()) return;
     const figure = document.createElement('figure');
     figure.className = 'concept-plate';
     figure.dataset.plateId = plate.id;

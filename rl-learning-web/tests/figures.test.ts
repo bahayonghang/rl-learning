@@ -4,13 +4,14 @@ import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { marked } from 'marked';
-import { conceptPlates, conceptPlateIds, conceptPlateReference, conceptPlateFromImage, localizedConceptPlate, expandConceptPlateReferences } from '../src/concept-plates';
+import { conceptPlates, conceptPlateIds, conceptPlateImage, conceptPlateReference, conceptPlateFromImage, localizedConceptPlate, expandConceptPlateReferences } from '../src/concept-plates';
 import { loadContentBundle, activateContent } from '../src/content/localized';
 import { researchPages } from '../src/research/content';
 import { researchBody } from '../src/content/research';
 import { getFigures } from '../src/figures';
+import { imageLanguage, imageLocaleDirectory, illustrationImage } from '../src/image-locales';
 import { setLocale, type Locale } from '../src/i18n';
-import { buildBook, buildResearchReview } from '../scripts/export-book';
+import { buildBook, buildResearchReview, formatBody } from '../scripts/export-book';
 import { chapterDownloadMarkdown, canonicalPublicAssets } from '../src/content-download';
 
 const inventory = JSON.parse(readFileSync('docs/diagram-assets/original-inventory.json', 'utf8')) as { id: string; href: string }[];
@@ -36,7 +37,7 @@ test('the original 40 localized occurrences, legacy occurrence and two roadmap e
       assert.doesNotMatch(body, /(?:```|~~~)mermaid/i);
       count++;
     }
-    assert.equal(imageLinks(conceptPlateReference('roadmap-learning', locale))[0], './images/diagrams/roadmap-learning.webp');
+    assert.equal(imageLinks(conceptPlateReference('roadmap-learning', locale))[0], `./images/diagrams/${imageLocaleDirectory(locale)}roadmap-learning.webp`);
     count++;
   }
   assert.deepEqual(imageLinks(researchBody), ['./images/diagrams/research-agenda-diagram-1.webp']);
@@ -63,17 +64,19 @@ test('every plate has complete bilingual semantic alternatives and a fixed compa
   assert.equal(new Set(conceptPlates.map(plate => plate.id)).size, 21);
   for (const plate of conceptPlates) {
     assert.equal(conceptPlateFromImage(`./images/diagrams/${plate.id}.webp`), plate);
+    assert.equal(conceptPlateFromImage(`./images/diagrams/zh-CN/${plate.id}.webp`), plate);
     for (const locale of ['zh-CN', 'en'] as const) {
       const local = localizedConceptPlate(plate.id, locale)!;
       assert.ok(local.title.length > 6 && local.alt.length > 30 && local.explanation.length > 25, `${plate.id}/${locale}`);
       assert.ok(local.regions.length >= 3);
       assert.ok(local.relationship.length > (locale === 'en' ? 100 : 60));
       assert.equal(local.width / local.height, 1.5);
+      assert.equal(local.image, `./images/diagrams/${imageLocaleDirectory(locale)}${plate.id}.webp`);
       for (const region of local.regions) assert.ok(region.label && region.description.length > 25);
       if (locale === 'en') assert.doesNotMatch([local.title, local.alt, local.explanation, local.relationship, ...local.regions.flatMap(region => [region.label, region.description])].join('\n'), /[\u3400-\u9fff]/u);
     }
   }
-  for (const path of ['https://other.example/images/diagrams/roadmap-learning.webp', './images/diagrams/unknown.webp', './images/diagrams/../roadmap-learning.webp', 'javascript:alert(1)']) assert.equal(conceptPlateFromImage(path), undefined);
+  for (const path of ['https://other.example/images/diagrams/roadmap-learning.webp', './images/diagrams/unknown.webp', './images/diagrams/zh-CN/unknown.webp', './images/diagrams/fr/roadmap-learning.webp', './images/diagrams/../roadmap-learning.webp', 'javascript:alert(1)']) assert.equal(conceptPlateFromImage(path), undefined);
   const fence = '~~~text\n' + conceptPlateReference('roadmap-learning', 'en') + '\n~~~';
   assert.equal(expandConceptPlateReferences(fence, 'en'), fence, 'an image example inside code must stay code');
 });
@@ -96,22 +99,68 @@ function webpDimensions(bytes: Buffer): { width: number; height: number } {
   throw new Error('WebP dimensions were not found');
 }
 
-test('all 28 catalogue images are real WebP assets with matching dimensions and compact plate ratios', t => {
-  setLocale('en'); activateContent(editions.en);
+test('both catalogue editions resolve real images with exact dimensions and distinct translated text assets', t => {
+  const paths = new Set<string>();
   try {
-    const figures = getFigures();
-    assert.equal(figures.length, 28);
-    assert.equal(figures.filter(figure => figure.kind === 'concept').length, 21);
-    assert.equal(figures.filter(figure => figure.kind === 'illustration').length, 7);
-    for (const figure of figures) {
-      const bytes = readFileSync(resolve('public', figure.image));
-      assert.ok(bytes.length > 10000, `empty or placeholder asset: ${figure.id}`);
-      const dimensions = webpDimensions(bytes);
-      assert.deepEqual(dimensions, { width: figure.width, height: figure.height }, figure.id);
-      if (figure.kind === 'concept') assert.ok(dimensions.width / dimensions.height >= 1.3 && dimensions.width / dimensions.height <= 1.55, figure.id);
+    for (const locale of ['zh-CN', 'en'] as const) {
+      setLocale(locale); activateContent(editions[locale]);
+      const figures = getFigures();
+      assert.equal(figures.length, 28);
+      assert.equal(figures.filter(figure => figure.kind === 'concept').length, 21);
+      assert.equal(figures.filter(figure => figure.kind === 'illustration').length, 7);
+      for (const figure of figures) {
+        const bytes = readFileSync(resolve('public', figure.image));
+        assert.ok(bytes.length > 10000, `empty or placeholder asset: ${figure.id}/${locale}`);
+        const dimensions = webpDimensions(bytes);
+        assert.deepEqual(dimensions, { width: figure.width, height: figure.height }, `${figure.id}/${locale}`);
+        if (figure.kind === 'concept') {
+          assert.equal(dimensions.width / dimensions.height, 1.5, figure.id);
+          assert.equal(figure.image.includes('/zh-CN/'), locale === 'zh-CN');
+          if (locale === 'zh-CN') assert.notEqual(digest(bytes), digest(readFileSync(resolve('public/images/diagrams', `${figure.id}.webp`))), 'Chinese text requires a real translated asset');
+        }
+        paths.add(figure.image);
+      }
     }
-    t.diagnostic('Verified 21 compact 3:2 plates and 7 preserved illustrations from their actual WebP headers.');
+    assert.equal(paths.size, 50, '21 plate pairs, the journey pair and six language-neutral illustrations');
+    t.diagnostic('Verified all 50 distinct catalogue assets across Chinese and English editions.');
   } finally { setLocale('zh-CN'); activateContent(editions['zh-CN']); }
+});
+
+test('Chinese image language and the English fallback are explicit and do not follow ambient state', () => {
+  for (const locale of ['zh', 'zh-CN', 'zh-Hans', 'zh-TW', 'ZH-cn']) assert.equal(imageLanguage(locale), 'zh-CN');
+  for (const locale of ['en', 'en-US', 'ja', 'de', 'fr', 'es', '']) assert.equal(imageLanguage(locale), 'en');
+  setLocale('zh-CN');
+  assert.equal(conceptPlateImage('chapter-01-diagram-1', 'ja'), './images/diagrams/chapter-01-diagram-1.webp');
+  assert.equal(localizedConceptPlate('chapter-01-diagram-1', 'en')!.image, './images/diagrams/chapter-01-diagram-1.webp');
+  assert.equal(illustrationImage('journey', 'zh-CN'), './images/zh-CN/journey.webp');
+  assert.equal(illustrationImage('journey', 'fr'), './images/journey.webp');
+  for (const id of ['foundations', 'industry', 'operations-stack', 'evolution-search', 'safe-agent', 'world-model']) assert.equal(illustrationImage(id, 'zh-CN'), illustrationImage(id, 'en'));
+});
+
+test('inline and adjacent images localize without dropping images or rewriting code examples', () => {
+  const first = '![First](./images/diagrams/chapter-01-diagram-1.webp)';
+  const second = '![Second](./images/diagrams/zh-CN/chapter-04-diagram-1.webp)';
+  const inline = `Read ${first} together with ${second}.`;
+  const adjacent = `${first} ${second}`;
+  const journey = '![Journey](./images/journey.webp)';
+  const code = ['`' + first + '`', '``' + first + ' ` example``', '`a\n' + first + '\nb`', '~~~md\n' + first + '\n~~~', '```md\n' + second + '\n```', 'Example:\n\n    ' + first].join('\n\n');
+  for (const source of [inline, adjacent]) {
+    const expanded = expandConceptPlateReferences(source, 'zh-CN');
+    assert.deepEqual(imageLinks(expanded), ['./images/diagrams/zh-CN/chapter-01-diagram-1.webp', './images/diagrams/zh-CN/chapter-04-diagram-1.webp']);
+    assert.doesNotMatch(expanded, /<a id="figure-/, 'inline images do not receive standalone guide blocks');
+    assert.deepEqual(imageLinks(formatBody(source, 'docs', 'en')), ['../public/images/diagrams/chapter-01-diagram-1.webp', '../public/images/diagrams/chapter-04-diagram-1.webp']);
+  }
+  assert.equal(expandConceptPlateReferences(code, 'zh-CN'), code);
+  assert.equal(formatBody(code, 'docs', 'zh-CN'), code);
+  assert.deepEqual(imageLinks(formatBody(journey, 'public', 'zh-CN')), ['./images/zh-CN/journey.webp']);
+  const chapter = { ...editions['zh-CN'].chapters[0]!, id: '99', body: `${inline}\n\n${journey}\n\n${code}` };
+  const downloaded = chapterDownloadMarkdown(chapter, undefined, 'zh-CN');
+  assert.deepEqual(imageLinks(downloaded), [
+    `${canonicalPublicAssets}images/diagrams/zh-CN/chapter-01-diagram-1.webp`,
+    `${canonicalPublicAssets}images/diagrams/zh-CN/chapter-04-diagram-1.webp`,
+    `${canonicalPublicAssets}images/zh-CN/journey.webp`,
+  ]);
+  assert.ok(downloaded.includes(code), 'chapter export preserves code examples verbatim');
 });
 
 test('six exports and individual chapter downloads retain full guides and destination-correct images', () => {
@@ -119,7 +168,7 @@ test('six exports and individual chapter downloads retain full guides and destin
     for (const destination of ['docs', 'public', 'code'] as const) {
       const body = destination === 'code' ? buildResearchReview(locale) : buildBook(destination, locale);
       const selected = conceptPlates.filter(plate => destination !== 'code' || plate.id.startsWith('research-'));
-      const prefix = destination === 'docs' ? '../public/images/diagrams/' : destination === 'code' ? '../images/diagrams/' : './images/diagrams/';
+      const prefix = (destination === 'docs' ? '../public/images/diagrams/' : destination === 'code' ? '../images/diagrams/' : './images/diagrams/') + imageLocaleDirectory(locale);
       assert.equal(imageLinks(body).filter(path => path.includes('/diagrams/')).length, selected.length);
       assert.doesNotMatch(body, /mermaid/i);
       for (const plate of selected) {
@@ -136,7 +185,10 @@ test('six exports and individual chapter downloads retain full guides and destin
         if (token.type === 'link' && 'href' in token) assert.doesNotMatch(token.href, /^(?:\.\/|\/)?(?:code|images)\//);
       });
       const plate = conceptPlates.find(item => item.href === `#/chapter/${chapter.id}`);
-      if (plate) assert.ok(download.includes(plate.relationship[locale]));
+      if (plate) {
+        assert.ok(download.includes(plate.relationship[locale]));
+        assert.ok(imageLinks(download).includes(`${canonicalPublicAssets}images/diagrams/${imageLocaleDirectory(locale)}${plate.id}.webp`));
+      }
     }
   }
 });
@@ -184,7 +236,7 @@ test('sanitized images receive accessible guides and viewer events without SVG d
     assert.equal(host.querySelector('a[href="https://example.org/paper"]')!.getAttribute('rel'), 'noopener noreferrer');
     assert.equal(figure.querySelector('img')!.getAttribute('alt'), localizedConceptPlate('chapter-21-diagram-1', 'en')!.alt);
     assert.ok(figure.querySelector('details')!.textContent?.includes('Rejection holds SP while time, dynamics and measurements advance'));
-    assert.equal(figure.querySelector('a[download]')!.getAttribute('download'), 'chapter-21-diagram-1.webp');
+    assert.equal(figure.querySelector('a[download]')!.getAttribute('download'), 'chapter-21-diagram-1.en.webp');
     const trigger = figure.querySelector<HTMLButtonElement>('.figure-image-button')!;
     trigger.focus(); trigger.click();
     const dialog = dom.window.document.querySelector<HTMLDialogElement>('.figure-viewer')!;
@@ -215,11 +267,24 @@ test('sanitized images receive accessible guides and viewer events without SVG d
     assert.equal(filterFigures([noAlgorithm], 'PPO').length, 0);
     assert.equal(filterFigures([noAlgorithm], 'SAC').length, 0);
     setLocale('zh-CN'); activateContent(editions['zh-CN']);
+    dom.window.history.replaceState(null, '', '#/gallery');
     await renderGallery(host, '');
+    assert.equal(host.querySelectorAll('img[src*="/diagrams/zh-CN/"]').length, 21);
     const chineseSearch = host.querySelector<HTMLInputElement>('#gallery-search')!;
     chineseSearch.value = '门控'; chineseSearch.dispatchEvent(new dom.window.Event('input'));
     assert.ok(host.querySelector('.figure-card h2 a[href="#/gallery/chapter-21-diagram-1"]'));
     assert.ok(host.querySelector('.figure-card h2 a[href="#/gallery/chapter-15-diagram-1"]'), 'Chinese text within the relationship guide remains searchable');
+    // Even an explicitly English authored reference must follow the Chinese edition.
+    await renderMarkdown(host, conceptPlateReference('chapter-01-diagram-1', 'en'));
+    const localized = host.querySelector<HTMLElement>('.concept-plate')!;
+    assert.equal(localized.querySelector('img')!.getAttribute('src'), './images/diagrams/zh-CN/chapter-01-diagram-1.webp');
+    assert.equal(localized.querySelector('a[download]')!.getAttribute('href'), './images/diagrams/zh-CN/chapter-01-diagram-1.webp');
+    assert.equal(localized.querySelector('a[download]')!.getAttribute('download'), 'chapter-01-diagram-1.zh-CN.webp');
+    localized.querySelector<HTMLButtonElement>('.figure-image-button')!.click();
+    const zhDialog = dom.window.document.querySelector<HTMLDialogElement>('.figure-viewer')!;
+    assert.equal(zhDialog.querySelector('img')!.getAttribute('src'), './images/diagrams/zh-CN/chapter-01-diagram-1.webp');
+    zhDialog.close();
+
   } finally {
     setLocale('zh-CN'); activateContent(editions['zh-CN']);
     for (const [key, descriptor] of previous) { if (descriptor) Object.defineProperty(globalThis, key, descriptor); else Reflect.deleteProperty(globalThis, key); }

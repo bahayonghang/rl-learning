@@ -14,12 +14,14 @@ import { loadContentBundle } from '../src/content/localized';
 import { chapterGuides, guideToMarkdown } from '../src/content/guides';
 import { primerIntroduction, primerUnits } from '../src/content/primer';
 import { glossary } from '../src/content/glossary';
+import { getFormulaCases, formulaCaseMarkdown } from '../src/formula-cases';
 import { buildBook, groupReferences, workbenchAppendix, workbenchAppendixEn, buildResearchReview } from '../scripts/export-book';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicDirectory = resolve(root, 'public');
 const englishBundle = await loadContentBundle('en');
 const authoredDocuments = [
+  ...(['zh-CN', 'en'] as const).flatMap(locale => getFormulaCases(locale).map(item => ({ name: `formula case ${item.id}/${locale}`, body: formulaCaseMarkdown(item.id, locale) }))),
   ...chapters.map(chapter => ({ name: `chapter ${chapter.id}`, body: chapter.body })),
   ...chapterGuides.map(guide => ({ name: `guide ${guide.chapterId}`, body: guideToMarkdown(guide) })),
   { name: 'math introduction', body: primerIntroduction },
@@ -191,7 +193,7 @@ test('authored documents use images without live diagram-source fences', t => {
     });
   }
   assert.equal(count, 40);
-  t.diagnostic(`Checked ${count} localized authored concept images; both roadmap editions use the shared registered roadmap plate.`);
+  t.diagnostic(`Checked ${count} localized authored concept images; the two roadmap editions resolve their corresponding image language.`);
 });
 
 test('downloadable chapter and exported-book links resolve to actual files', t => {

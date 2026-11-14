@@ -1,10 +1,12 @@
 import { chapters, chapterGuides, primerUnits, glossary } from './content/localized';
 import { researchPages } from './research/content';
+import { getFormulaCases } from './formula-cases';
 import { text as t, getLocale } from './i18n';
 export interface LearningSearchResult {href:string;label:string;title:string;subtitle:string;}
 interface SearchDocument extends LearningSearchResult{keywords:string;body:string;}
 function documents():SearchDocument[]{const locale=getLocale();return[
  ...chapters.map(chapter=>({href:`#/chapter/${chapter.id}`,label:chapter.id,title:chapter.title,subtitle:t(`第 ${chapter.id} 章 · ${chapter.subtitle}`,`Chapter ${chapter.id} · ${chapter.subtitle}`),keywords:chapter.tags.join(' '),body:chapter.body+' '+JSON.stringify(chapterGuides.find(guide=>guide.chapterId===chapter.id)??'')})),
+ ...getFormulaCases(locale).map(item=>({href:`#/cases/${item.id}`,label:t('计算','Calculate'),title:item.title,subtitle:item.description,keywords:item.tags.join(' ')+' 公式 案例 计算 calculator formula worked case',body:item.scenario})),
  ...primerUnits.map(unit=>({href:`#/primer/${unit.id}`,label:t('数学','Math'),title:unit.title,subtitle:t('数学准备 · ','Math primer · ')+unit.summary,keywords:'数学 概率 基础 推导 mathematics probability primer '+unit.calculator,body:unit.body})),
  ...researchPages.map(page=>({href:`#/research/${page.id}`,label:t('研究','Research'),title:page.title[locale],subtitle:page.summary[locale],keywords:page.title['zh-CN']+' '+page.title.en+' '+page.id+(page.id==='agenda'?' OAM-Net QC-MTWaveSME PG-MOEA/D-IEpsilon NURBS TCNSO 研究接口':''),body:page.body[locale]})),
  {href:'#/kiln',label:t('水泥','Cement'),title:t('水泥烧成决策工作台','Cement calcination decision workbench'),subtitle:t('调整设定值，观察动态响应、化验延迟与执行门控','Adjust setpoints and inspect dynamic responses, assay delays and execution gates'),keywords:'Tc T2 SP PV 设定值 水泥 烧成 OOD 安全 动作 奖励 f-CaO cement kiln safety gates action reward quality',body:'状态 动作 奖励 成本 转移 五分钟 历史窗口 下层 PID APC 预热器 分解炉 回转窑 篦冷机 state cost history window preheater calciner rotary kiln cooler'},

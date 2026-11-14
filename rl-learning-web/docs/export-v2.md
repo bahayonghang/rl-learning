@@ -2,6 +2,8 @@
 
 > 后续图解更新：本站已将 Mermaid 展示替换为 21 张生成式学术概念图，保留这份历史设计/生成/验证记录。当前接口、双语读图说明和导出规则见 [concept-plates.md](concept-plates.md)。下文的历史图源或解析记录不代表当前页面仍运行绘图引擎。
 
+> 2026-11-14 升级：中文现使用实际中文图片，其他图片语言使用英文版；六份导出与单章下载遵循同一规则，并收录交互公式案例的静态推导。最新资产、路径、代码示例保护及验证范围见 [localized-figures-and-cases.md](localized-figures-and-cases.md) 和 [concept-plates.md](concept-plates.md)。下文保留 v2 历史证据；本次浏览器验收受环境限制，尚未完成。
+
 ## Generated deliverables
 
 `npm run export:book` now writes six files from the current authored content:

@@ -2,6 +2,7 @@ import { chapters } from './content/localized';
 import { researchPages } from './research/content';
 import { text as t, getLocale, type Localized } from './i18n';
 import { conceptPlates, localizedConceptPlate, type FigureTopic } from './concept-plates';
+import { illustrationImage } from './image-locales';
 export type { FigureTopic } from './concept-plates';
 
 export interface FigureRecord {
@@ -57,7 +58,7 @@ const illustrated = [
 ];
 export function illustratedFigure(id:string):FigureRecord|undefined {
  const item=illustrated.find(x=>x.id===id);if(!item)return;
- const locale=getLocale();return {...item,kind:'illustration',title:item.title[locale],alt:item.explanation[locale],explanation:item.explanation[locale],width:1586,height:992,image:`./images/${id}.webp`,href:`#/research/${item.page}`,sourceLabel:t('运行指标决策研究','Operational decision research'),regions:item.regions.map(x=>({label:x.label,description:x.description[locale]}))};
+ const locale=getLocale();return {...item,kind:'illustration',title:item.title[locale],alt:item.explanation[locale],explanation:item.explanation[locale],width:1586,height:992,image:illustrationImage(id,locale),href:`#/research/${item.page}`,sourceLabel:t('运行指标决策研究','Operational decision research'),regions:item.regions.map(x=>({label:x.label,description:x.description[locale]}))};
 }
 export function getFigures(): FigureRecord[] {
  const locale = getLocale();
@@ -73,6 +74,6 @@ export function getFigures(): FigureRecord[] {
   {id:'journey',title:t('课程地图：从直觉到研究','Course map: from intuition to research'),description:t('课程导览插画，用来识别学习阶段。算法关系请结合学术概念图解下方的文字和公式阅读。','An orientation illustration identifying learning stages. Read the selectable guides and equations alongside the academic concept plates for algorithm relationships.'),href:'#/roadmap'},
   {id:'foundations',title:t('基础概念的视觉线索','Visual cues for foundational concepts'),description:t('基础课程的原创情境插画。结合状态、动作、奖励的正文定义阅读，不从画面推断数学关系。','An original scene for the foundations course. Read it alongside the definitions of state, action and reward; mathematical relations are specified in the text.'),href:'#/chapter/01'},
   {id:'industry',title:t('从模型研究到工艺决策','From modelling research to process decisions'),description:t('工业研究情境图，强调模型、运行目标与控制边界的协作。新的分层决策和策略网络图给出了进一步拆解。','A research scene linking models, operational objectives and control boundaries. The newer hierarchy and policy illustrations unpack these components.'),href:'#/research'},
- ])result.push({id:item.id,kind:'illustration',topic:'orientation',title:item.title,alt:item.description,explanation:item.description,width:1672,height:941,keywords:['导览','orientation','课程','course'],href:item.href,sourceLabel:t('课程导览','Course orientation'),image:`./images/${item.id}.webp`});
+ ])result.push({id:item.id,kind:'illustration',topic:'orientation',title:item.title,alt:item.description,explanation:item.description,width:1672,height:941,keywords:['导览','orientation','课程','course'],href:item.href,sourceLabel:t('课程导览','Course orientation'),image:illustrationImage(item.id,locale)});
  return result;
 }

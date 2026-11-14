@@ -19,6 +19,8 @@ import { researchPages, reviewSources } from '../src/research/content';
 import { illustratedFigure } from '../src/figures';
 import { conceptPlates, conceptPlateReference, expandConceptPlateReferences } from '../src/concept-plates';
 import { getLocale, setLocale, type Locale } from '../src/i18n';
+import { chapterFormulaCasesMarkdown, researchFormulaCasesMarkdown, getFormulaCases } from '../src/formula-cases';
+import { mapMarkdownProse } from '../src/markdown-prose';
 import type { ContentBundle } from '../src/content/localized';
 import type { ResearchPage } from '../src/research/types';
 import type { Source } from '../src/types';
@@ -76,17 +78,8 @@ const bookAnchor = (id: string, destination: OfflineDestination, locale: Locale)
 
 /** Rewrite authored links and heading depth, while preserving both fenced-code syntaxes verbatim. */
 export function formatBody(markdown: string, destination: OfflineDestination, locale: Locale = 'zh-CN', headingShift = 2): string {
-  let fence: { marker: string; length: number } | undefined;
-  return expandConceptPlateReferences(markdown, locale).trim().split('\n').map(line => {
-    const delimiter = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
-    if (delimiter) {
-      const marker = delimiter[1][0];
-      if (!fence) fence = { marker, length: delimiter[1].length };
-      else if (marker === fence.marker && delimiter[1].length >= fence.length && !delimiter[2].trim()) fence = undefined;
-      return line;
-    }
-    if (fence) return line;
-    let formatted = line.replace(/^(#{1,6}) /, (_, hashes: string) => `${'#'.repeat(Math.min(hashes.length + headingShift, 6))} `);
+  return mapMarkdownProse(expandConceptPlateReferences(markdown, locale).trim(), (prose, boundary) => {
+    let formatted = prose.replace(/(^|\n)(#{1,6}) /g, (match, before: string, hashes: string, offset: number) => offset === 0 && !boundary.startsLine ? match : `${before}${'#'.repeat(Math.min(hashes.length + headingShift, 6))} `);
     formatted = formatted.replace(/\]\((?:\.\/|\/)?code\/([^\s)]+)\)/g, (_, filename: string) => `](${codePrefix(destination)}${filename})`)
       .replace(/\]\((?:\.\/|\/)?images\/([^\s)]+)\)/g, (_, filename: string) => `](${assetPrefix(destination)}images/${filename})`)
       .replace(/\]\(#\/research\/([a-z0-9-]+)\)/g, '](#research-$1)')
@@ -99,7 +92,7 @@ export function formatBody(markdown: string, destination: OfflineDestination, lo
       .replace(/\]\(#\/glossary\)/g, `](${bookAnchor('glossary', destination, locale)})`)
       .replace(/\]\(#\/references\)/g, '](#references)');
     return formatted;
-  }).join('\n');
+  });
 }
 
 /** Use the same authored captions and region explanations as the web figure catalogue. */
@@ -114,7 +107,7 @@ function conceptFigure(page: ResearchPage, destination: OfflineDestination, loca
   const t = label(locale);
   return [
     `<a id="figure-${figure.id}"></a>`, '',
-    `![${figure.title}](${assetPrefix(destination)}images/${figure.id}.webp)`, '',
+    `![${figure.title}](${assetPrefix(destination)}${figure.image.replace(/^\.\//, '')})`, '',
     `**${figure.title}**`, '', figure.explanation, '',
     `**${t('逐区读图', 'Read the regions')}**`, '',
     ...(figure.regions ?? []).map(region => `- **${region.label}** · ${region.description}`), '',
@@ -141,6 +134,7 @@ function appendResearch(parts: string[], destination: OfflineDestination, locale
       `**${t('建议阅读', 'Reading estimate')}:** ${page.minutes} ${t('分钟（按个人基础调整）', 'minutes (adjust to your background)')}`, '',
       conceptFigure(page, destination, locale),
       formatBody(page.body[locale], destination, locale, standalone ? 1 : 2), '',
+      formatBody(researchFormulaCasesMarkdown(page.id, locale), destination, locale, standalone ? 1 : 2), '',
       `${heading}# ${t('本篇原始资料与阅读边界', 'Primary references and evidence boundaries')}`, '',
       ...sourceList(page.sources, references, locale), '');
     for (const id of page.sources) {
@@ -192,7 +186,7 @@ export function buildBook(destination: BookDestination, locale: Locale = 'zh-CN'
     t('- **保留单位与时间。** 工业案例使用运行指标设定值增量，保留下层控制与安全门控，不连接真实设备。', '- **Preserve units and timing.** Industrial examples use operational setpoint increments, retain inner control and execution gates, and have no connection to real equipment.'),
     t('- **检查原始资料。** 数学与接口来源均可追溯；阅读时保留定理假设和实验边界。', '- **Inspect primary sources.** Mathematical and interface references are traceable; retain theorem assumptions and experimental limits.'), '',
     t('建议按个人时间在六至八周内完成一轮：第一至二周处理交互、概率和表格方法；第三周理解 DQN；第四至五周学习 Actor-Critic、PPO 与 SAC；第六周完成环境和评估设计；最后一至二周将离线、模型与约束方法连接到自己的课题。该安排是学习建议，不是学习效果或课时保证。', 'A suggested first pass takes six to eight weeks, adjusted to your schedule: interaction, probability, and tabular methods in weeks one and two; DQN in week three; actor–critic, PPO, and SAC in weeks four and five; environment and evaluation design in week six; then one or two weeks connecting offline, model-based, and constrained methods to your research. This is a planning suggestion, not a learning-outcome or completion-time guarantee.'), '',
-    t('数学保留为 LaTeX，概念图解以 WebP 图片配合完整双语读图说明呈现。图片使用相对路径，移动文件时请保留配套 images（包括 diagrams 子目录）与 code 目录结构。图片中的英文短标签由可选择的正文解释；全部推导不依赖在线翻译。', 'Mathematics remains in LaTeX; concept plates use WebP images with complete bilingual reading guides. Preserve the relative images directory (including diagrams) and code directory when moving files. Selectable text explains the short English labels in the images; all derivations are available without online translation.'), '',
+    t('数学保留为 LaTeX，概念图解以 WebP 图片配合完整双语读图说明呈现。图片使用相对路径，移动文件时请保留配套 images（包括 diagrams 子目录）与 code 目录结构。中文版本使用中文图，其他语言使用英文图；全部推导与读图说明保留为可选择的文字。', 'Mathematics remains in LaTeX; concept plates use WebP images with complete bilingual reading guides. Preserve the relative images directory (including diagrams) and code directory when moving files. The Chinese edition uses Chinese figures; other editions use English figures. All derivations and reading guides remain selectable text.'), '',
     `## ${t('目录', 'Contents')}`, '', `- [${t('课程学习路线', 'Course learning roadmap')}](#roadmap)`, `- [${t('数学准备：从符号到可计算的例子', 'Mathematics: from symbols to calculable examples')}](#math-primer)`,
   ];
   for (const module of edition.modules) {
@@ -223,7 +217,7 @@ export function buildBook(destination: BookDestination, locale: Locale = 'zh-CN'
       if (chapter.lab) parts.push(`**${t('配套网页实验', 'Companion web experiment')}:** ${chapter.lab}${t('（在网页“交互实验室”打开）', ' (open in the website’s Interactive Labs)')}`, '');
       const guide = guideById.get(chapter.id);
       if (!guide) throw new Error(`Missing ${locale} guide for chapter ${chapter.id}`);
-      parts.push(formatBody(guideToMarkdown(guide, locale), destination, locale), '', `#### ${t('从案例走向系统正文', 'From the case to the full explanation')}`, '',
+      parts.push(formatBody(guideToMarkdown(guide, locale), destination, locale), '', formatBody(chapterFormulaCasesMarkdown(chapter.id, locale), destination, locale), '', `#### ${t('从案例走向系统正文', 'From the case to the full explanation')}`, '',
         formatBody(chapter.body, destination, locale), '', `#### ${t('本章参考资料', 'Chapter references')}`, '', ...sourceList(chapter.sources, references, locale), '', '---', '');
     }
   }
@@ -283,7 +277,7 @@ export async function exportBook(): Promise<void> {
   const allSources = [...sources, ...localizedReviewSources('zh-CN')];
   console.log(JSON.stringify({ locales: ['zh-CN', 'en'], chapters: chapters.length, modules: modules.length, mathUnits: primerUnits.length,
     guides: chapterGuides.length, derivationSteps: chapterGuides.reduce((sum, guide) => sum + guide.steps.length, 0), glossaryTerms: glossary.length,
-    researchStudies: researchPages.length, academicConceptPlates: conceptPlates.length, conceptIllustrations: researchPages.filter(page => page.figure).length,
+    researchStudies: researchPages.length, formulaCases: getFormulaCases().length, academicConceptPlates: conceptPlates.length, conceptIllustrations: researchPages.filter(page => page.figure).length,
     sourceIds: allSources.length, uniqueReferenceUrls: groupReferences(allSources).length, reviewSourceIds: reviewSources.length, outputs: results }, null, 2));
 }
 

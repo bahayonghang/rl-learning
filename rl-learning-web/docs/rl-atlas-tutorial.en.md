@@ -16,7 +16,7 @@ The structure was inspired by the user-provided public article [“Reinforcement
 
 A suggested first pass takes six to eight weeks, adjusted to your schedule: interaction, probability, and tabular methods in weeks one and two; DQN in week three; actor–critic, PPO, and SAC in weeks four and five; environment and evaluation design in week six; then one or two weeks connecting offline, model-based, and constrained methods to your research. This is a planning suggestion, not a learning-outcome or completion-time guarantee.
 
-Mathematics remains in LaTeX; concept plates use WebP images with complete bilingual reading guides. Preserve the relative images directory (including diagrams) and code directory when moving files. Selectable text explains the short English labels in the images; all derivations are available without online translation.
+Mathematics remains in LaTeX; concept plates use WebP images with complete bilingual reading guides. Preserve the relative images directory (including diagrams) and code directory when moving files. The Chinese edition uses Chinese figures; other editions use English figures. All derivations and reading guides remain selectable text.
 
 ## Contents
 
@@ -92,7 +92,7 @@ Two algorithm strands share modelling and probability foundations, then join env
 
 Interaction/probability/MDPs → Bellman/tabular methods → value and policy strands → environment and independent evaluation → offline/model-based learning → constraints and research design. This is a learning dependency map, not an algorithm ranking; research often returns to modelling and evaluation.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 ---
 
@@ -669,6 +669,151 @@ The current setpoint is 880°C and the policy outputs a=0.5. Which interpretatio
 
 **Take it into your research:** RL learns which candidate action to propose from available information for long-term benefit under constraints. Temperature prediction, setpoint proposals, lower-level regulation and delayed quality observations have distinct roles. A correctly timed transition connects them.
 
+##### Worked formula case · Three-step return: what remains after a cutoff?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching rollout records three five-minute decisions with rewards −1, 2 and 3; the final state is valued at 4. Predict whether stopping collection erases future value. Rewards use example units.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| First reward | -1 | dimensionless |
+| Second reward | 2 | dimensionless |
+| Third reward | 3 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Final-state value estimate | 4 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+G_0^{(3)}=R_1+\gamma R_2+\gamma^2R_3+\gamma^3(1-d)V(S_3)
+$$
+
+**Substitution and calculation**
+
+1. **Weight the observed rewards**
+
+$$
+-1+0.9\cdot(2)+0.9^2\cdot(3)\approx 3.23
+$$
+
+The first reward has exponent 0; the third has exponent 2.
+
+2. **Compute the tail separately**
+
+$$
+0.9^3(1-0)\cdot(4)\approx 2.916
+$$
+
+The tail begins after the third step, so its coefficient is γ³.
+
+3. **Combine the learning target**
+
+$$
+G_0^{(3)}\approx 3.23+(2.916)\approx 6.146
+$$
+
+Calculations retain full precision; displayed values have up to six decimal places.
+
+**Results**
+
+- Observed discounted rewards: 3.23
+- Tail contribution: 2.916
+- Three-step target: 6.146
+
+**Contribution of each term**
+
+| Term | Weight | Contribution |
+| --- | --- | --- |
+| R₁ | 1 | -1 |
+| R₂ | 0.9 | 1.8 |
+| R₃ | 0.81 | 2.43 |
+| V(S₃) | 0.729 | 2.916 |
+
+**Interpretation**
+
+- A collection cutoff retains the final-state bootstrap. This remains an estimate and depends on the value estimate.
+- This is one trajectory target, not independent evidence of long-term policy performance.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · From action to temperature: why SP differs from PV
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use the teaching workbench’s first CV: SP=880°C, PV=879°C, a five-minute step, RATE=2°C and tracking factor 0.28. Other CVs and disturbances are fixed; this is not the complete thermal model.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Requested normalized increment | 0.5 | dimensionless |
+| Current temperature setpoint | 880 | °C |
+| Current measured temperature | 879 | °C |
+| Externally supplied gate result | Assume all five checks passed |  |
+
+**Equations**
+
+$$
+\Delta T^{sp}_{req}=2a_{req},\quad T^{sp}_{new}=T^{sp}+2a_{exec}
+$$
+
+$$
+T_{new}=T+0.28(T^{sp}_{new}-T)
+$$
+
+**Substitution and calculation**
+
+1. **Scale the normalized request**
+
+$$
+\Delta T^{sp}_{req}=2\cdot(0.5)\approx1,\quad T^{sp}_{candidate}\approx881
+$$
+
+The output changes a supervisory target; it does not directly actuate a fuel valve.
+
+2. **Distinguish request from execution**
+
+$$
+a_{exec}\approx0.5,\quad T^{sp}_{new}=880+2\cdot(0.5)\approx881
+$$
+
+The request executes under the supplied acceptance assumption.
+
+3. **Advance the teaching tracking response**
+
+$$
+T_{new}=879+0.28(881-879)\approx879.56
+$$
+
+0.28 is the existing teaching coefficient, not an identified plant parameter.
+
+**Results**
+
+- Executed increment: 1 °C
+- New setpoint SP: 881 °C
+- Teaching PV after five minutes: 879.56 °C
+
+**Interpretation**
+
+- Even with zero executed increment, PV may change whenever it differs from the current SP.
+- This one-dimensional slice omits full gates, delays and other CVs and cannot be used for plant control.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
 #### From the case to the full explanation
 
 #### First ask: what are we trying to learn?
@@ -701,7 +846,7 @@ Follow observation, policy, process response and feedback. Distinguish immediate
 
 Read observation → choose action → advance the environment → receive feedback → decide again. Distinguish genuine termination from a teaching time limit; a continuing process retains value bootstrapping at truncation. The learning loop does not require every algorithm to update only after termination.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 A policy update can happen at every step or after collecting a batch. Interaction and learning have different clocks: sampling the environment once does not restrict a neural network to one update.
@@ -915,6 +1060,141 @@ H is uniquely greedy in a two-action ε-greedy policy with ε=0.2. What is U’s
 - Option 3: That describes pure greediness. Positive ε exists to give lower-estimated allowed actions opportunities to gather new evidence.
 
 **Take it into your research:** A mean records what has been observed, while a count indicates how much evidence supports it. Exploration determines where the next evidence comes from. Interpret its value within the repeat-trial assumptions and the permitted action set.
+
+##### Worked formula case · Three-step return: what remains after a cutoff?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching rollout records three five-minute decisions with rewards −1, 2 and 3; the final state is valued at 4. Predict whether stopping collection erases future value. Rewards use example units.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| First reward | -1 | dimensionless |
+| Second reward | 2 | dimensionless |
+| Third reward | 3 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Final-state value estimate | 4 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+G_0^{(3)}=R_1+\gamma R_2+\gamma^2R_3+\gamma^3(1-d)V(S_3)
+$$
+
+**Substitution and calculation**
+
+1. **Weight the observed rewards**
+
+$$
+-1+0.9\cdot(2)+0.9^2\cdot(3)\approx 3.23
+$$
+
+The first reward has exponent 0; the third has exponent 2.
+
+2. **Compute the tail separately**
+
+$$
+0.9^3(1-0)\cdot(4)\approx 2.916
+$$
+
+The tail begins after the third step, so its coefficient is γ³.
+
+3. **Combine the learning target**
+
+$$
+G_0^{(3)}\approx 3.23+(2.916)\approx 6.146
+$$
+
+Calculations retain full precision; displayed values have up to six decimal places.
+
+**Results**
+
+- Observed discounted rewards: 3.23
+- Tail contribution: 2.916
+- Three-step target: 6.146
+
+**Contribution of each term**
+
+| Term | Weight | Contribution |
+| --- | --- | --- |
+| R₁ | 1 | -1 |
+| R₂ | 0.9 | 1.8 |
+| R₃ | 0.81 | 2.43 |
+| V(S₃) | 0.729 | 2.916 |
+
+**Interpretation**
+
+- A collection cutoff retains the final-state bootstrap. This remains an estimate and depends on the value estimate.
+- This is one trajectory target, not independent evidence of long-term policy performance.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · Bellman expectation: weight two possible futures
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix a regime and one candidate action. A teaching model predicts recovery or no recovery at the next step. Compute this state-action Q backup without maximizing over actions.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Recovery probability | 0.7 | dimensionless |
+| Reward after recovery | 3 | dimensionless |
+| Reward without recovery | -2 | dimensionless |
+| Value after recovery | 5 | dimensionless |
+| Value without recovery | 1 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+
+**Equations**
+
+$$
+Q(s,a)=p[r_A+\gamma V_A]+(1-p)[r_B+\gamma V_B]
+$$
+
+**Substitution and calculation**
+
+1. **Calculate each branch value**
+
+$$
+B_A=3+0.9\cdot(5)\approx7.5,\quad B_B=-2+0.9\cdot(1)\approx-1.1
+$$
+
+Each branch includes immediate reward and successor value.
+
+2. **Take the expectation over futures**
+
+$$
+Q\approx0.7\cdot(7.5)+(1-0.7)\cdot(-1.1)\approx4.92
+$$
+
+The two probabilities always sum to 1.
+
+**Results**
+
+- Recovery contribution: 5.25
+- No-recovery contribution: -0.33
+- Action-value target: 4.92
+
+**Interpretation**
+
+- This is one Bellman backup under the teaching model and supplied values, not necessarily a Bellman fixed point.
+- One transition observes one branch; positive expectation does not guarantee acceptable quality on every step.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
 
 #### From the case to the full explanation
 
@@ -1153,6 +1433,8 @@ The policy chooses U 40% of the time. Conditional on U, the next state is stable
 - Option 3: Simultaneous occurrence does not use that addition, and 120% exceeds the probability bound of 100%. Addition concerns appropriately handled unions, not this conditional path.
 
 **Take it into your research:** For each probability, identify the population being counted. For each expectation, list outcomes, conditions and weights. Value functions, TD targets and policy gradients all build on these operations.
+
+
 
 #### From the case to the full explanation
 
@@ -1397,6 +1679,151 @@ An assay was unavailable at the 10:00 decision and released at 11:00. May offlin
 
 **Take it into your research:** Define state, observation, action, transition, reward, cost and timing before selecting an algorithm. History and soft sensors manage hidden-state uncertainty; neither truncation nor delayed assays permits changing causal order.
 
+##### Worked formula case · Three-step return: what remains after a cutoff?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching rollout records three five-minute decisions with rewards −1, 2 and 3; the final state is valued at 4. Predict whether stopping collection erases future value. Rewards use example units.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| First reward | -1 | dimensionless |
+| Second reward | 2 | dimensionless |
+| Third reward | 3 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Final-state value estimate | 4 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+G_0^{(3)}=R_1+\gamma R_2+\gamma^2R_3+\gamma^3(1-d)V(S_3)
+$$
+
+**Substitution and calculation**
+
+1. **Weight the observed rewards**
+
+$$
+-1+0.9\cdot(2)+0.9^2\cdot(3)\approx 3.23
+$$
+
+The first reward has exponent 0; the third has exponent 2.
+
+2. **Compute the tail separately**
+
+$$
+0.9^3(1-0)\cdot(4)\approx 2.916
+$$
+
+The tail begins after the third step, so its coefficient is γ³.
+
+3. **Combine the learning target**
+
+$$
+G_0^{(3)}\approx 3.23+(2.916)\approx 6.146
+$$
+
+Calculations retain full precision; displayed values have up to six decimal places.
+
+**Results**
+
+- Observed discounted rewards: 3.23
+- Tail contribution: 2.916
+- Three-step target: 6.146
+
+**Contribution of each term**
+
+| Term | Weight | Contribution |
+| --- | --- | --- |
+| R₁ | 1 | -1 |
+| R₂ | 0.9 | 1.8 |
+| R₃ | 0.81 | 2.43 |
+| V(S₃) | 0.729 | 2.916 |
+
+**Interpretation**
+
+- A collection cutoff retains the final-state bootstrap. This remains an estimate and depends on the value estimate.
+- This is one trajectory target, not independent evidence of long-term policy performance.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · From action to temperature: why SP differs from PV
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use the teaching workbench’s first CV: SP=880°C, PV=879°C, a five-minute step, RATE=2°C and tracking factor 0.28. Other CVs and disturbances are fixed; this is not the complete thermal model.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Requested normalized increment | 0.5 | dimensionless |
+| Current temperature setpoint | 880 | °C |
+| Current measured temperature | 879 | °C |
+| Externally supplied gate result | Assume all five checks passed |  |
+
+**Equations**
+
+$$
+\Delta T^{sp}_{req}=2a_{req},\quad T^{sp}_{new}=T^{sp}+2a_{exec}
+$$
+
+$$
+T_{new}=T+0.28(T^{sp}_{new}-T)
+$$
+
+**Substitution and calculation**
+
+1. **Scale the normalized request**
+
+$$
+\Delta T^{sp}_{req}=2\cdot(0.5)\approx1,\quad T^{sp}_{candidate}\approx881
+$$
+
+The output changes a supervisory target; it does not directly actuate a fuel valve.
+
+2. **Distinguish request from execution**
+
+$$
+a_{exec}\approx0.5,\quad T^{sp}_{new}=880+2\cdot(0.5)\approx881
+$$
+
+The request executes under the supplied acceptance assumption.
+
+3. **Advance the teaching tracking response**
+
+$$
+T_{new}=879+0.28(881-879)\approx879.56
+$$
+
+0.28 is the existing teaching coefficient, not an identified plant parameter.
+
+**Results**
+
+- Executed increment: 1 °C
+- New setpoint SP: 881 °C
+- Teaching PV after five minutes: 879.56 °C
+
+**Interpretation**
+
+- Even with zero executed increment, PV may change whenever it differs from the current SP.
+- This one-dimensional slice omits full gates, delays and other CVs and cannot be used for plant control.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
 #### From the case to the full explanation
 
 #### An algorithm optimizes the problem you actually define
@@ -1439,7 +1866,7 @@ Check whether information available at the time is sufficient. Add history or st
 
 The sufficiency question selects a representation path; both paths join the same environment definition. History or neural encoding does not automatically establish the Markov property. Random-policy checks belong only in teaching simulation, never exploration on a physical kiln.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### A complete small modeling example
@@ -1644,6 +2071,64 @@ Using V_k(S)=4, V_k(W)=1 and the 60% H / 40% U policy, what is one policy-evalua
 - Option 3: 1.12 includes only immediate reward. Conditional expectation applies to future returns too; Bellman adds their discounted tail to each branch.
 
 **Take it into your research:** Each Bellman equality has a specific justification: algebraic return splitting, the value definition, total expectation over actions, total expectation over transitions, and a Markov state’s sufficient summary of the future. With those reasons clear, updates can be derived.
+
+##### Worked formula case · Bellman expectation: weight two possible futures
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix a regime and one candidate action. A teaching model predicts recovery or no recovery at the next step. Compute this state-action Q backup without maximizing over actions.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Recovery probability | 0.7 | dimensionless |
+| Reward after recovery | 3 | dimensionless |
+| Reward without recovery | -2 | dimensionless |
+| Value after recovery | 5 | dimensionless |
+| Value without recovery | 1 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+
+**Equations**
+
+$$
+Q(s,a)=p[r_A+\gamma V_A]+(1-p)[r_B+\gamma V_B]
+$$
+
+**Substitution and calculation**
+
+1. **Calculate each branch value**
+
+$$
+B_A=3+0.9\cdot(5)\approx7.5,\quad B_B=-2+0.9\cdot(1)\approx-1.1
+$$
+
+Each branch includes immediate reward and successor value.
+
+2. **Take the expectation over futures**
+
+$$
+Q\approx0.7\cdot(7.5)+(1-0.7)\cdot(-1.1)\approx4.92
+$$
+
+The two probabilities always sum to 1.
+
+**Results**
+
+- Recovery contribution: 5.25
+- No-recovery contribution: -0.33
+- Action-value target: 4.92
+
+**Interpretation**
+
+- This is one Bellman backup under the teaching model and supplied values, not necessarily a Bellman fixed point.
+- One transition observes one branch; positive expectation does not guarantee acceptable quality on every step.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
 
 #### From the case to the full explanation
 
@@ -1912,6 +2397,64 @@ Under this model’s contraction assumptions, γ=0.9 and current residual δ=0.0
 
 **Take it into your research:** Dynamic programming repeatedly recalculates values using a known model. Convergence follows because probability-weighted averages do not amplify the maximum discrepancy and discounting shrinks it further. This reason also identifies where the guarantee can fail in more complex settings.
 
+##### Worked formula case · Bellman expectation: weight two possible futures
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix a regime and one candidate action. A teaching model predicts recovery or no recovery at the next step. Compute this state-action Q backup without maximizing over actions.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Recovery probability | 0.7 | dimensionless |
+| Reward after recovery | 3 | dimensionless |
+| Reward without recovery | -2 | dimensionless |
+| Value after recovery | 5 | dimensionless |
+| Value without recovery | 1 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+
+**Equations**
+
+$$
+Q(s,a)=p[r_A+\gamma V_A]+(1-p)[r_B+\gamma V_B]
+$$
+
+**Substitution and calculation**
+
+1. **Calculate each branch value**
+
+$$
+B_A=3+0.9\cdot(5)\approx7.5,\quad B_B=-2+0.9\cdot(1)\approx-1.1
+$$
+
+Each branch includes immediate reward and successor value.
+
+2. **Take the expectation over futures**
+
+$$
+Q\approx0.7\cdot(7.5)+(1-0.7)\cdot(-1.1)\approx4.92
+$$
+
+The two probabilities always sum to 1.
+
+**Results**
+
+- Recovery contribution: 5.25
+- No-recovery contribution: -0.33
+- Action-value target: 4.92
+
+**Interpretation**
+
+- This is one Bellman backup under the teaching model and supplied values, not necessarily a Bellman fixed point.
+- One transition observes one branch; positive expectation does not guarantee acceptable quality on every step.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+
 #### From the case to the full explanation
 
 #### Give the algorithm an advantage: a known environment model
@@ -2168,6 +2711,157 @@ r=1, γ=0.9 and next value is 5. The sampling window ends with truncated=True an
 
 **Take it into your research:** An update asks four questions: which evidence constructs the target, what error separates target and prediction, what fraction to absorb, and whether the task truly ended. MC, TD and n-step differ first in their targets.
 
+##### Worked formula case · Three-step return: what remains after a cutoff?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching rollout records three five-minute decisions with rewards −1, 2 and 3; the final state is valued at 4. Predict whether stopping collection erases future value. Rewards use example units.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| First reward | -1 | dimensionless |
+| Second reward | 2 | dimensionless |
+| Third reward | 3 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Final-state value estimate | 4 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+G_0^{(3)}=R_1+\gamma R_2+\gamma^2R_3+\gamma^3(1-d)V(S_3)
+$$
+
+**Substitution and calculation**
+
+1. **Weight the observed rewards**
+
+$$
+-1+0.9\cdot(2)+0.9^2\cdot(3)\approx 3.23
+$$
+
+The first reward has exponent 0; the third has exponent 2.
+
+2. **Compute the tail separately**
+
+$$
+0.9^3(1-0)\cdot(4)\approx 2.916
+$$
+
+The tail begins after the third step, so its coefficient is γ³.
+
+3. **Combine the learning target**
+
+$$
+G_0^{(3)}\approx 3.23+(2.916)\approx 6.146
+$$
+
+Calculations retain full precision; displayed values have up to six decimal places.
+
+**Results**
+
+- Observed discounted rewards: 3.23
+- Tail contribution: 2.916
+- Three-step target: 6.146
+
+**Contribution of each term**
+
+| Term | Weight | Contribution |
+| --- | --- | --- |
+| R₁ | 1 | -1 |
+| R₂ | 0.9 | 1.8 |
+| R₃ | 0.81 | 2.43 |
+| V(S₃) | 0.729 | 2.916 |
+
+**Interpretation**
+
+- A collection cutoff retains the final-state bootstrap. This remains an estimate and depends on the value estimate.
+- This is one trajectory target, not independent evidence of long-term policy performance.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · One TD update: target, error and new estimate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+The current estimate is 2 and the reward is −1. The successor has Q estimates 4 and 1; the sampled next action is B. Switch methods and explain the target change.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Update method | SARSA: sampled next action |  |
+| Observed reward | -1 | dimensionless |
+| Estimate before update | 2 | dimensionless |
+| Next value A | 4 | dimensionless |
+| Next-action B value | 1 | dimensionless |
+| Next action sampled by SARSA | Action B |  |
+| Discount factor | 0.9 | dimensionless |
+| Learning rate | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)B,\quad\delta=y-\hat v,\quad\hat v_{\rm new}=\hat v+\eta\delta
+$$
+
+$$
+B_{\rm TD}=V(s'),\quad B_{\rm SARSA}=Q(s',a'),\quad B_{\rm Q}=\max_a Q(s',a)
+$$
+
+**Substitution and calculation**
+
+1. **Select the bootstrap**
+
+$$
+B=1
+$$
+
+Use Q for the sampled next action.
+
+2. **Subtract the old estimate from the target**
+
+$$
+y=-1+0.9(1-0)\cdot(1)\approx-0.1,\quad\delta\approx-0.1-(2)\approx-2.1
+$$
+
+The error sign determines whether the estimate rises or falls.
+
+3. **Move by the learning-rate fraction**
+
+$$
+\hat v_{\rm new}\approx2+0.2\cdot(-2.1)\approx1.58
+$$
+
+This is a single tabular update; a neural network instead updates parameters through gradients.
+
+**Results**
+
+- Learning target: -0.1
+- TD error: -2.1
+- Updated estimate: 1.58
+
+**Interpretation**
+
+- SARSA and Q-learning differ in target policy; one update cannot establish which algorithm is better.
+- External truncation retains bootstrapping; genuine termination removes it.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
 #### From the case to the full explanation
 
 #### Estimate values without knowing transition probabilities
@@ -2407,6 +3101,80 @@ Next-state Q(H)=4 and Q(U)=1. ε-greedy behavior selects them with probabilities
 - Option 3: Correct: 1+0.9×Q(U)=1.9. The conditional average across many such samples reflects the full 0.9/0.1 behavior distribution.
 
 **Take it into your research:** Name the behavior policy, then the target policy, then inspect whether the tail uses an actual action, a policy average or a maximum. That comparison explains outcomes more directly than memorized on-policy/off-policy labels.
+
+##### Worked formula case · One TD update: target, error and new estimate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+The current estimate is 2 and the reward is −1. The successor has Q estimates 4 and 1; the sampled next action is B. Switch methods and explain the target change.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Update method | SARSA: sampled next action |  |
+| Observed reward | -1 | dimensionless |
+| Estimate before update | 2 | dimensionless |
+| Next value A | 4 | dimensionless |
+| Next-action B value | 1 | dimensionless |
+| Next action sampled by SARSA | Action B |  |
+| Discount factor | 0.9 | dimensionless |
+| Learning rate | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)B,\quad\delta=y-\hat v,\quad\hat v_{\rm new}=\hat v+\eta\delta
+$$
+
+$$
+B_{\rm TD}=V(s'),\quad B_{\rm SARSA}=Q(s',a'),\quad B_{\rm Q}=\max_a Q(s',a)
+$$
+
+**Substitution and calculation**
+
+1. **Select the bootstrap**
+
+$$
+B=1
+$$
+
+Use Q for the sampled next action.
+
+2. **Subtract the old estimate from the target**
+
+$$
+y=-1+0.9(1-0)\cdot(1)\approx-0.1,\quad\delta\approx-0.1-(2)\approx-2.1
+$$
+
+The error sign determines whether the estimate rises or falls.
+
+3. **Move by the learning-rate fraction**
+
+$$
+\hat v_{\rm new}\approx2+0.2\cdot(-2.1)\approx1.58
+$$
+
+This is a single tabular update; a neural network instead updates parameters through gradients.
+
+**Results**
+
+- Learning target: -0.1
+- TD error: -2.1
+- Updated estimate: 1.58
+
+**Interpretation**
+
+- SARSA and Q-learning differ in target policy; one update cannot establish which algorithm is better.
+- External truncation retains bootstrapping; genuine termination removes it.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
 
 #### From the case to the full explanation
 
@@ -2686,6 +3454,8 @@ x=1, θ=2, fixed target y=5, loss (Q−y)²/2 and learning rate 0.1. What is θ 
 
 **Take it into your research:** Weight updates require the loss derivative, network-local derivatives and the optimization direction. Semi-gradients deliberately stop a target path. Understanding that choice clarifies target networks and the extra stability risks of function approximation.
 
+
+
 #### From the case to the full explanation
 
 #### Can states too numerous to tabulate share experience?
@@ -2728,7 +3498,7 @@ Function approximation, bootstrapping and off-policy learning interact. Replay a
 
 The combination can create unstable feedback; it does not imply inevitable divergence. Replay and target networks address different mechanisms. Neither removes all off-policy problems or guarantees convergence or industrial safety.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 The combination of function approximation, bootstrapping and off-policy learning is the **deadly triad**. It identifies an instability risk, not inevitable divergence whenever all three occur. [Jiang and colleagues’ research](https://proceedings.mlr.press/v139/jiang21j.html) and [target-network theory](https://proceedings.mlr.press/v202/fellows23a.html) offer more precise discussion.
@@ -2950,6 +3720,80 @@ This sample chose U. Current online outputs are H=7, U=3; next-state target outp
 - Option 3: Replay changes sampling, not the use of bootstrapping. Since the transition did not truly terminate, retain the discounted next-state value.
 
 **Take it into your research:** DQN stores correct transitions, mixes samples, fixes targets, indexes actual-action outputs, updates online parameters through a loss and updates target parameters more slowly. Every link has a specific data role and purpose.
+
+##### Worked formula case · One TD update: target, error and new estimate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+The current estimate is 2 and the reward is −1. The successor has Q estimates 4 and 1; the sampled next action is B. Switch methods and explain the target change.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Update method | SARSA: sampled next action |  |
+| Observed reward | -1 | dimensionless |
+| Estimate before update | 2 | dimensionless |
+| Next value A | 4 | dimensionless |
+| Next-action B value | 1 | dimensionless |
+| Next action sampled by SARSA | Action B |  |
+| Discount factor | 0.9 | dimensionless |
+| Learning rate | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)B,\quad\delta=y-\hat v,\quad\hat v_{\rm new}=\hat v+\eta\delta
+$$
+
+$$
+B_{\rm TD}=V(s'),\quad B_{\rm SARSA}=Q(s',a'),\quad B_{\rm Q}=\max_a Q(s',a)
+$$
+
+**Substitution and calculation**
+
+1. **Select the bootstrap**
+
+$$
+B=1
+$$
+
+Use Q for the sampled next action.
+
+2. **Subtract the old estimate from the target**
+
+$$
+y=-1+0.9(1-0)\cdot(1)\approx-0.1,\quad\delta\approx-0.1-(2)\approx-2.1
+$$
+
+The error sign determines whether the estimate rises or falls.
+
+3. **Move by the learning-rate fraction**
+
+$$
+\hat v_{\rm new}\approx2+0.2\cdot(-2.1)\approx1.58
+$$
+
+This is a single tabular update; a neural network instead updates parameters through gradients.
+
+**Results**
+
+- Learning target: -0.1
+- TD error: -2.1
+- Updated estimate: 1.58
+
+**Interpretation**
+
+- SARSA and Q-learning differ in target policy; one update cannot establish which algorithm is better.
+- External truncation retains bootstrapping; genuine termination removes it.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
 
 #### From the case to the full explanation
 
@@ -3185,6 +4029,80 @@ Next-state online Q=[4,3] and target Q=[2,5], ordered [H,U]. With r=1, γ=0.9 an
 - Option 3: This lets the same online estimate both select and evaluate instead of using the target network for evaluation.
 
 **Take it into your research:** Maximization selects not only larger numbers but favorable noise in uncertain estimates. Double DQN chooses actions online and evaluates them with a target network to reduce that coupling. Assess the effect under actual error correlation and coverage.
+
+##### Worked formula case · One TD update: target, error and new estimate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+The current estimate is 2 and the reward is −1. The successor has Q estimates 4 and 1; the sampled next action is B. Switch methods and explain the target change.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Update method | SARSA: sampled next action |  |
+| Observed reward | -1 | dimensionless |
+| Estimate before update | 2 | dimensionless |
+| Next value A | 4 | dimensionless |
+| Next-action B value | 1 | dimensionless |
+| Next action sampled by SARSA | Action B |  |
+| Discount factor | 0.9 | dimensionless |
+| Learning rate | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)B,\quad\delta=y-\hat v,\quad\hat v_{\rm new}=\hat v+\eta\delta
+$$
+
+$$
+B_{\rm TD}=V(s'),\quad B_{\rm SARSA}=Q(s',a'),\quad B_{\rm Q}=\max_a Q(s',a)
+$$
+
+**Substitution and calculation**
+
+1. **Select the bootstrap**
+
+$$
+B=1
+$$
+
+Use Q for the sampled next action.
+
+2. **Subtract the old estimate from the target**
+
+$$
+y=-1+0.9(1-0)\cdot(1)\approx-0.1,\quad\delta\approx-0.1-(2)\approx-2.1
+$$
+
+The error sign determines whether the estimate rises or falls.
+
+3. **Move by the learning-rate fraction**
+
+$$
+\hat v_{\rm new}\approx2+0.2\cdot(-2.1)\approx1.58
+$$
+
+This is a single tabular update; a neural network instead updates parameters through gradients.
+
+**Results**
+
+- Learning target: -0.1
+- TD error: -2.1
+- Updated estimate: 1.58
+
+**Interpretation**
+
+- SARSA and Q-learning differ in target policy; one update cannot establish which algorithm is better.
+- External truncation retains bootstrapping; genuine termination removes it.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
 
 #### From the case to the full explanation
 
@@ -3527,6 +4445,71 @@ At the start, U is sampled with π(U)=0.25 and return G=2, but state baseline b=
 
 **Take it into your research:** Trajectory factorization, the log-derivative trick, zero contribution from past rewards, a zero-mean state baseline and explicit softmax derivatives together explain REINFORCE. It improves expected return by changing action probabilities without differentiating the kiln’s physical response.
 
+##### Worked formula case · PPO: which side clips for each advantage sign?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+The same discrete action has old probability 0.2, new probability 0.3 and estimated advantage 2. Calculate both products before taking the minimum.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Old-policy action probability | 0.2 | dimensionless |
+| New-policy action probability | 0.3 | dimensionless |
+| Fixed advantage estimate | 2 | dimensionless |
+| Clip width | 0.2 | dimensionless |
+
+**Equations**
+
+$$
+\rho=\frac{\pi_{new}(a|s)}{\pi_{old}(a|s)},\quad L^{clip}=\min\bigl(\rho\hat A,\operatorname{clip}(\rho,1-\epsilon,1+\epsilon)\hat A\bigr)
+$$
+
+**Substitution and calculation**
+
+1. **Calculate ratio and clip interval**
+
+$$
+\rho=\frac{0.3}{0.2}\approx1.5,\quad[1-\epsilon,1+\epsilon]=[0.8,1.2]
+$$
+
+The ratio compares probabilities of the same action, not its magnitude.
+
+2. **Multiply both candidates by the advantage**
+
+$$
+u\approx1.5\cdot(2)\approx3,\quad c\approx1.2\cdot(2)\approx2.4
+$$
+
+A negative advantage reverses numerical order; the positive-advantage intuition no longer applies.
+
+3. **Minimize the two terms, not the ratios**
+
+$$
+L^{clip}=\min(3,2.4)\approx2.4
+$$
+
+The clipped term is selected; further change in the helpful direction does not increase this sample objective.
+
+**Results**
+
+- Probability ratio: 1.5
+- Maximized surrogate: 2.4
+- Negative surrogate for minimization: -2.4
+
+**Interpretation**
+
+- This is one sample contribution. PPO averages a batch and usually adds value loss, entropy and other training controls.
+- Clipping does not hard-bound policy parameters or all probability ratios, and is not an industrial action-safety guarantee.
+
+**Sources and conventions**
+
+- [Schulman et al. · Proximal Policy Optimization Algorithms, Eq. 7](https://arxiv.org/abs/1707.06347)
+- [OpenAI Spinning Up · PPO-Clip key equations](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
+
 #### From the case to the full explanation
 
 #### Why not always estimate values first and take argmax?
@@ -3579,7 +4562,7 @@ Sample a trajectory, compute reward-to-go and a baseline, then weight action log
 
 Sample → reward-to-go → subtract baseline → weight log probabilities → update policy → sample again. For the discounted start-state objective in the text, retain the time weight γᵗ. A suitable state baseline can reduce gradient-estimator variance without replacing the definition of return.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### Which probability does one update increase?
@@ -3782,6 +4765,89 @@ A segment from continuing kiln operation ends at a time limit, then reset starts
 
 **Take it into your research:** GAE geometrically mixes multistep advantages. γ defines temporal weights in the task, λ selects an estimator, and two boundary masks preserve correct timing.
 
+##### Worked formula case · GAE: carry three TD residuals backward
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A three-step teaching segment has rewards 1, 0 and 2, with state values 0.5, 1, 1.5 and 2. The trace ends at the segment boundary; its final V bootstrap depends on termination semantics.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Reward 1 | 1 | dimensionless |
+| Reward 2 | 0 | dimensionless |
+| Reward 3 | 2 | dimensionless |
+| Initial-state value | 0.5 | dimensionless |
+| State 1 value | 1 | dimensionless |
+| State 2 value | 1.5 | dimensionless |
+| Final-state value | 2 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Trace parameter | 0.8 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+\delta_t=R_{t+1}+\gamma(1-d_t)V_{t+1}-V_t
+$$
+
+$$
+\hat A_t=\delta_t+\gamma\lambda(1-e_t)\hat A_{t+1},\quad \hat A_3=0
+$$
+
+**Substitution and calculation**
+
+1. **Compute the three residuals**
+
+$$
+\begin{aligned}\delta_0&=1+0.9\cdot(1)-(0.5)\approx1.4\\\delta_1&=0+0.9\cdot(1.5)-(1)\approx0.35\\\delta_2&=2+0.9(1-0)\cdot(2)-(1.5)\approx2.3\end{aligned}
+$$
+
+The first two steps continue; the terminal flag determines whether the last uses V₃.
+
+2. **Recurse backward from the boundary**
+
+$$
+\hat A_2=\delta_2\approx2.3,\quad \hat A_1\approx0.35+0.72\cdot(2.3)\approx2.006
+$$
+
+e₂=1 stops the advantage trace and prevents leakage into a reset trajectory.
+
+3. **Obtain the first action advantage**
+
+$$
+\hat A_0\approx1.4+0.72\cdot(0.35)+0.72^2\cdot(2.3)\approx2.84432
+$$
+
+The terms are δ₀, γλδ₁ and (γλ)²δ₂. A value target can be V₀+Â₀; this does not establish unbiasedness or low variance.
+
+**Results**
+
+- Advantage Â0: 2.84432
+- Advantage Â1: 2.006
+- Advantage Â2: 2.3
+
+**Residuals, advantages and value targets**
+
+| t | δₜ | Âₜ | Vₜ + Âₜ |
+| --- | --- | --- | --- |
+| 0 | 1.4 | 2.84432 | 3.34432 |
+| 1 | 0.35 | 2.006 | 3.006 |
+| 2 | 2.3 | 2.3 | 3.8 |
+
+**Interpretation**
+
+- d marks true termination; e marks a trace boundary. At a timeout, d=0 and e=1: retain the V bootstrap while stopping cross-trajectory recursion.
+- Changing λ trades bias and variance. One deterministic example shows weights, not statistical variance.
+
+**Sources and conventions**
+
+- [Schulman et al. · Generalized Advantage Estimation, §3, Eqs. 11–16](https://arxiv.org/html/1506.02438v6)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
 #### From the case to the full explanation
 
 #### Why REINFORCE needs a critic
@@ -3856,7 +4922,7 @@ The actor defines the action distribution and the critic estimates value. They e
 
 Batch rewards and values → TD residuals → GAE → actor update; GAE plus the old value → critic target. True termination stops bootstrapping. Time truncation retains appropriate bootstrapping, while trace recursion must not cross a reset or unrelated trajectory boundary.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### What to inspect in experiments
@@ -4027,6 +5093,155 @@ Old data contain only holding setpoints, but the new policy proposes another adj
 - Option 3: Incorrect. Numerical action bounds neither create historical coverage nor establish physical compliance in a particular state.
 
 **Take it into your research:** Importance sampling requires support and coverage. A trust region controls local policy change; it does not solve unfamiliar operating conditions or equipment safety.
+
+##### Worked formula case · GAE: carry three TD residuals backward
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A three-step teaching segment has rewards 1, 0 and 2, with state values 0.5, 1, 1.5 and 2. The trace ends at the segment boundary; its final V bootstrap depends on termination semantics.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Reward 1 | 1 | dimensionless |
+| Reward 2 | 0 | dimensionless |
+| Reward 3 | 2 | dimensionless |
+| Initial-state value | 0.5 | dimensionless |
+| State 1 value | 1 | dimensionless |
+| State 2 value | 1.5 | dimensionless |
+| Final-state value | 2 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Trace parameter | 0.8 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+\delta_t=R_{t+1}+\gamma(1-d_t)V_{t+1}-V_t
+$$
+
+$$
+\hat A_t=\delta_t+\gamma\lambda(1-e_t)\hat A_{t+1},\quad \hat A_3=0
+$$
+
+**Substitution and calculation**
+
+1. **Compute the three residuals**
+
+$$
+\begin{aligned}\delta_0&=1+0.9\cdot(1)-(0.5)\approx1.4\\\delta_1&=0+0.9\cdot(1.5)-(1)\approx0.35\\\delta_2&=2+0.9(1-0)\cdot(2)-(1.5)\approx2.3\end{aligned}
+$$
+
+The first two steps continue; the terminal flag determines whether the last uses V₃.
+
+2. **Recurse backward from the boundary**
+
+$$
+\hat A_2=\delta_2\approx2.3,\quad \hat A_1\approx0.35+0.72\cdot(2.3)\approx2.006
+$$
+
+e₂=1 stops the advantage trace and prevents leakage into a reset trajectory.
+
+3. **Obtain the first action advantage**
+
+$$
+\hat A_0\approx1.4+0.72\cdot(0.35)+0.72^2\cdot(2.3)\approx2.84432
+$$
+
+The terms are δ₀, γλδ₁ and (γλ)²δ₂. A value target can be V₀+Â₀; this does not establish unbiasedness or low variance.
+
+**Results**
+
+- Advantage Â0: 2.84432
+- Advantage Â1: 2.006
+- Advantage Â2: 2.3
+
+**Residuals, advantages and value targets**
+
+| t | δₜ | Âₜ | Vₜ + Âₜ |
+| --- | --- | --- | --- |
+| 0 | 1.4 | 2.84432 | 3.34432 |
+| 1 | 0.35 | 2.006 | 3.006 |
+| 2 | 2.3 | 2.3 | 3.8 |
+
+**Interpretation**
+
+- d marks true termination; e marks a trace boundary. At a timeout, d=0 and e=1: retain the V bootstrap while stopping cross-trajectory recursion.
+- Changing λ trades bias and variance. One deterministic example shows weights, not statistical variance.
+
+**Sources and conventions**
+
+- [Schulman et al. · Generalized Advantage Estimation, §3, Eqs. 11–16](https://arxiv.org/html/1506.02438v6)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · PPO: which side clips for each advantage sign?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+The same discrete action has old probability 0.2, new probability 0.3 and estimated advantage 2. Calculate both products before taking the minimum.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Old-policy action probability | 0.2 | dimensionless |
+| New-policy action probability | 0.3 | dimensionless |
+| Fixed advantage estimate | 2 | dimensionless |
+| Clip width | 0.2 | dimensionless |
+
+**Equations**
+
+$$
+\rho=\frac{\pi_{new}(a|s)}{\pi_{old}(a|s)},\quad L^{clip}=\min\bigl(\rho\hat A,\operatorname{clip}(\rho,1-\epsilon,1+\epsilon)\hat A\bigr)
+$$
+
+**Substitution and calculation**
+
+1. **Calculate ratio and clip interval**
+
+$$
+\rho=\frac{0.3}{0.2}\approx1.5,\quad[1-\epsilon,1+\epsilon]=[0.8,1.2]
+$$
+
+The ratio compares probabilities of the same action, not its magnitude.
+
+2. **Multiply both candidates by the advantage**
+
+$$
+u\approx1.5\cdot(2)\approx3,\quad c\approx1.2\cdot(2)\approx2.4
+$$
+
+A negative advantage reverses numerical order; the positive-advantage intuition no longer applies.
+
+3. **Minimize the two terms, not the ratios**
+
+$$
+L^{clip}=\min(3,2.4)\approx2.4
+$$
+
+The clipped term is selected; further change in the helpful direction does not increase this sample objective.
+
+**Results**
+
+- Probability ratio: 1.5
+- Maximized surrogate: 2.4
+- Negative surrogate for minimization: -2.4
+
+**Interpretation**
+
+- This is one sample contribution. PPO averages a batch and usually adds value loss, entropy and other training controls.
+- Clipping does not hard-bound policy parameters or all probability ratios, and is not an industrial action-safety guarantee.
+
+**Sources and conventions**
+
+- [Schulman et al. · Proximal Policy Optimization Algorithms, Eq. 7](https://arxiv.org/abs/1707.06347)
+- [OpenAI Spinning Up · PPO-Clip key equations](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
 
 #### From the case to the full explanation
 
@@ -4265,6 +5480,155 @@ For ε=0.2, advantage −2, and ratio 0.6, what is the PPO sample objective bein
 
 **Take it into your research:** Check the advantage sign, then compare the two branches. PPO plateaus limit extra incentives; they do not guarantee safe ratios, physical actions, or process states.
 
+##### Worked formula case · GAE: carry three TD residuals backward
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A three-step teaching segment has rewards 1, 0 and 2, with state values 0.5, 1, 1.5 and 2. The trace ends at the segment boundary; its final V bootstrap depends on termination semantics.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Reward 1 | 1 | dimensionless |
+| Reward 2 | 0 | dimensionless |
+| Reward 3 | 2 | dimensionless |
+| Initial-state value | 0.5 | dimensionless |
+| State 1 value | 1 | dimensionless |
+| State 2 value | 1.5 | dimensionless |
+| Final-state value | 2 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Trace parameter | 0.8 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+\delta_t=R_{t+1}+\gamma(1-d_t)V_{t+1}-V_t
+$$
+
+$$
+\hat A_t=\delta_t+\gamma\lambda(1-e_t)\hat A_{t+1},\quad \hat A_3=0
+$$
+
+**Substitution and calculation**
+
+1. **Compute the three residuals**
+
+$$
+\begin{aligned}\delta_0&=1+0.9\cdot(1)-(0.5)\approx1.4\\\delta_1&=0+0.9\cdot(1.5)-(1)\approx0.35\\\delta_2&=2+0.9(1-0)\cdot(2)-(1.5)\approx2.3\end{aligned}
+$$
+
+The first two steps continue; the terminal flag determines whether the last uses V₃.
+
+2. **Recurse backward from the boundary**
+
+$$
+\hat A_2=\delta_2\approx2.3,\quad \hat A_1\approx0.35+0.72\cdot(2.3)\approx2.006
+$$
+
+e₂=1 stops the advantage trace and prevents leakage into a reset trajectory.
+
+3. **Obtain the first action advantage**
+
+$$
+\hat A_0\approx1.4+0.72\cdot(0.35)+0.72^2\cdot(2.3)\approx2.84432
+$$
+
+The terms are δ₀, γλδ₁ and (γλ)²δ₂. A value target can be V₀+Â₀; this does not establish unbiasedness or low variance.
+
+**Results**
+
+- Advantage Â0: 2.84432
+- Advantage Â1: 2.006
+- Advantage Â2: 2.3
+
+**Residuals, advantages and value targets**
+
+| t | δₜ | Âₜ | Vₜ + Âₜ |
+| --- | --- | --- | --- |
+| 0 | 1.4 | 2.84432 | 3.34432 |
+| 1 | 0.35 | 2.006 | 3.006 |
+| 2 | 2.3 | 2.3 | 3.8 |
+
+**Interpretation**
+
+- d marks true termination; e marks a trace boundary. At a timeout, d=0 and e=1: retain the V bootstrap while stopping cross-trajectory recursion.
+- Changing λ trades bias and variance. One deterministic example shows weights, not statistical variance.
+
+**Sources and conventions**
+
+- [Schulman et al. · Generalized Advantage Estimation, §3, Eqs. 11–16](https://arxiv.org/html/1506.02438v6)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · PPO: which side clips for each advantage sign?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+The same discrete action has old probability 0.2, new probability 0.3 and estimated advantage 2. Calculate both products before taking the minimum.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Old-policy action probability | 0.2 | dimensionless |
+| New-policy action probability | 0.3 | dimensionless |
+| Fixed advantage estimate | 2 | dimensionless |
+| Clip width | 0.2 | dimensionless |
+
+**Equations**
+
+$$
+\rho=\frac{\pi_{new}(a|s)}{\pi_{old}(a|s)},\quad L^{clip}=\min\bigl(\rho\hat A,\operatorname{clip}(\rho,1-\epsilon,1+\epsilon)\hat A\bigr)
+$$
+
+**Substitution and calculation**
+
+1. **Calculate ratio and clip interval**
+
+$$
+\rho=\frac{0.3}{0.2}\approx1.5,\quad[1-\epsilon,1+\epsilon]=[0.8,1.2]
+$$
+
+The ratio compares probabilities of the same action, not its magnitude.
+
+2. **Multiply both candidates by the advantage**
+
+$$
+u\approx1.5\cdot(2)\approx3,\quad c\approx1.2\cdot(2)\approx2.4
+$$
+
+A negative advantage reverses numerical order; the positive-advantage intuition no longer applies.
+
+3. **Minimize the two terms, not the ratios**
+
+$$
+L^{clip}=\min(3,2.4)\approx2.4
+$$
+
+The clipped term is selected; further change in the helpful direction does not increase this sample objective.
+
+**Results**
+
+- Probability ratio: 1.5
+- Maximized surrogate: 2.4
+- Negative surrogate for minimization: -2.4
+
+**Interpretation**
+
+- This is one sample contribution. PPO averages a batch and usually adds value loss, entropy and other training controls.
+- Clipping does not hard-bound policy parameters or all probability ratios, and is not an industrial action-safety guarantee.
+
+**Sources and conventions**
+
+- [Schulman et al. · Proximal Policy Optimization Algorithms, Eq. 7](https://arxiv.org/abs/1707.06347)
+- [OpenAI Spinning Up · PPO-Clip key equations](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
+
 #### From the case to the full explanation
 
 #### What PPO is trying to preserve
@@ -4312,7 +5676,7 @@ Freeze the behaviour policy, construct advantages and probability ratios, then p
 
 The outer cycle refreshes the sampling distribution; the inner cycle reuses one batch only for a limited budget. The min surrogate has different plateaus for positive and negative advantages. It does not hard-bound every probability ratio, and KL early stopping is not a physical execution gate.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 During collection, record observations, actions, rewards, old_log_prob, values, and both kinds of boundary flag. After computing advantages, normally freeze these targets and perform a limited number of minibatch epochs on the same data. Then discard that old rollout for policy optimization and collect fresh interaction.
@@ -4528,6 +5892,74 @@ What happens if a Gaussian log density is used unchanged after tanh maps the sam
 - Option 3: Correct. Normalized coordinates need the tanh Jacobian; engineering coordinates also need the positive-scale term. Every objective must use consistent conventions.
 
 **Take it into your research:** Reparameterization preserves gradients; change of variables preserves correct density. Bounded sampling completes only the candidate-generation layer.
+
+##### Worked formula case · SAC target: combine twin critics and entropy
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix one next action sampled from the current policy. Target critics return 5 and 6, and its corrected log density is −1.2. Expand one sample target without training.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Environment reward | 1 | dimensionless |
+| Discount factor | 0.99 | dimensionless |
+| Target critic 1 | 5 | dimensionless |
+| Target critic 2 | 6 | dimensionless |
+| Next-action log density | -1.2 | dimensionless |
+| Entropy temperature | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)\left[\min(Q_1,Q_2)-\alpha\log\pi(a'|s')\right]
+$$
+
+**Substitution and calculation**
+
+1. **Take the smaller Q for the same next action**
+
+$$
+Q_{min}=\min(5,6)=5
+$$
+
+The values come from target critics; the next action comes from the current policy.
+
+2. **Check the sign of the entropy term**
+
+$$
+-\alpha\log\pi=-0.2\cdot(-1.2)\approx0.24
+$$
+
+This term can be positive or negative depending on the sampled density.
+
+3. **Apply the termination mask**
+
+$$
+y=1+0.99(1-0)[5+(0.24)]\approx6.1876
+$$
+
+True termination removes both future Q and entropy contributions.
+
+**Results**
+
+- Smaller target Q: 5
+- Entropy term −α log π: 0.24
+- SAC regression target: 6.1876
+
+**Interpretation**
+
+- The minimum of twin critics helps counter overestimation; it does not establish safety or model validity.
+- Do not add the same future entropy term to r again; this case follows the displayed SAC reward convention.
+
+**Sources and conventions**
+
+- [OpenAI Spinning Up · Soft Actor-Critic, target Q equation](https://spinningup.openai.com/en/latest/algorithms/sac.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
 
 #### From the case to the full explanation
 
@@ -4768,6 +6200,74 @@ In one normalized coordinate system, actual policy entropy is below its target. 
 
 **Take it into your research:** SAC fits soft values, optimizes a stochastic policy, and adjusts entropy weight through three distinct updates. All require correct density and data semantics; entropy alone provides no industrial safety guarantee.
 
+##### Worked formula case · SAC target: combine twin critics and entropy
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix one next action sampled from the current policy. Target critics return 5 and 6, and its corrected log density is −1.2. Expand one sample target without training.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Environment reward | 1 | dimensionless |
+| Discount factor | 0.99 | dimensionless |
+| Target critic 1 | 5 | dimensionless |
+| Target critic 2 | 6 | dimensionless |
+| Next-action log density | -1.2 | dimensionless |
+| Entropy temperature | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)\left[\min(Q_1,Q_2)-\alpha\log\pi(a'|s')\right]
+$$
+
+**Substitution and calculation**
+
+1. **Take the smaller Q for the same next action**
+
+$$
+Q_{min}=\min(5,6)=5
+$$
+
+The values come from target critics; the next action comes from the current policy.
+
+2. **Check the sign of the entropy term**
+
+$$
+-\alpha\log\pi=-0.2\cdot(-1.2)\approx0.24
+$$
+
+This term can be positive or negative depending on the sampled density.
+
+3. **Apply the termination mask**
+
+$$
+y=1+0.99(1-0)[5+(0.24)]\approx6.1876
+$$
+
+True termination removes both future Q and entropy contributions.
+
+**Results**
+
+- Smaller target Q: 5
+- Entropy term −α log π: 0.24
+- SAC regression target: 6.1876
+
+**Interpretation**
+
+- The minimum of twin critics helps counter overestimation; it does not establish safety or model validity.
+- Do not add the same future entropy term to r again; this case follows the displayed SAC reward convention.
+
+**Sources and conventions**
+
+- [OpenAI Spinning Up · Soft Actor-Critic, target Q equation](https://spinningup.openai.com/en/latest/algorithms/sac.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
 #### From the case to the full explanation
 
 #### Why reward randomness as well as high return?
@@ -4837,7 +6337,7 @@ Replay, twin critics, a stochastic actor and entropy temperature form the SAC up
 
 Simulated interaction → replay → critic and actor learning. Critic evaluation supplies the actor learning signal; target critics supply detached value targets. Entropy temperature and target networks do not replace action bounds, separate costs or execution gates.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### When does an implementation begin to be credible?
@@ -5026,6 +6526,74 @@ Only fixed operating logs are available, with no credible new-policy simulator t
 
 **Take it into your research:** Choose the question and evidence conditions before the algorithm. Representation, constraints, and gating are separate design choices that need their own comparisons.
 
+##### Worked formula case · SAC target: combine twin critics and entropy
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix one next action sampled from the current policy. Target critics return 5 and 6, and its corrected log density is −1.2. Expand one sample target without training.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Environment reward | 1 | dimensionless |
+| Discount factor | 0.99 | dimensionless |
+| Target critic 1 | 5 | dimensionless |
+| Target critic 2 | 6 | dimensionless |
+| Next-action log density | -1.2 | dimensionless |
+| Entropy temperature | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)\left[\min(Q_1,Q_2)-\alpha\log\pi(a'|s')\right]
+$$
+
+**Substitution and calculation**
+
+1. **Take the smaller Q for the same next action**
+
+$$
+Q_{min}=\min(5,6)=5
+$$
+
+The values come from target critics; the next action comes from the current policy.
+
+2. **Check the sign of the entropy term**
+
+$$
+-\alpha\log\pi=-0.2\cdot(-1.2)\approx0.24
+$$
+
+This term can be positive or negative depending on the sampled density.
+
+3. **Apply the termination mask**
+
+$$
+y=1+0.99(1-0)[5+(0.24)]\approx6.1876
+$$
+
+True termination removes both future Q and entropy contributions.
+
+**Results**
+
+- Smaller target Q: 5
+- Entropy term −α log π: 0.24
+- SAC regression target: 6.1876
+
+**Interpretation**
+
+- The minimum of twin critics helps counter overestimation; it does not establish safety or model validity.
+- Do not add the same future entropy term to r again; this case follows the displayed SAC reward convention.
+
+**Sources and conventions**
+
+- [OpenAI Spinning Up · Soft Actor-Critic, target Q equation](https://spinningup.openai.com/en/latest/algorithms/sac.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
 #### From the case to the full explanation
 
 #### The first question is usually not PPO versus SAC
@@ -5080,7 +6648,7 @@ First ask whether actions affect the future, then whether you have historical lo
 
 No long-term effect → prediction/bandit baseline; long-term effect → inspect data permissions. Simulated discrete actions → tabular/DQN; simulated continuous actions → PPO/SAC/TD3; fixed logs → BC/offline RL. Every path still needs coverage checks, constraints and independent evaluation.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 The tree narrows the candidate set. You must still consider whether a model is known, memory requirements, action constraints, and interpretability. It has no branch that guarantees the best choice.
@@ -5273,6 +6841,151 @@ A sample taken at 10:00 produces a result at 10:40. How should you construct the
 - Option 3: Incorrect. A later result can retrospectively evaluate a historical decision, but that does not permit the policy to see a future label at that decision.
 
 **Take it into your research:** Environment modeling begins by defining when information becomes visible, how actions are actually executed, and what each boundary means.
+
+##### Worked formula case · Three-step return: what remains after a cutoff?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching rollout records three five-minute decisions with rewards −1, 2 and 3; the final state is valued at 4. Predict whether stopping collection erases future value. Rewards use example units.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| First reward | -1 | dimensionless |
+| Second reward | 2 | dimensionless |
+| Third reward | 3 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Final-state value estimate | 4 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+G_0^{(3)}=R_1+\gamma R_2+\gamma^2R_3+\gamma^3(1-d)V(S_3)
+$$
+
+**Substitution and calculation**
+
+1. **Weight the observed rewards**
+
+$$
+-1+0.9\cdot(2)+0.9^2\cdot(3)\approx 3.23
+$$
+
+The first reward has exponent 0; the third has exponent 2.
+
+2. **Compute the tail separately**
+
+$$
+0.9^3(1-0)\cdot(4)\approx 2.916
+$$
+
+The tail begins after the third step, so its coefficient is γ³.
+
+3. **Combine the learning target**
+
+$$
+G_0^{(3)}\approx 3.23+(2.916)\approx 6.146
+$$
+
+Calculations retain full precision; displayed values have up to six decimal places.
+
+**Results**
+
+- Observed discounted rewards: 3.23
+- Tail contribution: 2.916
+- Three-step target: 6.146
+
+**Contribution of each term**
+
+| Term | Weight | Contribution |
+| --- | --- | --- |
+| R₁ | 1 | -1 |
+| R₂ | 0.9 | 1.8 |
+| R₃ | 0.81 | 2.43 |
+| V(S₃) | 0.729 | 2.916 |
+
+**Interpretation**
+
+- A collection cutoff retains the final-state bootstrap. This remains an estimate and depends on the value estimate.
+- This is one trajectory target, not independent evidence of long-term policy performance.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · From action to temperature: why SP differs from PV
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use the teaching workbench’s first CV: SP=880°C, PV=879°C, a five-minute step, RATE=2°C and tracking factor 0.28. Other CVs and disturbances are fixed; this is not the complete thermal model.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Requested normalized increment | 0.5 | dimensionless |
+| Current temperature setpoint | 880 | °C |
+| Current measured temperature | 879 | °C |
+| Externally supplied gate result | Assume all five checks passed |  |
+
+**Equations**
+
+$$
+\Delta T^{sp}_{req}=2a_{req},\quad T^{sp}_{new}=T^{sp}+2a_{exec}
+$$
+
+$$
+T_{new}=T+0.28(T^{sp}_{new}-T)
+$$
+
+**Substitution and calculation**
+
+1. **Scale the normalized request**
+
+$$
+\Delta T^{sp}_{req}=2\cdot(0.5)\approx1,\quad T^{sp}_{candidate}\approx881
+$$
+
+The output changes a supervisory target; it does not directly actuate a fuel valve.
+
+2. **Distinguish request from execution**
+
+$$
+a_{exec}\approx0.5,\quad T^{sp}_{new}=880+2\cdot(0.5)\approx881
+$$
+
+The request executes under the supplied acceptance assumption.
+
+3. **Advance the teaching tracking response**
+
+$$
+T_{new}=879+0.28(881-879)\approx879.56
+$$
+
+0.28 is the existing teaching coefficient, not an identified plant parameter.
+
+**Results**
+
+- Executed increment: 1 °C
+- New setpoint SP: 881 °C
+- Teaching PV after five minutes: 879.56 °C
+
+**Interpretation**
+
+- Even with zero executed increment, PV may change whenever it differs from the current SP.
+- This one-dimensional slice omits full gates, delays and other CVs and cannot be used for plant control.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
 
 #### From the case to the full explanation
 
@@ -5509,6 +7222,8 @@ Five independent teaching scores have mean 10 and standard deviation 1.581. Can 
 
 **Take it into your research:** Credible experiments combine predefined questions, correct temporal splits, repeated runs, clearly identified independent units, and failure criteria.
 
+
+
 #### From the case to the full explanation
 
 #### One attractive curve proves very little
@@ -5741,6 +7456,160 @@ A policy has high raw return, but most proposals are rejected. What should happe
 
 **Take it into your research:** An auditable industrial decision chain needs consistent timing, separate benefits and costs, execution gates, and baselines that have actually been run.
 
+##### Worked formula case · From action to temperature: why SP differs from PV
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use the teaching workbench’s first CV: SP=880°C, PV=879°C, a five-minute step, RATE=2°C and tracking factor 0.28. Other CVs and disturbances are fixed; this is not the complete thermal model.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Requested normalized increment | 0.5 | dimensionless |
+| Current temperature setpoint | 880 | °C |
+| Current measured temperature | 879 | °C |
+| Externally supplied gate result | Assume all five checks passed |  |
+
+**Equations**
+
+$$
+\Delta T^{sp}_{req}=2a_{req},\quad T^{sp}_{new}=T^{sp}+2a_{exec}
+$$
+
+$$
+T_{new}=T+0.28(T^{sp}_{new}-T)
+$$
+
+**Substitution and calculation**
+
+1. **Scale the normalized request**
+
+$$
+\Delta T^{sp}_{req}=2\cdot(0.5)\approx1,\quad T^{sp}_{candidate}\approx881
+$$
+
+The output changes a supervisory target; it does not directly actuate a fuel valve.
+
+2. **Distinguish request from execution**
+
+$$
+a_{exec}\approx0.5,\quad T^{sp}_{new}=880+2\cdot(0.5)\approx881
+$$
+
+The request executes under the supplied acceptance assumption.
+
+3. **Advance the teaching tracking response**
+
+$$
+T_{new}=879+0.28(881-879)\approx879.56
+$$
+
+0.28 is the existing teaching coefficient, not an identified plant parameter.
+
+**Results**
+
+- Executed increment: 1 °C
+- New setpoint SP: 881 °C
+- Teaching PV after five minutes: 879.56 °C
+
+**Interpretation**
+
+- Even with zero executed increment, PV may change whenever it differs from the current SP.
+- This one-dimensional slice omits full gates, delays and other CVs and cannot be used for plant control.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
+
+##### Worked formula case · Industrial reward: keep energy and constraint costs separate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use teaching references: coal mean 134 and scale 4 kg/t; electricity mean 25 and scale 1 kWh/t. Only the first executed action varies; two other components are zero. The quality sample is for offline evaluation, not the current online policy.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Specific coal consumption | 130 | kg/t |
+| Specific electricity | 25.5 | kWh/t |
+| Current executed action | 0.5 | dimensionless |
+| Previous executed action | 0 | dimensionless |
+| Coal weight | 0.6 | dimensionless |
+| Electricity weight | 0.4 | dimensionless |
+| Regularity weight | 0.05 | dimensionless |
+| Evaluation quality sample f-CaO | 1 | % |
+| Evaluation oxygen content | 1.8 | % |
+
+**Equations**
+
+$$
+z_F=\frac{F-134}{4},\quad z_E=\frac{E-25}{1}
+$$
+
+$$
+r=-w_fz_F-w_ez_E-w_s[a_t^2+(a_t-a_{t-1})^2]
+$$
+
+$$
+c_q=\max(0,0.5-q)+\max(0,q-1.5),\quad c_O=\max(0,1.2-O_2)
+$$
+
+**Substitution and calculation**
+
+1. **Normalize the physical quantities**
+
+$$
+z_F=\frac{130-134}{4}\approx-1,\quad z_E=\frac{25.5-25}{1}\approx0.5
+$$
+
+References are fixed teaching values; research must fit them on training data only.
+
+2. **Expand executed-action regularity**
+
+$$
+s=-0.05\left[(0.5)^2+(0.5-(0))^2\right]\approx-0.025
+$$
+
+Inside regularity: a²=0.25, squared change=0.25.
+
+3. **Combine energy and action regularity**
+
+$$
+r\approx-0.6\cdot(-1)-0.4\cdot(0.5)+(-0.025)\approx0.375
+$$
+
+Weights need not sum to one; they encode preferences and scale. Energy below a teaching reference contributes positively to reward.
+
+4. **Report constraint costs independently**
+
+$$
+\begin{aligned}c_q&=\max(0,0.5-1)+\max(0,1-1.5)\approx0\\c_O&=\max(0,1.2-1.8)\approx0\end{aligned}
+$$
+
+These costs are not arbitrarily folded into the reward; separate constraints and execution gates remain necessary.
+
+**Results**
+
+- Reward: 0.375
+- Quality violation cost: 0 percentage points
+- Oxygen violation cost: 0 percentage points
+
+**Interpretation**
+
+- Neither evaluation sample violates its bound, but zero single-step cost does not prove trajectory or plant safety.
+- Action reversal may also fail rate/curvature gates. This case decomposes the objective; actual reward must use the executed action.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
 #### From the case to the full explanation
 
 #### From accurate prediction to effective decisions
@@ -5807,7 +7676,7 @@ Operational decisions change supervisory setpoints while lower-level control tra
 
 Data → current state → model/OOD → rate/curvature → absolute bounds/authorization. These are ordered gates, not five independent quality checks. Accepted SPs are still tracked by inner control. Rejection holds SP while time, dynamics and measurements advance; requested and executed increments are logged separately.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 The first layer checks NaN, Inf, and measurement anomalies in observations and actions. The second checks critical states. The third checks support, with the project's illustrative threshold requiring standardized deviation no greater than 4. The fourth retains the convention that changes in normalized increments do not exceed 1.5. The fifth checks absolute target-setpoint ranges and APC authorization. Any failure records the specific layer and falls back to the project's $Y_{\mathrm{safe}}$.
@@ -6002,6 +7871,84 @@ Because IQL’s actor performs advantage-weighted cloning on data actions, is it
 
 **Take it into your research:** Offline improvement must limit exploitation of unknown action values. BC, CQL, and IQL use different mechanisms, but all need coverage and evaluation evidence.
 
+##### Worked formula case · Discrete CQL: why penalize unsupported values?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching action table contains A, B and C. The log recorded A, but the network assigns B a larger Q. This is one discrete CQL(H) term; continuous industrial actions require sampling approximations.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Q for action A | 1 | dimensionless |
+| Q for action B | 4 | dimensionless |
+| Q for action C | 0 | dimensionless |
+| Recorded action | Action A |  |
+| Conservative-term weight | 1 | dimensionless |
+| Fixed TD target | 1.5 | dimensionless |
+
+**Equations**
+
+$$
+L=\alpha\left[\log\sum_a e^{Q_a}-Q_{data}\right]+\tfrac12(Q_{data}-y)^2
+$$
+
+$$
+\log\sum_a e^{Q_a}=m+\log\sum_a e^{Q_a-m},\quad m=\max_a Q_a
+$$
+
+**Substitution and calculation**
+
+1. **Subtract the maximum before exponentiating**
+
+$$
+m=4,\quad\log\sum_a e^{Q_a}=m+\log\left(0.049787+1+0.018316\right)\approx4.065884
+$$
+
+Even for Q≈1000, never evaluate exp(1000) directly.
+
+2. **Compare against the recorded-action Q**
+
+$$
+C\approx1\cdot[4.065884-(1)]\approx1\cdot(3.065884)\approx3.065884
+$$
+
+Raising an unrecorded action’s Q increases this term and pushes it downward. The kernel calculates the shifted difference directly to avoid cancellation.
+
+3. **Add the fixed-target TD loss**
+
+$$
+L\approx3.065884+\tfrac12(1-1.5)^2\approx3.190884
+$$
+
+Regularization and the TD term can push a Q estimate in different directions.
+
+**Results**
+
+- Conservative gap: 3.065884
+- Weighted regularizer: 3.065884
+- Total teaching loss: 3.190884
+
+**Derivative of the conservative term only**
+
+| Action | Q | ∂C/∂Q |
+| --- | --- | --- |
+| A | 1 | -0.953387 |
+| B | 4 | 0.93624 |
+| C | 0 | 0.017148 |
+
+**Interpretation**
+
+- This illustrates a loss term, not full training or offline policy evaluation; small loss does not imply safe execution.
+- CQL lower-bound results have assumptions; this three-action table is not a safety proof for the industrial project.
+
+**Sources and conventions**
+
+- [Kumar et al. · Conservative Q-Learning, CQL(H), Eq. 4](https://arxiv.org/html/2006.04779v3)
+
 #### From the case to the full explanation
 
 #### Why a million log records can still teach the wrong behavior
@@ -6064,7 +8011,7 @@ With a fixed dataset, extrapolating values for unsupported actions becomes a ris
 
 Logs → valid transitions → temporal separation → BC versus offline RL → support and independent evaluation. A fixed offline dataset does not authorize exploration on real equipment. High predicted values for unsupported actions are not field benefits.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### Offline evaluation has assumptions too
@@ -6249,6 +8196,8 @@ A model has low one-step temperature RMSE. Does that directly establish trustwor
 
 **Take it into your research:** Model-based RL must establish when, where, and how far a model can be trusted, not merely how many variables it can predict.
 
+
+
 #### From the case to the full explanation
 
 #### Why learn a policy after learning a transition model?
@@ -6302,7 +8251,7 @@ Separate real experience from short model-generated trajectories and inspect how
 
 Real states → short branches → checks → model buffer → policy update → new branches. Closed-loop error also depends on the policy response to state error. Model agreement or good one-step prediction does not guarantee reliable long rollouts; generated trajectories are not additional physical trials.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 Treat model-data proportion, branch length, and initial-state selection as experimental variables. Longer rollouts are not necessarily better. More model samples in a buffer do not imply a proportional increase in information.
@@ -6494,6 +8443,172 @@ A CMDP’s mean quality cost is below budget. Can the per-proposal setpoint gate
 - Option 3: Incorrect. PPO’s clipped surrogate is not equivalent to a quality boundary and does not impose a hard update constraint.
 
 **Take it into your research:** A CMDP makes the relationship between benefit and constraints explicit. Credible research still needs support conditions, calibrated models, per-proposal gates, and a falsifiable experimental chain.
+
+##### Worked formula case · Industrial reward: keep energy and constraint costs separate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use teaching references: coal mean 134 and scale 4 kg/t; electricity mean 25 and scale 1 kWh/t. Only the first executed action varies; two other components are zero. The quality sample is for offline evaluation, not the current online policy.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Specific coal consumption | 130 | kg/t |
+| Specific electricity | 25.5 | kWh/t |
+| Current executed action | 0.5 | dimensionless |
+| Previous executed action | 0 | dimensionless |
+| Coal weight | 0.6 | dimensionless |
+| Electricity weight | 0.4 | dimensionless |
+| Regularity weight | 0.05 | dimensionless |
+| Evaluation quality sample f-CaO | 1 | % |
+| Evaluation oxygen content | 1.8 | % |
+
+**Equations**
+
+$$
+z_F=\frac{F-134}{4},\quad z_E=\frac{E-25}{1}
+$$
+
+$$
+r=-w_fz_F-w_ez_E-w_s[a_t^2+(a_t-a_{t-1})^2]
+$$
+
+$$
+c_q=\max(0,0.5-q)+\max(0,q-1.5),\quad c_O=\max(0,1.2-O_2)
+$$
+
+**Substitution and calculation**
+
+1. **Normalize the physical quantities**
+
+$$
+z_F=\frac{130-134}{4}\approx-1,\quad z_E=\frac{25.5-25}{1}\approx0.5
+$$
+
+References are fixed teaching values; research must fit them on training data only.
+
+2. **Expand executed-action regularity**
+
+$$
+s=-0.05\left[(0.5)^2+(0.5-(0))^2\right]\approx-0.025
+$$
+
+Inside regularity: a²=0.25, squared change=0.25.
+
+3. **Combine energy and action regularity**
+
+$$
+r\approx-0.6\cdot(-1)-0.4\cdot(0.5)+(-0.025)\approx0.375
+$$
+
+Weights need not sum to one; they encode preferences and scale. Energy below a teaching reference contributes positively to reward.
+
+4. **Report constraint costs independently**
+
+$$
+\begin{aligned}c_q&=\max(0,0.5-1)+\max(0,1-1.5)\approx0\\c_O&=\max(0,1.2-1.8)\approx0\end{aligned}
+$$
+
+These costs are not arbitrarily folded into the reward; separate constraints and execution gates remain necessary.
+
+**Results**
+
+- Reward: 0.375
+- Quality violation cost: 0 percentage points
+- Oxygen violation cost: 0 percentage points
+
+**Interpretation**
+
+- Neither evaluation sample violates its bound, but zero single-step cost does not prove trajectory or plant safety.
+- Action reversal may also fail rate/curvature gates. This case decomposes the objective; actual reward must use the executed action.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
+
+##### Worked formula case · Lagrangian trade-offs: why a high score can be infeasible
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Teaching candidate A has estimated discounted return/cost 10/0.3; B has 9/0.05, with budget 0.1. These J values use the same horizon and discount convention; they are not single sensor readings.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Estimated return of A | 10 | dimensionless |
+| Estimated return of B | 9 | dimensionless |
+| Estimated cost of A | 0.3 | dimensionless |
+| Estimated cost of B | 0.05 | dimensionless |
+| Cost budget | 0.1 | dimensionless |
+| Current multiplier | 2 | dimensionless |
+| Multiplier step size | 0.5 | dimensionless |
+| Current policy evaluated for this update | Policy A |  |
+
+**Equations**
+
+$$
+L(\pi,\lambda)=J_r(\pi)-\lambda[J_c(\pi)-d]
+$$
+
+$$
+\lambda_{new}=\operatorname{clip}\left(\lambda+\eta_\lambda[J_c(\pi_{current})-d],0,100\right)
+$$
+
+**Substitution and calculation**
+
+1. **Calculate both relaxed scores**
+
+$$
+\begin{aligned}L_A&=10-2(0.3-0.1)\approx9.6\\L_B&=9-2(0.05-0.1)\approx9.1\end{aligned}
+$$
+
+Maximize L. The budget term is shared, but feasibility must still be checked separately.
+
+2. **Check the budget explicitly**
+
+$$
+J_c^A=0.3,\quad J_c^B=0.05,\quad d=0.1
+$$
+
+Budget-filtered result: B. This uses supplied expected costs, not pointwise physical safety.
+
+3. **Update from the current policy’s budget excess**
+
+$$
+\lambda_{new}=\operatorname{clip}(2+0.5\cdot(0.2),0,100)\approx2.1
+$$
+
+Budget excess increases the multiplier; undershoot may reduce it. The cap 100 is a numerical demonstration limit, not an industrial threshold or guarantee.
+
+**Results**
+
+- Preferred relaxed score: A
+- Preferred within the budget: B
+- Updated multiplier: 2.1
+
+**Compare the two candidates**
+
+| Policy | Jᵣ | J꜀ | L | Within budget |
+| --- | --- | --- | --- | --- |
+| A | 10 | 0.3 | 9.6 | No |
+| B | 9 | 0.05 | 9.1 | Yes |
+
+**Interpretation**
+
+- A finite multiplier can favor a budget-violating candidate; one score does not replace feasibility checks.
+- This is not the full CPO update. Independent cost evaluation, model credibility, five execution gates and fallback remain necessary.
+
+**Sources and conventions**
+
+- [Achiam et al. · Constrained Policy Optimization, §4 and primal-dual baseline Eq. 16](https://arxiv.org/html/1705.10528v1)
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
 
 #### From the case to the full explanation
 
@@ -6925,7 +9040,7 @@ Locate the decision layer before comparing RTO, tracking MPC, economic MPC and l
 
 Requirements → objectives → SP decision → gate → inner control → process. The process feeds both state/quality information and indicator audits, with audits informing objectives. Distinguish RTO, tracking MPC, economic MPC and learned policies by decision layer and objective.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### 2. Steady-state RTO converts economics into an operating point
@@ -6982,6 +9097,74 @@ The tutorial preserves the existing CV interface. Studying a different CV select
 First, economic objectives must map to auditable measurements rather than disappear into an unexplained reward. Second, setpoints must respect the inner system's tracking capability, rate limits and authorization. A slow supervisory change can still induce a fast regulatory response. Third, estimation, synchronization, model maintenance and operator exit mechanisms are parts of the decision system, not accessories to add after an algorithm succeeds.
 
 A claim of a better learned operational policy must identify what it improves over operator behavior, the project's PG-MOEA/D-IEpsilon baseline and other appropriate optimization baselines. Better soft sensing, extra model calls and future assay leakage are three very different explanations for apparent progress. The review therefore proceeds from measurable indicators, to precise objectives and constraints, and only then to algorithms and evidence.
+
+##### Worked formula case · From action to temperature: why SP differs from PV
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use the teaching workbench’s first CV: SP=880°C, PV=879°C, a five-minute step, RATE=2°C and tracking factor 0.28. Other CVs and disturbances are fixed; this is not the complete thermal model.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Requested normalized increment | 0.5 | dimensionless |
+| Current temperature setpoint | 880 | °C |
+| Current measured temperature | 879 | °C |
+| Externally supplied gate result | Assume all five checks passed |  |
+
+**Equations**
+
+$$
+\Delta T^{sp}_{req}=2a_{req},\quad T^{sp}_{new}=T^{sp}+2a_{exec}
+$$
+
+$$
+T_{new}=T+0.28(T^{sp}_{new}-T)
+$$
+
+**Substitution and calculation**
+
+1. **Scale the normalized request**
+
+$$
+\Delta T^{sp}_{req}=2\cdot(0.5)\approx1,\quad T^{sp}_{candidate}\approx881
+$$
+
+The output changes a supervisory target; it does not directly actuate a fuel valve.
+
+2. **Distinguish request from execution**
+
+$$
+a_{exec}\approx0.5,\quad T^{sp}_{new}=880+2\cdot(0.5)\approx881
+$$
+
+The request executes under the supplied acceptance assumption.
+
+3. **Advance the teaching tracking response**
+
+$$
+T_{new}=879+0.28(881-879)\approx879.56
+$$
+
+0.28 is the existing teaching coefficient, not an identified plant parameter.
+
+**Results**
+
+- Executed increment: 1 °C
+- New setpoint SP: 881 °C
+- Teaching PV after five minutes: 879.56 °C
+
+**Interpretation**
+
+- Even with zero executed increment, PV may change whenever it differs from the current SP.
+- This one-dimensional slice omits full gates, delays and other CVs and cannot be used for plant control.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
 
 #### Primary references and evidence boundaries
 
@@ -7079,7 +9262,7 @@ Put fuel, electricity, quality, throughput, emissions and stability back into un
 
 Feed/load → proposal and → later outcome; history/judgment also affects both. A separate proposal → regulated process → outcome path represents action effects. These shared causes prevent conditional association from automatically identifying intervention effects; a temporal test split alone does not remove confounding.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 Check temporal order, measurement provenance, information available to the operator and joint action coverage before deciding which comparisons are identifiable. Matching, stratification and causal models can address some biases without proving that all hidden confounding has disappeared. A world model can fit historical data closely while mainly reproducing the old operating policy, rather than identifying the consequences of changing it.
@@ -7101,6 +9284,160 @@ $$TV(a^{exec})=\sum_t\|a_t^{exec}-a_{t-1}^{exec}\|_1.$$
 Other diagnostics include CV variance, tracking error, the longest violation episode, gate rejection rate and recovery time. They are not interchangeable. A constant but wrong temperature has low variance. A smooth transition to a new operating condition contains a trend that should not automatically be treated as noise. Holding a setpoint after rejection does not freeze physical dynamics, disturbances or the assay clock.
 
 Separate primary outcomes from explanatory diagnostics. Preserve fuel, electricity, conforming production, quality costs and oxygen costs as outcomes; use support, smoothness and fallback causes to explain them. Time-held-out evaluation, operating-condition strata and independent repeated runs help distinguish an algorithm effect from unusually favorable feed. [Agarwal et al.](https://arxiv.org/abs/2108.13264) provide a useful treatment of uncertainty in limited-run RL comparisons.
+
+##### Worked formula case · From action to temperature: why SP differs from PV
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use the teaching workbench’s first CV: SP=880°C, PV=879°C, a five-minute step, RATE=2°C and tracking factor 0.28. Other CVs and disturbances are fixed; this is not the complete thermal model.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Requested normalized increment | 0.5 | dimensionless |
+| Current temperature setpoint | 880 | °C |
+| Current measured temperature | 879 | °C |
+| Externally supplied gate result | Assume all five checks passed |  |
+
+**Equations**
+
+$$
+\Delta T^{sp}_{req}=2a_{req},\quad T^{sp}_{new}=T^{sp}+2a_{exec}
+$$
+
+$$
+T_{new}=T+0.28(T^{sp}_{new}-T)
+$$
+
+**Substitution and calculation**
+
+1. **Scale the normalized request**
+
+$$
+\Delta T^{sp}_{req}=2\cdot(0.5)\approx1,\quad T^{sp}_{candidate}\approx881
+$$
+
+The output changes a supervisory target; it does not directly actuate a fuel valve.
+
+2. **Distinguish request from execution**
+
+$$
+a_{exec}\approx0.5,\quad T^{sp}_{new}=880+2\cdot(0.5)\approx881
+$$
+
+The request executes under the supplied acceptance assumption.
+
+3. **Advance the teaching tracking response**
+
+$$
+T_{new}=879+0.28(881-879)\approx879.56
+$$
+
+0.28 is the existing teaching coefficient, not an identified plant parameter.
+
+**Results**
+
+- Executed increment: 1 °C
+- New setpoint SP: 881 °C
+- Teaching PV after five minutes: 879.56 °C
+
+**Interpretation**
+
+- Even with zero executed increment, PV may change whenever it differs from the current SP.
+- This one-dimensional slice omits full gates, delays and other CVs and cannot be used for plant control.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
+
+##### Worked formula case · Industrial reward: keep energy and constraint costs separate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use teaching references: coal mean 134 and scale 4 kg/t; electricity mean 25 and scale 1 kWh/t. Only the first executed action varies; two other components are zero. The quality sample is for offline evaluation, not the current online policy.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Specific coal consumption | 130 | kg/t |
+| Specific electricity | 25.5 | kWh/t |
+| Current executed action | 0.5 | dimensionless |
+| Previous executed action | 0 | dimensionless |
+| Coal weight | 0.6 | dimensionless |
+| Electricity weight | 0.4 | dimensionless |
+| Regularity weight | 0.05 | dimensionless |
+| Evaluation quality sample f-CaO | 1 | % |
+| Evaluation oxygen content | 1.8 | % |
+
+**Equations**
+
+$$
+z_F=\frac{F-134}{4},\quad z_E=\frac{E-25}{1}
+$$
+
+$$
+r=-w_fz_F-w_ez_E-w_s[a_t^2+(a_t-a_{t-1})^2]
+$$
+
+$$
+c_q=\max(0,0.5-q)+\max(0,q-1.5),\quad c_O=\max(0,1.2-O_2)
+$$
+
+**Substitution and calculation**
+
+1. **Normalize the physical quantities**
+
+$$
+z_F=\frac{130-134}{4}\approx-1,\quad z_E=\frac{25.5-25}{1}\approx0.5
+$$
+
+References are fixed teaching values; research must fit them on training data only.
+
+2. **Expand executed-action regularity**
+
+$$
+s=-0.05\left[(0.5)^2+(0.5-(0))^2\right]\approx-0.025
+$$
+
+Inside regularity: a²=0.25, squared change=0.25.
+
+3. **Combine energy and action regularity**
+
+$$
+r\approx-0.6\cdot(-1)-0.4\cdot(0.5)+(-0.025)\approx0.375
+$$
+
+Weights need not sum to one; they encode preferences and scale. Energy below a teaching reference contributes positively to reward.
+
+4. **Report constraint costs independently**
+
+$$
+\begin{aligned}c_q&=\max(0,0.5-1)+\max(0,1-1.5)\approx0\\c_O&=\max(0,1.2-1.8)\approx0\end{aligned}
+$$
+
+These costs are not arbitrarily folded into the reward; separate constraints and execution gates remain necessary.
+
+**Results**
+
+- Reward: 0.375
+- Quality violation cost: 0 percentage points
+- Oxygen violation cost: 0 percentage points
+
+**Interpretation**
+
+- Neither evaluation sample violates its bound, but zero single-step cost does not prove trajectory or plant safety.
+- Action reversal may also fail rate/curvature gates. This case decomposes the objective; actual reward must use the executed action.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
 
 #### Primary references and evidence boundaries
 
@@ -7190,7 +9527,7 @@ Worked examples separate scaling, preferences, feasibility, chance constraints a
 
 Candidate → accounting → feasibility. Reject or continue searching when infeasible; otherwise compare Pareto order, choose a preference and independently review execution. An epsilon-constraint budget differs from epsilon tolerance during evolutionary search. Soft penalties, chance constraints and per-step hard boundaries are distinct.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### 5. Hard, soft, chance and expected constraints differ
@@ -7214,6 +9551,172 @@ Suppose three five-minute intervals have constant qualities $1.4\%,1.6\%,1.9\%$,
 Provide a metric dictionary, raw units, normalization version, temporal aggregation, preference rationale, constraint semantics, approved infeasibility fallback, and separate requested/executed action logs. Freeze these across algorithm comparisons. If preference sensitivity is the subject, vary weights systematically and publish the whole comparison.
 
 An explicit formulation reveals ways a reward can be exploited: producing less to lower instantaneous consumption, diluting an emission concentration, remaining motionless at the wrong quality condition, or consulting an assay that had not yet arrived. These are specification and data-governance failures. A more powerful solver cannot repair an incorrectly defined task.
+
+##### Worked formula case · Industrial reward: keep energy and constraint costs separate
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use teaching references: coal mean 134 and scale 4 kg/t; electricity mean 25 and scale 1 kWh/t. Only the first executed action varies; two other components are zero. The quality sample is for offline evaluation, not the current online policy.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Specific coal consumption | 130 | kg/t |
+| Specific electricity | 25.5 | kWh/t |
+| Current executed action | 0.5 | dimensionless |
+| Previous executed action | 0 | dimensionless |
+| Coal weight | 0.6 | dimensionless |
+| Electricity weight | 0.4 | dimensionless |
+| Regularity weight | 0.05 | dimensionless |
+| Evaluation quality sample f-CaO | 1 | % |
+| Evaluation oxygen content | 1.8 | % |
+
+**Equations**
+
+$$
+z_F=\frac{F-134}{4},\quad z_E=\frac{E-25}{1}
+$$
+
+$$
+r=-w_fz_F-w_ez_E-w_s[a_t^2+(a_t-a_{t-1})^2]
+$$
+
+$$
+c_q=\max(0,0.5-q)+\max(0,q-1.5),\quad c_O=\max(0,1.2-O_2)
+$$
+
+**Substitution and calculation**
+
+1. **Normalize the physical quantities**
+
+$$
+z_F=\frac{130-134}{4}\approx-1,\quad z_E=\frac{25.5-25}{1}\approx0.5
+$$
+
+References are fixed teaching values; research must fit them on training data only.
+
+2. **Expand executed-action regularity**
+
+$$
+s=-0.05\left[(0.5)^2+(0.5-(0))^2\right]\approx-0.025
+$$
+
+Inside regularity: a²=0.25, squared change=0.25.
+
+3. **Combine energy and action regularity**
+
+$$
+r\approx-0.6\cdot(-1)-0.4\cdot(0.5)+(-0.025)\approx0.375
+$$
+
+Weights need not sum to one; they encode preferences and scale. Energy below a teaching reference contributes positively to reward.
+
+4. **Report constraint costs independently**
+
+$$
+\begin{aligned}c_q&=\max(0,0.5-1)+\max(0,1-1.5)\approx0\\c_O&=\max(0,1.2-1.8)\approx0\end{aligned}
+$$
+
+These costs are not arbitrarily folded into the reward; separate constraints and execution gates remain necessary.
+
+**Results**
+
+- Reward: 0.375
+- Quality violation cost: 0 percentage points
+- Oxygen violation cost: 0 percentage points
+
+**Interpretation**
+
+- Neither evaluation sample violates its bound, but zero single-step cost does not prove trajectory or plant safety.
+- Action reversal may also fail rate/curvature gates. This case decomposes the objective; actual reward must use the executed action.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
+
+##### Worked formula case · Lagrangian trade-offs: why a high score can be infeasible
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Teaching candidate A has estimated discounted return/cost 10/0.3; B has 9/0.05, with budget 0.1. These J values use the same horizon and discount convention; they are not single sensor readings.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Estimated return of A | 10 | dimensionless |
+| Estimated return of B | 9 | dimensionless |
+| Estimated cost of A | 0.3 | dimensionless |
+| Estimated cost of B | 0.05 | dimensionless |
+| Cost budget | 0.1 | dimensionless |
+| Current multiplier | 2 | dimensionless |
+| Multiplier step size | 0.5 | dimensionless |
+| Current policy evaluated for this update | Policy A |  |
+
+**Equations**
+
+$$
+L(\pi,\lambda)=J_r(\pi)-\lambda[J_c(\pi)-d]
+$$
+
+$$
+\lambda_{new}=\operatorname{clip}\left(\lambda+\eta_\lambda[J_c(\pi_{current})-d],0,100\right)
+$$
+
+**Substitution and calculation**
+
+1. **Calculate both relaxed scores**
+
+$$
+\begin{aligned}L_A&=10-2(0.3-0.1)\approx9.6\\L_B&=9-2(0.05-0.1)\approx9.1\end{aligned}
+$$
+
+Maximize L. The budget term is shared, but feasibility must still be checked separately.
+
+2. **Check the budget explicitly**
+
+$$
+J_c^A=0.3,\quad J_c^B=0.05,\quad d=0.1
+$$
+
+Budget-filtered result: B. This uses supplied expected costs, not pointwise physical safety.
+
+3. **Update from the current policy’s budget excess**
+
+$$
+\lambda_{new}=\operatorname{clip}(2+0.5\cdot(0.2),0,100)\approx2.1
+$$
+
+Budget excess increases the multiplier; undershoot may reduce it. The cap 100 is a numerical demonstration limit, not an industrial threshold or guarantee.
+
+**Results**
+
+- Preferred relaxed score: A
+- Preferred within the budget: B
+- Updated multiplier: 2.1
+
+**Compare the two candidates**
+
+| Policy | Jᵣ | J꜀ | L | Within budget |
+| --- | --- | --- | --- | --- |
+| A | 10 | 0.3 | 9.6 | No |
+| B | 9 | 0.05 | 9.1 | Yes |
+
+**Interpretation**
+
+- A finite multiplier can favor a budget-violating candidate; one score does not replace feasibility checks.
+- This is not the full CPO update. Independent cost evaluation, model credibility, five execution gates and fallback remain necessary.
+
+**Sources and conventions**
+
+- [Achiam et al. · Constrained Policy Optimization, §4 and primal-dual baseline Eq. 16](https://arxiv.org/html/1705.10528v1)
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
 
 #### Primary references and evidence boundaries
 
@@ -7287,7 +9790,7 @@ Separate representation, evaluation, feasibility and search. Derive NSGA-II and 
 
 Observation/history → population → model and constraint evaluation → ranking or decomposition → variation → population. The selected branch → first-step proposal → gates/inner control → new observation. Evolutionary search can optimize dynamic trajectories; results depend on the model, budget and fair rolling evaluation.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### 2. NSGA-II: compare rank, then preserve spread
@@ -7349,6 +9852,8 @@ Candidate ablations include shifting the previous population for a warm start, i
 An online EA spends computation evaluating candidates during each planning cycle. Offline RL spends substantial computation before operation and then proposes actions through network inference. Their suitability depends on model quality, data support, latency, changing conditions and the cost of errors. They can cooperate: an EA can supply feasible demonstrations or trajectories; RL can supply a warm start, proposal distribution or terminal value. A hybrid must earn its complexity against strong, equally budgeted evolutionary optimization, behavior cloning and simple offline RL, rather than against an inadequately tuned static search.
 
 The project requires Operator and PG-MOEA/D-IEpsilon baselines. Their actual implementation, training data and unified experimental results are not connected to this web tutorial. This page therefore specifies a reproducible comparison and makes no claim that a neural policy outperforms that baseline.
+
+
 
 #### Primary references and evidence boundaries
 
@@ -7412,7 +9917,7 @@ Move from a present candidate to a trajectory and a feedback policy, connecting 
 
 Arrived information → history/belief → policy or planner → gated execution → process → next information and separate reward/cost signals. Feedback supports value learning or model calibration. The alternatives need not execute together; expected-cost constraints do not guarantee every step is safe.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### 2. An MDP is a conditional-independence assumption
@@ -7471,6 +9976,222 @@ Online SAC and TD3 can use new interactions to correct value errors. Repeatedly 
 RL can learn a terminal value, warm-start an optimizer, fit a policy near feasible demonstrations or tune economic-MPC parameters. Gros and Zanon study economic NMPC as an RL function approximator and relate model mismatch to cost modification. Their results have explicit modified-stage-cost, terminal-value and existence conditions; they do not state that an arbitrarily wrong model becomes safe and optimal through RL. [Original paper](https://arxiv.org/abs/1904.04152)
 
 First fix the available information, action interface, preferences, constraints and evaluation environment. Then replace a terminal value, candidate generator or learning component. In a continuing process, a finite simulation window ends by truncation: a value target may bootstrap from the final observation, while advantage recursion must stop across a reset. These controls help attribute differences to the decision method rather than to changed information, actuator permissions or termination semantics.
+
+##### Worked formula case · Three-step return: what remains after a cutoff?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching rollout records three five-minute decisions with rewards −1, 2 and 3; the final state is valued at 4. Predict whether stopping collection erases future value. Rewards use example units.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| First reward | -1 | dimensionless |
+| Second reward | 2 | dimensionless |
+| Third reward | 3 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+| Final-state value estimate | 4 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+G_0^{(3)}=R_1+\gamma R_2+\gamma^2R_3+\gamma^3(1-d)V(S_3)
+$$
+
+**Substitution and calculation**
+
+1. **Weight the observed rewards**
+
+$$
+-1+0.9\cdot(2)+0.9^2\cdot(3)\approx 3.23
+$$
+
+The first reward has exponent 0; the third has exponent 2.
+
+2. **Compute the tail separately**
+
+$$
+0.9^3(1-0)\cdot(4)\approx 2.916
+$$
+
+The tail begins after the third step, so its coefficient is γ³.
+
+3. **Combine the learning target**
+
+$$
+G_0^{(3)}\approx 3.23+(2.916)\approx 6.146
+$$
+
+Calculations retain full precision; displayed values have up to six decimal places.
+
+**Results**
+
+- Observed discounted rewards: 3.23
+- Tail contribution: 2.916
+- Three-step target: 6.146
+
+**Contribution of each term**
+
+| Term | Weight | Contribution |
+| --- | --- | --- |
+| R₁ | 1 | -1 |
+| R₂ | 0.9 | 1.8 |
+| R₃ | 0.81 | 2.43 |
+| V(S₃) | 0.729 | 2.916 |
+
+**Interpretation**
+
+- A collection cutoff retains the final-state bootstrap. This remains an estimate and depends on the value estimate.
+- This is one trajectory target, not independent evidence of long-term policy performance.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · Bellman expectation: weight two possible futures
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix a regime and one candidate action. A teaching model predicts recovery or no recovery at the next step. Compute this state-action Q backup without maximizing over actions.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Recovery probability | 0.7 | dimensionless |
+| Reward after recovery | 3 | dimensionless |
+| Reward without recovery | -2 | dimensionless |
+| Value after recovery | 5 | dimensionless |
+| Value without recovery | 1 | dimensionless |
+| Discount factor | 0.9 | dimensionless |
+
+**Equations**
+
+$$
+Q(s,a)=p[r_A+\gamma V_A]+(1-p)[r_B+\gamma V_B]
+$$
+
+**Substitution and calculation**
+
+1. **Calculate each branch value**
+
+$$
+B_A=3+0.9\cdot(5)\approx7.5,\quad B_B=-2+0.9\cdot(1)\approx-1.1
+$$
+
+Each branch includes immediate reward and successor value.
+
+2. **Take the expectation over futures**
+
+$$
+Q\approx0.7\cdot(7.5)+(1-0.7)\cdot(-1.1)\approx4.92
+$$
+
+The two probabilities always sum to 1.
+
+**Results**
+
+- Recovery contribution: 5.25
+- No-recovery contribution: -0.33
+- Action-value target: 4.92
+
+**Interpretation**
+
+- This is one Bellman backup under the teaching model and supplied values, not necessarily a Bellman fixed point.
+- One transition observes one branch; positive expectation does not guarantee acceptable quality on every step.
+
+**Sources and conventions**
+
+- [Sutton & Barto · Reinforcement Learning: An Introduction (2nd ed.), Chapters 3, 6, 7](https://incompleteideas.net/book/the-book-2nd.html)
+
+
+##### Worked formula case · Lagrangian trade-offs: why a high score can be infeasible
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Teaching candidate A has estimated discounted return/cost 10/0.3; B has 9/0.05, with budget 0.1. These J values use the same horizon and discount convention; they are not single sensor readings.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Estimated return of A | 10 | dimensionless |
+| Estimated return of B | 9 | dimensionless |
+| Estimated cost of A | 0.3 | dimensionless |
+| Estimated cost of B | 0.05 | dimensionless |
+| Cost budget | 0.1 | dimensionless |
+| Current multiplier | 2 | dimensionless |
+| Multiplier step size | 0.5 | dimensionless |
+| Current policy evaluated for this update | Policy A |  |
+
+**Equations**
+
+$$
+L(\pi,\lambda)=J_r(\pi)-\lambda[J_c(\pi)-d]
+$$
+
+$$
+\lambda_{new}=\operatorname{clip}\left(\lambda+\eta_\lambda[J_c(\pi_{current})-d],0,100\right)
+$$
+
+**Substitution and calculation**
+
+1. **Calculate both relaxed scores**
+
+$$
+\begin{aligned}L_A&=10-2(0.3-0.1)\approx9.6\\L_B&=9-2(0.05-0.1)\approx9.1\end{aligned}
+$$
+
+Maximize L. The budget term is shared, but feasibility must still be checked separately.
+
+2. **Check the budget explicitly**
+
+$$
+J_c^A=0.3,\quad J_c^B=0.05,\quad d=0.1
+$$
+
+Budget-filtered result: B. This uses supplied expected costs, not pointwise physical safety.
+
+3. **Update from the current policy’s budget excess**
+
+$$
+\lambda_{new}=\operatorname{clip}(2+0.5\cdot(0.2),0,100)\approx2.1
+$$
+
+Budget excess increases the multiplier; undershoot may reduce it. The cap 100 is a numerical demonstration limit, not an industrial threshold or guarantee.
+
+**Results**
+
+- Preferred relaxed score: A
+- Preferred within the budget: B
+- Updated multiplier: 2.1
+
+**Compare the two candidates**
+
+| Policy | Jᵣ | J꜀ | L | Within budget |
+| --- | --- | --- | --- | --- |
+| A | 10 | 0.3 | 9.6 | No |
+| B | 9 | 0.05 | 9.1 | Yes |
+
+**Interpretation**
+
+- A finite multiplier can favor a budget-violating candidate; one score does not replace feasibility checks.
+- This is not the full CPO update. Independent cost evaluation, model credibility, five execution gates and fallback remain necessary.
+
+**Sources and conventions**
+
+- [Achiam et al. · Constrained Policy Optimization, §4 and primal-dual baseline Eq. 16](https://arxiv.org/html/1705.10528v1)
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
 
 #### Primary references and evidence boundaries
 
@@ -7545,7 +10266,7 @@ Explain what the history encoder, soft sensor, tanh actor, twin critics, tempera
 
 Permitted history → encoder/soft sensor → actor and critics. Actor request → five gates → CV SP/inner control → next observation and logs. Logs support critic updates; critics supply actor learning signals, not device commands. Action semantics after gating must remain consistent with value functions and offline data.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 This is a proposed research interface, not a trained or deployed industrial network. OAM-Net, QC-MTWaveSME and MC3/OOD are discussed later as possible interfaces. This diagram does not reconstruct their layer counts, parameter counts, loss recipes or unpublished experimental results.
@@ -7622,6 +10343,222 @@ MBPO branches short model rollouts from real states to reduce long-horizon model
 
 Finally, the project's five threshold gates are execution rules. Formal predictive-safety-filter results typically require credible model error bounds, terminal safe sets, a backup controller and feasibility assumptions. Having a Gate box in a diagram does not establish those premises. [Wabersich and Zeilinger](https://doi.org/10.1016/j.automatica.2021.109597). This website supplies derivations and teaching simulations; it neither trains SAC in the background nor runs an industrial world model or demonstrates plant savings.
 
+##### Worked formula case · SAC target: combine twin critics and entropy
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Fix one next action sampled from the current policy. Target critics return 5 and 6, and its corrected log density is −1.2. Expand one sample target without training.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Environment reward | 1 | dimensionless |
+| Discount factor | 0.99 | dimensionless |
+| Target critic 1 | 5 | dimensionless |
+| Target critic 2 | 6 | dimensionless |
+| Next-action log density | -1.2 | dimensionless |
+| Entropy temperature | 0.2 | dimensionless |
+| Why does the segment end? | External cutoff: keep tail value |  |
+
+**Equations**
+
+$$
+y=r+\gamma(1-d)\left[\min(Q_1,Q_2)-\alpha\log\pi(a'|s')\right]
+$$
+
+**Substitution and calculation**
+
+1. **Take the smaller Q for the same next action**
+
+$$
+Q_{min}=\min(5,6)=5
+$$
+
+The values come from target critics; the next action comes from the current policy.
+
+2. **Check the sign of the entropy term**
+
+$$
+-\alpha\log\pi=-0.2\cdot(-1.2)\approx0.24
+$$
+
+This term can be positive or negative depending on the sampled density.
+
+3. **Apply the termination mask**
+
+$$
+y=1+0.99(1-0)[5+(0.24)]\approx6.1876
+$$
+
+True termination removes both future Q and entropy contributions.
+
+**Results**
+
+- Smaller target Q: 5
+- Entropy term −α log π: 0.24
+- SAC regression target: 6.1876
+
+**Interpretation**
+
+- The minimum of twin critics helps counter overestimation; it does not establish safety or model validity.
+- Do not add the same future entropy term to r again; this case follows the displayed SAC reward convention.
+
+**Sources and conventions**
+
+- [OpenAI Spinning Up · Soft Actor-Critic, target Q equation](https://spinningup.openai.com/en/latest/algorithms/sac.html)
+- [Gymnasium · Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+
+
+##### Worked formula case · Discrete CQL: why penalize unsupported values?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching action table contains A, B and C. The log recorded A, but the network assigns B a larger Q. This is one discrete CQL(H) term; continuous industrial actions require sampling approximations.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Q for action A | 1 | dimensionless |
+| Q for action B | 4 | dimensionless |
+| Q for action C | 0 | dimensionless |
+| Recorded action | Action A |  |
+| Conservative-term weight | 1 | dimensionless |
+| Fixed TD target | 1.5 | dimensionless |
+
+**Equations**
+
+$$
+L=\alpha\left[\log\sum_a e^{Q_a}-Q_{data}\right]+\tfrac12(Q_{data}-y)^2
+$$
+
+$$
+\log\sum_a e^{Q_a}=m+\log\sum_a e^{Q_a-m},\quad m=\max_a Q_a
+$$
+
+**Substitution and calculation**
+
+1. **Subtract the maximum before exponentiating**
+
+$$
+m=4,\quad\log\sum_a e^{Q_a}=m+\log\left(0.049787+1+0.018316\right)\approx4.065884
+$$
+
+Even for Q≈1000, never evaluate exp(1000) directly.
+
+2. **Compare against the recorded-action Q**
+
+$$
+C\approx1\cdot[4.065884-(1)]\approx1\cdot(3.065884)\approx3.065884
+$$
+
+Raising an unrecorded action’s Q increases this term and pushes it downward. The kernel calculates the shifted difference directly to avoid cancellation.
+
+3. **Add the fixed-target TD loss**
+
+$$
+L\approx3.065884+\tfrac12(1-1.5)^2\approx3.190884
+$$
+
+Regularization and the TD term can push a Q estimate in different directions.
+
+**Results**
+
+- Conservative gap: 3.065884
+- Weighted regularizer: 3.065884
+- Total teaching loss: 3.190884
+
+**Derivative of the conservative term only**
+
+| Action | Q | ∂C/∂Q |
+| --- | --- | --- |
+| A | 1 | -0.953387 |
+| B | 4 | 0.93624 |
+| C | 0 | 0.017148 |
+
+**Interpretation**
+
+- This illustrates a loss term, not full training or offline policy evaluation; small loss does not imply safe execution.
+- CQL lower-bound results have assumptions; this three-action table is not a safety proof for the industrial project.
+
+**Sources and conventions**
+
+- [Kumar et al. · Conservative Q-Learning, CQL(H), Eq. 4](https://arxiv.org/html/2006.04779v3)
+
+
+##### Worked formula case · From action to temperature: why SP differs from PV
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Use the teaching workbench’s first CV: SP=880°C, PV=879°C, a five-minute step, RATE=2°C and tracking factor 0.28. Other CVs and disturbances are fixed; this is not the complete thermal model.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Requested normalized increment | 0.5 | dimensionless |
+| Current temperature setpoint | 880 | °C |
+| Current measured temperature | 879 | °C |
+| Externally supplied gate result | Assume all five checks passed |  |
+
+**Equations**
+
+$$
+\Delta T^{sp}_{req}=2a_{req},\quad T^{sp}_{new}=T^{sp}+2a_{exec}
+$$
+
+$$
+T_{new}=T+0.28(T^{sp}_{new}-T)
+$$
+
+**Substitution and calculation**
+
+1. **Scale the normalized request**
+
+$$
+\Delta T^{sp}_{req}=2\cdot(0.5)\approx1,\quad T^{sp}_{candidate}\approx881
+$$
+
+The output changes a supervisory target; it does not directly actuate a fuel valve.
+
+2. **Distinguish request from execution**
+
+$$
+a_{exec}\approx0.5,\quad T^{sp}_{new}=880+2\cdot(0.5)\approx881
+$$
+
+The request executes under the supplied acceptance assumption.
+
+3. **Advance the teaching tracking response**
+
+$$
+T_{new}=879+0.28(881-879)\approx879.56
+$$
+
+0.28 is the existing teaching coefficient, not an identified plant parameter.
+
+**Results**
+
+- Executed increment: 1 °C
+- New setpoint SP: 881 °C
+- Teaching PV after five minutes: 879.56 °C
+
+**Interpretation**
+
+- Even with zero executed increment, PV may change whenever it differs from the current SP.
+- This one-dimensional slice omits full gates, delays and other CVs and cannot be used for plant control.
+
+**Sources and conventions**
+
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
+
 #### Primary references and evidence boundaries
 
 - [R21](#reference-21) · [Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290) — Tuomas Haarnoja, Aurick Zhou, Pieter Abbeel, Sergey Levine; 2018. Source ID: r2-sac.
@@ -7690,7 +10627,7 @@ An evidence matrix based on accessible primary material, separating plant data, 
 
 Specific claim → primary material → evidence category → assumptions/controls/scope → supported wording and open questions. The branches classify evidence rather than promise a deployment progression; another project’s operational report is not a benefit measured for this project.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### 2. Method papers do not directly establish kiln savings
@@ -7740,6 +10677,8 @@ Curve points are not independent samples. Time steps share a trained policy and 
 The site provides original derivations, explicitly calculated teaching examples, browser-based teaching dynamics, inspectable project contracts and proposed research interfaces. It does not supply actual industrial logs, an executable PG-MOEA/D-IEpsilon baseline, a trained industrial SAC policy, a plant comparison or verified savings. [Repository contract](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
 Its claims are therefore about why a question merits study, how to formulate it, how to avoid invalid comparisons and what observations would support or refute a hypothesis. When data and implementations become available, update the same matrix with evidence type, protocol, failure cases and reproduction results, rather than merely replacing the illustration with a more elaborate network.
+
+
 
 #### Primary references and evidence boundaries
 
@@ -7861,7 +10800,7 @@ Testable next steps for hidden state, offline support, closed-loop model error, 
 
 Logs → models → calibration → short branches → candidate policy → independent evaluation → failure/stopping rules → recalibration. Real held-out logs also support evaluation. Failure feedback may revise development/calibration; repeatedly tuning after inspecting the final locked test set and reusing it is no longer independent testing. Closed-loop error includes policy responses; one-step accuracy alone does not establish safety or benefit.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### 4. Calibrate uncertainty under the conditions that matter
@@ -7893,6 +10832,84 @@ Feed, product assignments, electricity prices, fuel heating value and equipment 
 | Are findings reproducible? | Paired disturbances, multiple seeds and independent time windows | Ranking depends on one seed, one period or test-set tuning |
 
 Repeated runs should estimate sensitivity to training and operating conditions, not produce a selected attractive curve. Predeclare a practically relevant effect size and report uncertainty around it. A small fixed seed count is a starting budget, not evidence of sufficiency. [RL statistical evaluation](https://arxiv.org/abs/2108.13264). These checks can begin with offline data and simulation; this page proposes no trial-and-error exploration on a physical kiln.
+
+##### Worked formula case · Discrete CQL: why penalize unsupported values?
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+A teaching action table contains A, B and C. The log recorded A, but the network assigns B a larger Q. This is one discrete CQL(H) term; continuous industrial actions require sampling approximations.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Q for action A | 1 | dimensionless |
+| Q for action B | 4 | dimensionless |
+| Q for action C | 0 | dimensionless |
+| Recorded action | Action A |  |
+| Conservative-term weight | 1 | dimensionless |
+| Fixed TD target | 1.5 | dimensionless |
+
+**Equations**
+
+$$
+L=\alpha\left[\log\sum_a e^{Q_a}-Q_{data}\right]+\tfrac12(Q_{data}-y)^2
+$$
+
+$$
+\log\sum_a e^{Q_a}=m+\log\sum_a e^{Q_a-m},\quad m=\max_a Q_a
+$$
+
+**Substitution and calculation**
+
+1. **Subtract the maximum before exponentiating**
+
+$$
+m=4,\quad\log\sum_a e^{Q_a}=m+\log\left(0.049787+1+0.018316\right)\approx4.065884
+$$
+
+Even for Q≈1000, never evaluate exp(1000) directly.
+
+2. **Compare against the recorded-action Q**
+
+$$
+C\approx1\cdot[4.065884-(1)]\approx1\cdot(3.065884)\approx3.065884
+$$
+
+Raising an unrecorded action’s Q increases this term and pushes it downward. The kernel calculates the shifted difference directly to avoid cancellation.
+
+3. **Add the fixed-target TD loss**
+
+$$
+L\approx3.065884+\tfrac12(1-1.5)^2\approx3.190884
+$$
+
+Regularization and the TD term can push a Q estimate in different directions.
+
+**Results**
+
+- Conservative gap: 3.065884
+- Weighted regularizer: 3.065884
+- Total teaching loss: 3.190884
+
+**Derivative of the conservative term only**
+
+| Action | Q | ∂C/∂Q |
+| --- | --- | --- |
+| A | 1 | -0.953387 |
+| B | 4 | 0.93624 |
+| C | 0 | 0.017148 |
+
+**Interpretation**
+
+- This illustrates a loss term, not full training or offline policy evaluation; small loss does not imply safe execution.
+- CQL lower-bound results have assumptions; this three-action table is not a safety proof for the industrial project.
+
+**Sources and conventions**
+
+- [Kumar et al. · Conservative Q-Learning, CQL(H), Eq. 4](https://arxiv.org/html/2006.04779v3)
 
 #### Primary references and evidence boundaries
 
@@ -7962,7 +10979,7 @@ Turn the state–quality–optimization–setpoint chain into explicit data cont
 
 Available data → state/quality/reliability → optimization or policy → shared gates → paired evaluation → hypothesis evidence. Failures revise interfaces, optimization and learning. Optimization can supply audited learning data, but combining modules does not establish a validated method or field energy savings.
 
-*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+*Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
 
 
 #### 2. Freeze a data contract before comparing modules
@@ -8050,6 +11067,86 @@ For every hypothesis, predeclare the primary outcome, a practically meaningful m
 | Research conclusion | Evidence matrix, reproducible scripts, negative results and next question | Claims restricted to demonstrated capabilities |
 
 The first step is to make data, baselines and interfaces verifiable, rather than immediately launch expensive training. These studies have not been run by this tutorial, no real energy savings have been generated, and no exploration on a physical kiln is proposed. The agenda turns existing work into claims that can be supported, refuted or left uncertain one at a time.
+
+##### Worked formula case · Lagrangian trade-offs: why a high score can be infeasible
+
+**Starting scenario (defaults; see the input table for this calculation)**
+
+Teaching candidate A has estimated discounted return/cost 10/0.3; B has 9/0.05, with budget 0.1. These J values use the same horizon and discount convention; they are not single sensor readings.
+
+This is a static calculation snapshot for these inputs. The website’s Formula cases allow parameter and scenario changes; this file retains the full calculation.
+
+**Inputs and units**
+
+| Parameter | Value | Unit |
+|---|---|---|
+| Estimated return of A | 10 | dimensionless |
+| Estimated return of B | 9 | dimensionless |
+| Estimated cost of A | 0.3 | dimensionless |
+| Estimated cost of B | 0.05 | dimensionless |
+| Cost budget | 0.1 | dimensionless |
+| Current multiplier | 2 | dimensionless |
+| Multiplier step size | 0.5 | dimensionless |
+| Current policy evaluated for this update | Policy A |  |
+
+**Equations**
+
+$$
+L(\pi,\lambda)=J_r(\pi)-\lambda[J_c(\pi)-d]
+$$
+
+$$
+\lambda_{new}=\operatorname{clip}\left(\lambda+\eta_\lambda[J_c(\pi_{current})-d],0,100\right)
+$$
+
+**Substitution and calculation**
+
+1. **Calculate both relaxed scores**
+
+$$
+\begin{aligned}L_A&=10-2(0.3-0.1)\approx9.6\\L_B&=9-2(0.05-0.1)\approx9.1\end{aligned}
+$$
+
+Maximize L. The budget term is shared, but feasibility must still be checked separately.
+
+2. **Check the budget explicitly**
+
+$$
+J_c^A=0.3,\quad J_c^B=0.05,\quad d=0.1
+$$
+
+Budget-filtered result: B. This uses supplied expected costs, not pointwise physical safety.
+
+3. **Update from the current policy’s budget excess**
+
+$$
+\lambda_{new}=\operatorname{clip}(2+0.5\cdot(0.2),0,100)\approx2.1
+$$
+
+Budget excess increases the multiplier; undershoot may reduce it. The cap 100 is a numerical demonstration limit, not an industrial threshold or guarantee.
+
+**Results**
+
+- Preferred relaxed score: A
+- Preferred within the budget: B
+- Updated multiplier: 2.1
+
+**Compare the two candidates**
+
+| Policy | Jᵣ | J꜀ | L | Within budget |
+| --- | --- | --- | --- | --- |
+| A | 10 | 0.3 | 9.6 | No |
+| B | 9 | 0.05 | 9.1 | Yes |
+
+**Interpretation**
+
+- A finite multiplier can favor a budget-violating candidate; one score does not replace feasibility checks.
+- This is not the full CPO update. Independent cost evaluation, model credibility, five execution gates and fallback remain necessary.
+
+**Sources and conventions**
+
+- [Achiam et al. · Constrained Policy Optimization, §4 and primal-dual baseline Eq. 16](https://arxiv.org/html/1705.10528v1)
+- [RL Atlas · Teaching kiln model and its assumptions](https://github.com/bahayonghang/rl-learning/blob/main/rl-learning-web/docs/kiln-workbench.en.md)
 
 #### Primary references and evidence boundaries
 

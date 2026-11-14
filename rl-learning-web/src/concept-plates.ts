@@ -1,5 +1,7 @@
 /** Original generated plates. Exact semantics remain selectable outside each raster. */
 import { getLocale, type Locale, type Localized } from './i18n';
+import { imageLocaleDirectory, illustrationImage, translatedIllustrationIds } from './image-locales';
+import { mapMarkdownProse } from './markdown-prose';
 
 export type FigureTopic = 'foundations' | 'algorithms' | 'process' | 'optimization' | 'architecture' | 'orientation';
 export const conceptPlateIds = [
@@ -1351,20 +1353,20 @@ export const conceptPlates: readonly ConceptPlate[] = [
 ];
 
 export const conceptPlateNotice: Localized<string> = {
-  'zh-CN': '原创概念图解。图内短英文标签由下方双语文字解释；精确公式、假设与执行边界以正文为准。图像不代表实测数据、真实工程接线或现场性能证据。',
-  en: 'Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.',
+  'zh-CN': '原创中文概念图解。下方文字解释图中各部分；精确公式、假设与执行边界以正文为准。图像不代表实测数据、真实工程接线或现场性能证据。',
+  en: 'Original English concept illustration. The selectable text explains each region. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.',
 };
 export function conceptPlate(id: string): ConceptPlate | undefined {
   return conceptPlates.find(plate => plate.id === id);
 }
-export const conceptPlateImage = (id: ConceptPlateId): string => `./images/diagrams/${id}.webp`;
+export const conceptPlateImage = (id: ConceptPlateId, locale: string = getLocale()): string => `./images/diagrams/${imageLocaleDirectory(locale)}${id}.webp`;
 export function localizedConceptPlate(id: string, locale: Locale = getLocale()) {
   const plate = conceptPlate(id);
   if (!plate) return;
   return {
     id: plate.id, kind: 'concept' as const, topic: plate.topic,
     title: plate.title[locale], alt: plate.alt[locale], explanation: plate.explanation[locale],
-    href: plate.href, image: conceptPlateImage(plate.id), width: 1536, height: 1024,
+    href: plate.href, image: conceptPlateImage(plate.id, locale), width: 1536, height: 1024,
     keywords: [...plate.keywords, plate.title['zh-CN'], plate.title.en],
     regions: plate.regions.map(region => ({ label: region.label[locale], description: region.description[locale] })),
     relationship: plate.relationship[locale],
@@ -1373,14 +1375,14 @@ export function localizedConceptPlate(id: string, locale: Locale = getLocale()) 
 /** A normal Markdown image is portable even before the renderer adds the reading guide. */
 export function conceptPlateReference(id: ConceptPlateId, locale: Locale = getLocale()): string {
   const plate = conceptPlate(id)!;
-  return `![${plate.title[locale]}](${conceptPlateImage(id)})`;
+  return `![${plate.title[locale]}](${conceptPlateImage(id, locale)})`;
 }
 /** Only an exact, registered local asset path may receive trusted figure controls. */
 export function conceptPlateFromImage(src: string): ConceptPlate | undefined {
-  const match = /^\.\/images\/diagrams\/([a-z0-9-]+)\.webp$/.exec(src);
+  const match = /^\.\/images\/diagrams\/(?:zh-CN\/)?([a-z0-9-]+)\.webp$/.exec(src);
   return match ? conceptPlate(match[1]) : undefined;
 }
-export function conceptPlateMarkdown(id: ConceptPlateId, locale: Locale, imageUrl = conceptPlateImage(id)): string {
+export function conceptPlateMarkdown(id: ConceptPlateId, locale: Locale, imageUrl = conceptPlateImage(id, locale)): string {
   const plate = conceptPlate(id)!;
   return [
     `<a id="figure-${id}"></a>`, '', `![${plate.alt[locale]}](${imageUrl})`, '',
@@ -1391,20 +1393,21 @@ export function conceptPlateMarkdown(id: ConceptPlateId, locale: Locale, imageUr
     plate.relationship[locale], '', `*${conceptPlateNotice[locale]}*`, '',
   ].join('\n');
 }
-/** Expand standalone registered images; preserve code fences and inline examples verbatim. */
+/** Localize every trusted image; only standalone plates receive a full reading guide. */
 export function expandConceptPlateReferences(markdown: string, locale: Locale, imagePrefix = './images/diagrams/'): string {
-  let fence: { marker: string; length: number } | undefined;
-  return markdown.split('\n').map(line => {
-    const delimiter = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
-    if (delimiter) {
-      const marker = delimiter[1][0];
-      if (!fence) fence = { marker, length: delimiter[1].length };
-      else if (marker === fence.marker && delimiter[1].length >= fence.length && !delimiter[2].trim()) fence = undefined;
-      return line;
-    }
-    if (fence) return line;
-    const reference = /^!\[[^\n]*\]\((\.\/images\/diagrams\/[a-z0-9-]+\.webp)\)\s*$/.exec(line);
-    const plate = reference ? conceptPlateFromImage(reference[1]) : undefined;
-    return plate ? conceptPlateMarkdown(plate.id, locale, `${imagePrefix}${plate.id}.webp`) : line;
-  }).join('\n');
+  const imageUrl = (id: ConceptPlateId) => `${imagePrefix}${imageLocaleDirectory(locale)}${id}.webp`;
+  return mapMarkdownProse(markdown, (prose, boundary) => prose.split('\n').map((line, index, lines) => {
+    const wholeLine = (index > 0 || boundary.startsLine) && (index < lines.length - 1 || boundary.endsLine);
+    // Do not let the alt text swallow another image on the same line.
+    const reference = wholeLine ? /^!\[(?:\\.|[^\]\\\n])*\]\((\.\/images\/diagrams\/(?:zh-CN\/)?[a-z0-9-]+\.webp)\)[ \t]*$/.exec(line) : undefined;
+    const standalone = reference ? conceptPlateFromImage(reference[1]!) : undefined;
+    if (standalone) return conceptPlateMarkdown(standalone.id, locale, imageUrl(standalone.id));
+    return line.replace(/(!\[(?:\\.|[^\]\\\n])*\]\()((?:\.\/images\/diagrams\/(?:zh-CN\/)?|\.\/images\/(?:zh-CN\/)?)[a-z0-9-]+\.webp)(\))/g, (match, before: string, source: string, after: string) => {
+      const plate = conceptPlateFromImage(source);
+      if (plate) return `${before}${imageUrl(plate.id)}${after}`;
+      const illustration = /^\.\/images\/(?:zh-CN\/)?([a-z0-9-]+)\.webp$/.exec(source);
+      if (!illustration || !(translatedIllustrationIds as readonly string[]).includes(illustration[1]!)) return match;
+      return `${before}${imagePrefix.replace(/diagrams\/$/, '')}${illustrationImage(illustration[1]!, locale).replace(/^\.\/images\//, '')}${after}`;
+    });
+  }).join('\n'));
 }
