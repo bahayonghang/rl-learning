@@ -154,3 +154,44 @@ Expanded the Chinese RL website with beginner mathematical reasoning, cement pro
 ### Status
 
 [OK] **Completed**
+
+
+## Session 5: 完成中文图片版本与交互公式案例
+<!-- trellis-session: v=2 fp=602e07b7dbba8116 -->
+
+**Date**: 2026-11-14
+**Task**: 完成中文图片版本与交互公式案例
+**Branch**: `feat/rl-localized-figures-formula-cases`
+
+### Summary
+
+按用户截图修复中文界面中的英文图，完成中文图片、10组双语公式案例、教材导出与真实浏览器验收。
+
+### Main Changes
+
+- 新增21张中文概念图与1张中文journey插图；统一中文/英文资源选择，覆盖阅读、图库、路线、放大、原图、下载和六份导出，保留英文原件。
+- 新增10组双语公式案例、30套预设、逐步代入和结果解释，接入章节、研究、首页、导航与全站搜索，支持当前参数快照下载。
+- 修复同行多图被吞、行内图片导出未本地化、小数科学计数法上标错误和默认背景/当前算例混淆；无效输入与渲染异常不显示旧结果。
+- 记录逐图生成提示词、数学来源、验收JSON及3张真实页面截图；完整说明位于docs/localized-figures-and-cases.md。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `2f06bedbb368c2f4c66b517bd352ba954e8210c7` | feat(web): localize figures and add worked formula cases |
+| `f683ec9262b8fd0a357735eeadff5f224fba29e8` | chore(task): archive 11-14-rl-localized-cases |
+
+### Testing
+
+- [OK] npm run export:book、npm test、npm run build全部通过；67 tests，2279条公式/225文档，50个图片文件，67个正文与3个数值核指纹保持一致。当前执行器无just，直接执行其check配方对应命令。
+- [OK] 真实托管Chromium验证10个英文案例、PPO预设/实时输入/清空/重置/当前值导出、中文图片与路线图库切换、章节及研究嵌入、深浅主题、Escape和焦点恢复。
+- [OK] 375px中文与768px英文的8个代表案例共16组视口无整页横溢出；手机查看器在312px画布内滚动1536px图片；中文WebP实际下载与源文件哈希相同。
+- [OK] GitHub对象按本地已验证的tree SHA逐一核对；main更新使用原HEAD fa416b326c5149932d8250df58a7abc8eed33d3d的expected-head保护。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 本轮功能与验收已完成；如继续扩展，沿用formula-cases定义、中文图注册规则及真实浏览器验收记录。
