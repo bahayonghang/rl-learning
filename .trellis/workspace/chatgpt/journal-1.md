@@ -81,3 +81,41 @@ Expanded the Chinese RL website with beginner mathematical reasoning, cement pro
 ### Next Steps
 
 - Use just dev in rl-learning-web; follow the mathematics primer, kiln workbench and staged research protocol.
+
+
+## Session 3: RL Atlas 双语橙色改版与运行指标决策综述
+<!-- trellis-session: v=2 fp=ea9246024d38e14d -->
+
+**Date**: 2026-11-14
+**Task**: RL Atlas 双语橙色改版与运行指标决策综述
+**Branch**: `feat/rl-learning-atlas-v2`
+
+### Summary
+
+在用户 2904fa2 依赖更新基础上完成双语教学、九篇研究综述、暖橙主题、原创标识及图解、分类检索与模块精简。
+
+### Main Changes
+
+- 完整中文与英文内容：24章、154步推导、8个数学单元、14个实验及水泥工作台。
+- 新增九篇双语研究专题、35项一手研究来源、四幅研究概念图；27图解和59资源均支持分类搜索。
+- 删除笔记、收藏和继续学习入口；保留完成状态、主题、字号、语言，记录旧数据兼容及语言扩展规则。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `42ee513c83c1057c745286fdb01067aa77210648` | feat(web): ✨ 重构双语橙色教程与运行指标研究专题 |
+
+### Testing
+
+- [OK] just check 通过：44项测试、2185处公式、40张Mermaid、严格类型检查和生产构建。
+- [OK] 实际Chrome验收双语明暗、九个研究路由、SVG下载、推导反馈、计算器、工作台延迟和375/768px布局。
+- [OK] 修复英文工作台展开计算后整页横向溢出；保留公式和表格局部滚动。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 在 rl-learning-web 运行 just dev；新增语言按 docs/i18n.md 补齐完整版本。
