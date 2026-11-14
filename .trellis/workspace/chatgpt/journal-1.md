@@ -119,3 +119,38 @@ Expanded the Chinese RL website with beginner mathematical reasoning, cement pro
 ### Next Steps
 
 - 在 rl-learning-web 运行 just dev；新增语言按 docs/i18n.md 补齐完整版本。
+
+
+## Session 4: RL Atlas 全站概念图替换与交付复核
+<!-- trellis-session: v=2 fp=ee48cbec8dd0f24a -->
+
+**Date**: 2026-11-14
+**Task**: RL Atlas 全站概念图替换与交付复核
+**Branch**: `feat/rl-learning-generated-diagrams`
+
+### Summary
+
+接续中断的概念图替换交付：恢复已生成的21张图片及页面实现，复核完整性，补齐任务记录并准备将同一内容同步至main。
+
+### Main Changes
+
+- 替换11张课程图、9张研究专题图与1张学习路线图，保留7张原有插图；28张图均可检索。
+- 中英42处活跃引用、1处旧研究引用、读图说明与六份教材/综述导出完整对应；页面不再加载Mermaid运行时。
+- 逐个核对GitHub上传对象及提交树，确保其内容与已验收的本地提交完全一致；保留既有依赖与用户提交。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `63188973f659c96c58d7fcf2713f07c05e052a4b` | feat(web): 🎨 以学术概念插图替换全部 Mermaid 图解 |
+| `9f6f7c43cd5918f3d3a50aaac1c713000acce892` | chore(task): archive 11-14-rl-generated-figures |
+
+### Testing
+
+- [OK] 本轮重新执行 npm run export:book、npm test、npm run build：51/51测试通过，2185个数学表达式通过严格渲染，TypeScript和生产构建通过。
+- [OK] 独立只读审查逐张检查21张最终WebP，未发现阻断缺陷；67份正文和3个数值内核指纹保持一致。
+- [OK] 核对先前保存的浏览器验收记录与截图，覆盖双语、明暗主题、图解搜索、原尺寸查看、下载、焦点恢复及375/768px布局；本轮未重新进行浏览器交互。
+
+### Status
+
+[OK] **Completed**
