@@ -5,7 +5,6 @@ import { dirname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { marked } from 'marked';
 import katex from 'katex';
-import ts from 'typescript';
 import { chapters, modules, sources } from '../src/content/index';
 import { foundationSources } from '../src/content/foundations';
 import { advancedSources } from '../src/content/advanced';
@@ -30,20 +29,13 @@ const authoredDocuments = [
 
 /** Read the canonical metadata without importing its browser-only CSS dependency. */
 function labRecords(): { id: string; chapter: string }[] {
-  const source = ts.createSourceFile('labs/index.ts', readFileSync(resolve(root, 'src/labs/index.ts'), 'utf8'), ts.ScriptTarget.Latest, true);
-  let array: ts.ArrayLiteralExpression | undefined;
-  function visit(node: ts.Node): void {
-    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === 'labs' && node.initializer && ts.isArrayLiteralExpression(node.initializer)) array = node.initializer;
-    ts.forEachChild(node, visit);
-  }
-  visit(source);
-  assert.ok(array, 'canonical laboratory metadata must remain statically inspectable');
-  return array.elements.map(node => {
-    assert.ok(ts.isObjectLiteralExpression(node));
+  const source = readFileSync(resolve(root, 'src/labs/index.ts'), 'utf8');
+  const declaration = source.match(/export const labs\b[\s\S]*?=\s*\[([\s\S]*?)\n\];/);
+  assert.ok(declaration, 'canonical laboratory metadata must remain statically inspectable');
+  return [...declaration[1].matchAll(/\{([^{}]*)\}/g)].map(match => {
     const fields: Record<string, string> = {};
-    for (const property of node.properties) {
-      if (!ts.isPropertyAssignment(property) || !ts.isStringLiteral(property.initializer)) continue;
-      if (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) fields[property.name.text] = property.initializer.text;
+    for (const property of match[1].matchAll(/(?:^|,)\s*(?:(['"])([^'"]+)\1|([A-Za-z_$][\w$]*))\s*:\s*(['"])(.*?)\4/g)) {
+      fields[property[2] ?? property[3]] = property[5];
     }
     assert.ok(fields.id && fields.chapter, 'each lab needs a literal ID and linked chapter');
     return { id: fields.id, chapter: fields.chapter };
