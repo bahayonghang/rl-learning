@@ -1,5 +1,6 @@
 import { clamp } from './math';
-export const COLORS = { green: '#245b4b', orange: '#c47752', blue: '#527b98', purple: '#827094', muted: '#b7c0b6' };
+import { text } from '../i18n';
+export const COLORS = { green: '#b36a4a', orange: '#ca9a62', blue: '#7897ae', purple: '#9b88a6', muted: '#a99c8c' };
 export const fmt = (n: number, digits = 2): string => Number.isFinite(n) ? n.toFixed(digits) : '—';
 export const percent = (n: number): string => `${fmt(n * 100, 1)}%`;
 export interface Series { name: string; values: number[]; color: string; dashed?: boolean; }
@@ -28,7 +29,7 @@ export function chart(series: Series[], label: string, options: { xLabel?: strin
   const x0 = options.xMin ?? 1, x1 = options.xMax ?? count;
   const xTicks = [0, 0.5, 1].map(f => `<text x="${left + f * (width - left - right)}" y="${height - 25}" text-anchor="middle">${fmt(x0 + f * (x1 - x0), x1 < 5 ? 1 : 0)}</text>`).join('');
   const legend = `<div class="lab-legend">${series.map(s => `<span><i style="background:${s.color}"></i>${escape(s.name)}</span>`).join('')}</div>`;
-  return `<figure class="lab-chart"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escape(label)}"><title>${escape(label)}</title>${grid}${lines}${xTicks}<text x="${left}" y="13" class="lab-axis-name">${escape(options.yLabel ?? '')}</text><text x="${width - right}" y="${height - 4}" text-anchor="end" class="lab-axis-name">${escape(options.xLabel ?? '步数')}</text></svg>${legend}<figcaption>${escape(label)}</figcaption></figure>`;
+  return `<figure class="lab-chart"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escape(label)}"><title>${escape(label)}</title>${grid}${lines}${xTicks}<text x="${left}" y="13" class="lab-axis-name">${escape(options.yLabel ?? '')}</text><text x="${width - right}" y="${height - 4}" text-anchor="end" class="lab-axis-name">${escape(options.xLabel ?? text('步数', 'Step'))}</text></svg>${legend}<figcaption>${escape(label)}</figcaption></figure>`;
 }
 
 export function bars(items: { label: string; value: number; color?: string }[], label: string, unit = ''): string {
@@ -59,7 +60,7 @@ export const table = (heads: string[], rows: string[][]): string => `<div class=
 export const note = (title: string, text: string): string => `<aside class="lab-explanation"><strong>${title}</strong><p>${text}</p></aside>`;
 
 export function setup(host: HTMLElement, question: string, intro: string, controls: string, actions = '') {
-  host.innerHTML = `<section class="lab-panel"><div class="lab-intro"><span class="lab-eyebrow">浏览器教学模拟 · 可重复计算</span><h2>${question}</h2><p>${intro}</p></div><div class="lab-controls">${controls}</div>${actions ? `<div class="lab-actions">${actions}</div>` : ''}<div class="lab-result" data-result aria-live="polite" aria-atomic="false"></div></section>`;
+  host.innerHTML = `<section class="lab-panel"><div class="lab-intro"><span class="lab-eyebrow">${text('浏览器教学模拟 · 可重复计算', 'Browser teaching simulation · Reproducible calculations')}</span><h2>${question}</h2><p>${intro}</p></div><div class="lab-controls">${controls}</div>${actions ? `<div class="lab-actions">${actions}</div>` : ''}<div class="lab-result" data-result aria-live="polite" aria-atomic="false"></div></section>`;
   const target = host.querySelector<HTMLElement>('[data-result]')!;
   const number = (id: string): number => {
     const el = host.querySelector<HTMLInputElement>(`[data-control="${id}"]`)!;

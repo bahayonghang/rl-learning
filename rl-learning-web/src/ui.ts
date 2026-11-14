@@ -1,0 +1,6 @@
+import { createIcons, ArrowUpRight, ArrowRight, ArrowLeft, BookOpen, BrainCircuit, Check, CheckCheck, ChevronDown, ChevronRight, Clock3, Code2, Compass, Download, FileText, FlaskConical, GraduationCap, Grid2X2, Image, LayoutDashboard, Lightbulb, ListChecks, Menu, Moon, Network, Route, Search, Settings2, ShieldCheck, Sun, Telescope, TrendingUp, Waves, X, ZoomIn, Languages, Filter } from 'lucide';
+const iconSet={ArrowUpRight,ArrowRight,ArrowLeft,BookOpen,BrainCircuit,Check,CheckCheck,ChevronDown,ChevronRight,Clock3,Code2,Compass,Download,FileText,FlaskConical,GraduationCap,Grid2X2,Image,LayoutDashboard,Lightbulb,ListChecks,Menu,Moon,Network,Route,Search,Settings2,ShieldCheck,Sun,Telescope,TrendingUp,Waves,X,ZoomIn,Languages,Filter};
+export const icon=(name:string,className='')=>`<i data-lucide="${name in iconSet?name:'FlaskConical'}" class="${className}" aria-hidden="true"></i>`;
+export const refreshIcons=()=>createIcons({icons:iconSet,attrs:{'stroke-width':1.65}});
+export const pageHeading=(eyebrow:string,title:string,subtitle:string,action='')=>`<header class="page-heading"><div><p class="eyebrow">${eyebrow}</p><h1>${title}</h1><p>${subtitle}</p></div>${action}</header>`;
+export const emptyState=(title:string,description:string,name='Search')=>`<div class="empty-state">${icon(name)}<h3>${title}</h3><p>${description}</p></div>`;

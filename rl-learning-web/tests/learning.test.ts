@@ -120,7 +120,7 @@ test('search prioritizes a named algorithm and includes new learning destination
   assert.equal(searchLearning('PPO')[0]?.href, '#/chapter/15');
   assert.ok(searchLearning('条件概率').some(result => result.href === '#/primer/probability'));
   assert.ok(searchLearning('SP PV').some(result => result.href === '#/kiln'));
-  assert.ok(searchLearning('OAM-Net').some(result => result.href === '#/research'));
+  assert.ok(searchLearning('OAM-Net').some(result => result.href === '#/research/agenda'));
   assert.ok(searchLearning('词典').some(result => result.href === '#/glossary'));
   assert.deepEqual(searchLearning('  '), []);
   assert.deepEqual(searchLearning('zz-no-matching-lecture-zz'), []);

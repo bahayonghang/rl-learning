@@ -1,6 +1,6 @@
 # RL Atlas｜强化学习：从直觉到决策
 
-> 完整中文教程 · 8 个数学准备单元 · 24 组水泥案例逐步推导 · 7 个模块 / 24 章 · 研究专题、概念词典、公式、Mermaid、代码与练习解答。
+> 完整中文教程 · 8 个数学准备单元 · 24 组水泥案例逐步推导 · 7 个模块 / 24 章 · 9 篇完整研究专题 · 概念词典、工作台模型、公式、Mermaid、代码与练习解答。
 
 本教程沿着“问题 → 数学 → 算法 → 代码 → 实验 → 可信结论”的路径组织。先学会解释一个决策问题，再理解每一种算法为什么出现、解决什么问题、还留下哪些限制。
 
@@ -16,7 +16,7 @@
 
 建议按个人时间在六至八周内完成一轮：第一至二周处理交互、概率和表格方法；第三周理解 DQN；第四至五周学习 Actor-Critic、PPO 与 SAC；第六周完成环境和评估设计；最后一至二周将离线、模型与约束方法连接到自己的课题。该安排是学习建议，不是学习效果或课时保证。
 
-数学保留为 LaTeX，流程图保留为 Mermaid 图源。使用支持这些格式的 Markdown 阅读器，可直接渲染；不支持时仍可阅读完整公式与图源。
+数学保留为 LaTeX，流程图保留为 Mermaid 图源。支持这些格式的 Markdown 阅读器可直接渲染。插图使用相对路径，移动文件时请保留配套 images 与 code 目录结构；正文与全部推导不依赖在线翻译。
 
 ## 目录
 
@@ -53,7 +53,16 @@
   - [23 · 模型学习、Dyna 与短程推演](#chapter-23)
   - [24 · 约束强化学习与研究闭环](#chapter-24)
 - [水泥工作台：模型、时间与实验](#kiln-workbench)
-- [衔接已有研究：流程工业强化学习](#research)
+- [运行指标决策研究](#research)
+  - [01 · 从全厂控制到运行指标决策](#research-history)
+  - [02 · 运行指标、权衡与因果混杂](#research-indicators)
+  - [03 · 从指标到目标、Pareto 与约束](#research-objectives)
+  - [04 · 进化优化：从 Pareto 搜索到滚动轨迹](#research-evolution)
+  - [05 · 从指标优化到序列决策：MDP、POMDP 与 CMDP](#research-sequential)
+  - [06 · 网络与数据路径：一个可审计的上层决策系统](#research-architecture)
+  - [07 · 证据地图：论文、仿真、现场与尚未回答的问题](#research-evidence)
+  - [08 · 开放问题：从预测准确到决策可信还缺什么](#research-open-problems)
+  - [09 · 研究路线：把已有模块变成六个可证伪问题](#research-agenda)
 - [概念与符号词典](#glossary)
 - [完整参考资料](#references)
 - [来源标识索引](#source-index)
@@ -111,7 +120,7 @@ $$\bigl(o_t,\;a_t,\;r_{t+1},\;o_{t+1}\bigr).$$
 
 “发生在什么时候”与“在什么时候知道”是两个不同的时间。后续的 POMDP、软测量、数据切分和世界模型都会用到这个区别。
 
-**应用到章节：** [第 01 章](#chapter-01)；[第 04 章](#chapter-04)；[第 19 章](#chapter-19)
+**应用到章节:** [第 01 章](#chapter-01)；[第 04 章](#chapter-04)；[第 19 章](#chapter-19)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -157,7 +166,7 @@ $$P(B\mid A)=\frac{P(A\mid B)P(B)}{P(A)},\qquad P(A)>0.$$
 
 若只知道“没有回稳”，想反推“原料难烧”的可能性，教学数据中难烧且未回稳有 20 次，全部未回稳有 30 次，因此是 $20/30=2/3$。这是从结果修正判断，并不表示看到一次未回稳就能确诊原料异常。
 
-**应用到章节：** [第 02 章](#chapter-02)；[第 03 章](#chapter-03)；[第 04 章](#chapter-04)
+**应用到章节:** [第 02 章](#chapter-02)；[第 03 章](#chapter-03)；[第 04 章](#chapter-04)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -213,7 +222,7 @@ $$\widehat{\mathbb E[R]}=\frac1N\sum_{i=1}^{N}r_i.$$
 
 能源奖励与质量成本可以各自求期望，但它们仍是不同对象。奖励的平均值好看，不能代替检查质量越界概率。
 
-**应用到章节：** [第 03 章](#chapter-03)；[第 05 章](#chapter-05)
+**应用到章节:** [第 03 章](#chapter-03)；[第 05 章](#chapter-05)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -262,7 +271,7 @@ $$\mathrm{Var}(\bar R)=\frac{\sigma^2}{N},\qquad
 
 RL 中，完整回报包含很多未来随机因素，方差可能较大；TD 使用估计的未来价值，可能引入偏差。GAE 的 $\lambda$ 不是“越大越好”的旋钮，而是在这些来源之间取舍。工业评估还需要同时报告约束越界、最坏工况和接管率，不能把方差当作安全指标的替代品。
 
-**应用到章节：** [第 07 章](#chapter-07)；[第 13 章](#chapter-13)；[第 20 章](#chapter-20)
+**应用到章节:** [第 07 章](#chapter-07)；[第 13 章](#chapter-13)；[第 20 章](#chapter-20)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -317,7 +326,7 @@ $$G_t=\sum_{k=0}^{H-1}\gamma^kR_{t+k+1}+\gamma^H G_{t+H}.$$
 
 如果用半衰期 $H$ 分钟表达偏好，要求 $\gamma^{H/5}=1/2$，就有 $\gamma=2^{-5/H}$。选择折扣应结合评价目标与延迟分析，而不是机械套用一个常数。
 
-**应用到章节：** [第 01 章](#chapter-01)；[第 05 章](#chapter-05)；[第 07 章](#chapter-07)
+**应用到章节:** [第 01 章](#chapter-01)；[第 05 章](#chapter-05)；[第 07 章](#chapter-07)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -363,7 +372,7 @@ Critic 通常最小化误差，因此写减号。策略想最大化期望回报 
 
 TD 目标含有下一状态估值。如果把目标也同时当作当前参数的可微函数，更新就会变成另一个问题。DQN 常冻结目标网络，或对目标停止梯度，再只对当前预测求导；这叫半梯度更新的思想。它有适用条件，并不保证任意函数逼近和离策略数据组合都稳定。
 
-**应用到章节：** [第 09 章](#chapter-09)；[第 12 章](#chapter-12)；[第 17 章](#chapter-17)
+**应用到章节:** [第 09 章](#chapter-09)；[第 12 章](#chapter-12)；[第 17 章](#chapter-17)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -419,7 +428,7 @@ $$\rho=\exp\bigl(\log\pi_{\mathrm{new}}-\log\pi_{\mathrm{old}}\bigr).$$
 
 概率比衡量的是这个样本动作相对旧策略变得多常见，不是温度乘了 1.5。旧概率为零而新概率为正时，旧数据根本无法覆盖这项，比例校正也无从计算；这会连接到离线 RL 的动作支持问题。
 
-**应用到章节：** [第 12 章](#chapter-12)；[第 14 章](#chapter-14)；[第 15 章](#chapter-15)
+**应用到章节:** [第 12 章](#chapter-12)；[第 14 章](#chapter-14)；[第 15 章](#chapter-15)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -470,7 +479,7 @@ $$\log p_A(a)=\log p_U(u)-\log(1-a^2).$$
 
 tanh 只限制当前建议的幅值。多次建议累计后，设定值仍可能越过机械边界；即使每次动作都小，也可能进入不安全工况。因此还需要状态、数据支持、执行边界和质量成本的独立检查。
 
-**应用到章节：** [第 16 章](#chapter-16)；[第 17 章](#chapter-17)
+**应用到章节:** [第 16 章](#chapter-16)；[第 17 章](#chapter-17)
 
 **网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。
 
@@ -482,7 +491,7 @@ tanh 只限制当前建议的幅值。多次建议累计后，设定值仍可能
 
 从一个选择开始，理解长期回报与探索的价值。
 
-**完成本模块后：** 把一个真实问题说清楚，并写出回报。
+**完成本模块后:** 把一个真实问题说清楚，并写出回报。
 
 <a id="chapter-01"></a>
 
@@ -490,7 +499,7 @@ tanh 只限制当前建议的幅值。多次建议累计后，设定值仍可能
 
 *先把智能体、环境和反馈连成闭环，再讨论算法。*
 
-**程度：** 入门　**建议阅读与推演：** 30 分钟（按个人基础调整）
+**程度:** 入门 · **建议阅读与推演:** 30 分钟（按个人基础调整）
 
 **学习目标**
 
@@ -498,7 +507,7 @@ tanh 只限制当前建议的幅值。多次建议累计后，设定值仍可能
 - 按统一时间下标写出一段轨迹
 - 手算折扣回报并解释折扣因子
 
-**配套网页实验：** return（在网页“交互实验室”打开）
+**配套网页实验:** return（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -714,8 +723,8 @@ assert abs(discounted_returns([2, -1, 5], 0.9)[0] - 5.15) < 1e-9
 
 #### 本章参考资料
 
-- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto，2018。来源标识：f-sutton。
-- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation，持续维护。来源标识：f-gym。
+- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto; 2018. 来源标识: f-sutton.
+- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation; 持续维护. 来源标识: f-gym.
 
 ---
 
@@ -725,9 +734,9 @@ assert abs(discounted_returns([2, -1, 5], 0.9)[0] - 5.15) < 1e-9
 
 *在最简单的决策问题里，理解信息为什么有价值。*
 
-**程度：** 入门　**建议阅读与推演：** 35 分钟（按个人基础调整）
+**程度:** 入门 · **建议阅读与推演:** 35 分钟（按个人基础调整）
 
-**先修章节：** [01 · 从一次行动，到长期回报](#chapter-01)
+**先修章节:** [01 · 从一次行动，到长期回报](#chapter-01)
 
 **学习目标**
 
@@ -735,7 +744,7 @@ assert abs(discounted_returns([2, -1, 5], 0.9)[0] - 5.15) < 1e-9
 - 解释 UCB 的不确定性奖励
 - 区分实现回报和伪遗憾
 
-**配套网页实验：** bandit（在网页“交互实验室”打开）
+**配套网页实验:** bandit（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -954,8 +963,8 @@ $$\bar R_T=\sum_{t=1}^{T}(\mu_* - \mu_{A_t}),\qquad \mu_*=\max_a\mu_a.$$
 
 #### 本章参考资料
 
-- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto，2018。来源标识：f-sutton。
-- [R5](#reference-5) · [Finite-time Analysis of the Multiarmed Bandit Problem](https://doi.org/10.1023/A:1013689704352) — Peter Auer · Nicolò Cesa-Bianchi · Paul Fischer，2002。来源标识：f-ucb。
+- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto; 2018. 来源标识: f-sutton.
+- [R5](#reference-5) · [Finite-time Analysis of the Multiarmed Bandit Problem](https://doi.org/10.1023/A:1013689704352) — Peter Auer · Nicolò Cesa-Bianchi · Paul Fischer; 2002. 来源标识: f-ucb.
 
 ---
 
@@ -965,9 +974,9 @@ $$\bar R_T=\sum_{t=1}^{T}(\mu_* - \mu_{A_t}),\qquad \mu_*=\max_a\mu_a.$$
 
 *把公式中的 E、条件概率和方差翻译成可计算的操作。*
 
-**程度：** 入门　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 入门 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [01 · 从一次行动，到长期回报](#chapter-01)；[02 · 多臂老虎机：探索需要付出什么？](#chapter-02)
+**先修章节:** [01 · 从一次行动，到长期回报](#chapter-01)；[02 · 多臂老虎机：探索需要付出什么？](#chapter-02)
 
 **学习目标**
 
@@ -1189,8 +1198,8 @@ print(mean, sample_variance, standard_error)
 
 #### 本章参考资料
 
-- [R3](#reference-3) · [Statistics 110: Probability](https://stat110.hsites.harvard.edu/) — Joe Blitzstein · Harvard University，持续维护。来源标识：f-probability。
-- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray，2022。来源标识：f-decision。
+- [R3](#reference-3) · [Statistics 110: Probability](https://stat110.hsites.harvard.edu/) — Joe Blitzstein · Harvard University; 持续维护. 来源标识: f-probability.
+- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray; 2022. 来源标识: f-decision.
 
 ---
 
@@ -1200,7 +1209,7 @@ print(mean, sample_variance, standard_error)
 
 用 Bellman 方程把未来的价值带回现在。
 
-**完成本模块后：** 手算价值更新，实现一个表格控制算法。
+**完成本模块后:** 手算价值更新，实现一个表格控制算法。
 
 <a id="chapter-04"></a>
 
@@ -1208,9 +1217,9 @@ print(mean, sample_variance, standard_error)
 
 *状态不是传感器清单，而是关于未来的充分信息。*
 
-**程度：** 入门　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 入门 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [01 · 从一次行动，到长期回报](#chapter-01)；[03 · 够用的概率：从样本到期望](#chapter-03)
+**先修章节:** [01 · 从一次行动，到长期回报](#chapter-01)；[03 · 够用的概率：从样本到期望](#chapter-03)
 
 **学习目标**
 
@@ -1433,9 +1442,9 @@ for t in range(horizon):
 
 #### 本章参考资料
 
-- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray，2022。来源标识：f-decision。
-- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver，2015。来源标识：f-silver。
-- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation，持续维护。来源标识：f-gym。
+- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray; 2022. 来源标识: f-decision.
+- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver; 2015. 来源标识: f-silver.
+- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation; 持续维护. 来源标识: f-gym.
 
 ---
 
@@ -1445,9 +1454,9 @@ for t in range(horizon):
 
 *不是背公式，而是学会递归地计算一个决定的后果。*
 
-**程度：** 入门　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 入门 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [03 · 够用的概率：从样本到期望](#chapter-03)；[04 · MDP 与 POMDP：先把问题写对](#chapter-04)
+**先修章节:** [03 · 够用的概率：从样本到期望](#chapter-03)；[04 · MDP 与 POMDP：先把问题写对](#chapter-04)
 
 **学习目标**
 
@@ -1455,7 +1464,7 @@ for t in range(horizon):
 - 区分 V、Q 与优势
 - 区分评价一个策略和寻找最优策略
 
-**配套网页实验：** bellman（在网页“交互实验室”打开）
+**配套网页实验:** bellman（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -1684,9 +1693,9 @@ print(v["A"])
 
 #### 本章参考资料
 
-- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto，2018。来源标识：f-sutton。
-- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray，2022。来源标识：f-decision。
-- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver，2015。来源标识：f-silver。
+- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto; 2018. 来源标识: f-sutton.
+- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray; 2022. 来源标识: f-decision.
+- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver; 2015. 来源标识: f-silver.
 
 ---
 
@@ -1696,9 +1705,9 @@ print(v["A"])
 
 *用策略评估、策略改进和价值迭代建立第一条算法主线。*
 
-**程度：** 入门　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 入门 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [05 · Bellman 方程：把未来拆成一步](#chapter-05)
+**先修章节:** [05 · Bellman 方程：把未来拆成一步](#chapter-05)
 
 **学习目标**
 
@@ -1706,7 +1715,7 @@ print(v["A"])
 - 区分策略迭代与价值迭代
 - 理解模型误差与计算复杂度的限制
 
-**配套网页实验：** gridworld（在网页“交互实验室”打开）
+**配套网页实验:** gridworld（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -1941,8 +1950,8 @@ B 向右进入 G 得 10，所以 $V(B)=10$；A 经 B 的回报为 $-1+0.9\times1
 
 #### 本章参考资料
 
-- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver，2015。来源标识：f-silver。
-- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray，2022。来源标识：f-decision。
+- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver; 2015. 来源标识: f-silver.
+- [R4](#reference-4) · [Algorithms for Decision Making](https://algorithmsbook.com/decisionmaking/) — Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray; 2022. 来源标识: f-decision.
 
 ---
 
@@ -1952,9 +1961,9 @@ B 向右进入 G 得 10，所以 $V(B)=10$；A 经 B 的回报为 $-1+0.9\times1
 
 *完整结局、一步预期和中间折衷，是同一个估计问题的不同答案。*
 
-**程度：** 进阶　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [05 · Bellman 方程：把未来拆成一步](#chapter-05)；[06 · 动态规划：模型已知时怎样规划？](#chapter-06)
+**先修章节:** [05 · Bellman 方程：把未来拆成一步](#chapter-05)；[06 · 动态规划：模型已知时怎样规划？](#chapter-06)
 
 **学习目标**
 
@@ -1962,7 +1971,7 @@ B 向右进入 G 得 10，所以 $V(B)=10$；A 经 B 的回报为 $-1+0.9\times1
 - 手算 TD 误差与 n-step return
 - 正确处理轨迹截断的 bootstrap
 
-**配套网页实验：** td（在网页“交互实验室”打开）
+**配套网页实验:** td（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -2196,9 +2205,9 @@ $V(s)=3$，奖励为 2，$V(s')=8$，$\gamma=0.5$、$\alpha=0.2$。分别计算�
 
 #### 本章参考资料
 
-- [R7](#reference-7) · [Learning to Predict by the Methods of Temporal Differences](https://jmvidal.cse.sc.edu/library/sutton88a.pdf) — Richard S. Sutton，1988。来源标识：f-td。
-- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto，2018。来源标识：f-sutton。
-- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation，持续维护。来源标识：f-gym。
+- [R7](#reference-7) · [Learning to Predict by the Methods of Temporal Differences](https://jmvidal.cse.sc.edu/library/sutton88a.pdf) — Richard S. Sutton; 1988. 来源标识: f-td.
+- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto; 2018. 来源标识: f-sutton.
+- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation; 持续维护. 来源标识: f-gym.
 
 ---
 
@@ -2208,9 +2217,9 @@ $V(s)=3$，奖励为 2，$V(s')=8$，$\gamma=0.5$、$\alpha=0.2$。分别计算�
 
 *行为策略与目标策略的区别，比记住更新公式更重要。*
 
-**程度：** 进阶　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [02 · 多臂老虎机：探索需要付出什么？](#chapter-02)；[07 · MC、TD 与 n-step：向什么目标学习？](#chapter-07)
+**先修章节:** [02 · 多臂老虎机：探索需要付出什么？](#chapter-02)；[07 · MC、TD 与 n-step：向什么目标学习？](#chapter-07)
 
 **学习目标**
 
@@ -2218,7 +2227,7 @@ $V(s)=3$，奖励为 2，$V(s')=8$，$\gamma=0.5$、$\alpha=0.2$。分别计算�
 - 从 max 目标解释 off-policy
 - 正确理解悬崖行走与收敛条件
 
-**配套网页实验：** cliff（在网页“交互实验室”打开）
+**配套网页实验:** cliff（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -2436,9 +2445,9 @@ $$y_t=R_{t+1}+\gamma(1-d_t)\sum_{a'}\pi(a'\mid S_{t+1})Q(S_{t+1},a').$$
 
 #### 本章参考资料
 
-- [R8](#reference-8) · [Q-learning](https://www.gatsby.ucl.ac.uk/~dayan/papers/wd92.html) — Christopher J. C. H. Watkins · Peter Dayan，1992。来源标识：f-qlearning。
-- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto，2018。来源标识：f-sutton。
-- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver，2015。来源标识：f-silver。
+- [R8](#reference-8) · [Q-learning](https://www.gatsby.ucl.ac.uk/~dayan/papers/wd92.html) — Christopher J. C. H. Watkins · Peter Dayan; 1992. 来源标识: f-qlearning.
+- [R1](#reference-1) · [Reinforcement Learning: An Introduction, 2nd edition](https://mitpress.mit.edu/9780262039246/reinforcement-learning/) — Richard S. Sutton · Andrew G. Barto; 2018. 来源标识: f-sutton.
+- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver; 2015. 来源标识: f-silver.
 
 ---
 
@@ -2448,7 +2457,7 @@ $$y_t=R_{t+1}+\gamma(1-d_t)\sum_{a'}\pi(a'\mid S_{t+1})Q(S_{t+1},a').$$
 
 理解 DQN 的训练闭环，也理解它为什么会不稳定。
 
-**完成本模块后：** 解释经验回放、目标网络与 Double DQN。
+**完成本模块后:** 解释经验回放、目标网络与 Double DQN。
 
 <a id="chapter-09"></a>
 
@@ -2456,9 +2465,9 @@ $$y_t=R_{t+1}+\gamma(1-d_t)\sum_{a'}\pi(a'\mid S_{t+1})Q(S_{t+1},a').$$
 
 *神经网络让经验能够泛化，也让误差有机会互相放大。*
 
-**程度：** 进阶　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)
+**先修章节:** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)
 
 **学习目标**
 
@@ -2714,9 +2723,9 @@ optimizer.step()
 
 #### 本章参考资料
 
-- [R9](#reference-9) · [Emphatic Algorithms for Deep Reinforcement Learning](https://proceedings.mlr.press/v139/jiang21j.html) — Ray Jiang et al.，2021。来源标识：f-triad。
-- [R10](#reference-10) · [Why Target Networks Stabilise Temporal Difference Methods](https://proceedings.mlr.press/v202/fellows23a.html) — Mattie Fellows · Matthew J. A. Smith · Shimon Whiteson，2023。来源标识：f-target。
-- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver，2015。来源标识：f-silver。
+- [R9](#reference-9) · [Emphatic Algorithms for Deep Reinforcement Learning](https://proceedings.mlr.press/v139/jiang21j.html) — Ray Jiang et al.; 2021. 来源标识: f-triad.
+- [R10](#reference-10) · [Why Target Networks Stabilise Temporal Difference Methods](https://proceedings.mlr.press/v202/fellows23a.html) — Mattie Fellows · Matthew J. A. Smith · Shimon Whiteson; 2023. 来源标识: f-target.
+- [R2](#reference-2) · [UCL Reinforcement Learning Lectures](https://www.davidsilver.uk/teaching/) — David Silver; 2015. 来源标识: f-silver.
 
 ---
 
@@ -2726,9 +2735,9 @@ optimizer.step()
 
 *经验回放与目标网络分别解决什么，又没有解决什么？*
 
-**程度：** 进阶　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[09 · 函数逼近：从 Q 表到共享参数](#chapter-09)
+**先修章节:** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[09 · 函数逼近：从 Q 表到共享参数](#chapter-09)
 
 **学习目标**
 
@@ -2736,7 +2745,7 @@ optimizer.step()
 - 正确构造 minibatch TD 目标
 - 区分交互步数、优化步数和目标同步频率
 
-**配套网页实验：** replay（在网页“交互实验室”打开）
+**配套网页实验:** replay（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -2965,9 +2974,9 @@ def dqn_update(online, target_net, optimizer, batch, gamma=0.99):
 
 #### 本章参考资料
 
-- [R11](#reference-11) · [Human-level control through deep reinforcement learning](https://doi.org/10.1038/nature14236) — Volodymyr Mnih et al.，2015。来源标识：f-dqn。
-- [R12](#reference-12) · [Reinforcement Learning (DQN) Tutorial](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) — PyTorch contributors，持续维护。来源标识：f-pytorch。
-- [R10](#reference-10) · [Why Target Networks Stabilise Temporal Difference Methods](https://proceedings.mlr.press/v202/fellows23a.html) — Mattie Fellows · Matthew J. A. Smith · Shimon Whiteson，2023。来源标识：f-target。
+- [R11](#reference-11) · [Human-level control through deep reinforcement learning](https://doi.org/10.1038/nature14236) — Volodymyr Mnih et al.; 2015. 来源标识: f-dqn.
+- [R12](#reference-12) · [Reinforcement Learning (DQN) Tutorial](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) — PyTorch contributors; 持续维护. 来源标识: f-pytorch.
+- [R10](#reference-10) · [Why Target Networks Stabilise Temporal Difference Methods](https://proceedings.mlr.press/v202/fellows23a.html) — Mattie Fellows · Matthew J. A. Smith · Shimon Whiteson; 2023. 来源标识: f-target.
 
 ---
 
@@ -2977,9 +2986,9 @@ def dqn_update(online, target_net, optimizer, batch, gamma=0.99):
 
 *从一个可以手算的偏差，理解动作选择与估值分离。*
 
-**程度：** 进阶　**建议阅读与推演：** 35 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 35 分钟（按个人基础调整）
 
-**先修章节：** [03 · 够用的概率：从样本到期望](#chapter-03)；[10 · DQN：把不稳定的学习循环拆开](#chapter-10)
+**先修章节:** [03 · 够用的概率：从样本到期望](#chapter-03)；[10 · DQN：把不稳定的学习循环拆开](#chapter-10)
 
 **学习目标**
 
@@ -2987,7 +2996,7 @@ def dqn_update(online, target_net, optimizer, batch, gamma=0.99):
 - 区分 DQN 与 Double DQN 目标
 - 说明双估计器的局限和消融方法
 
-**配套网页实验：** overestimation（在网页“交互实验室”打开）
+**配套网页实验:** overestimation（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -3203,8 +3212,8 @@ Double DQN 可能低估，也不能消除数据覆盖、函数逼近、终止处
 
 #### 本章参考资料
 
-- [R13](#reference-13) · [Double Q-learning](https://proceedings.neurips.cc/paper_files/paper/2010/hash/091d584fced301b442654dd8c23b3fc9-Abstract.html) — Hado van Hasselt，2010。来源标识：f-doubleq。
-- [R14](#reference-14) · [Deep Reinforcement Learning with Double Q-learning](https://arxiv.org/abs/1509.06461) — Hado van Hasselt · Arthur Guez · David Silver，2015 / AAAI 2016。来源标识：f-double-dqn。
+- [R13](#reference-13) · [Double Q-learning](https://proceedings.neurips.cc/paper_files/paper/2010/hash/091d584fced301b442654dd8c23b3fc9-Abstract.html) — Hado van Hasselt; 2010. 来源标识: f-doubleq.
+- [R14](#reference-14) · [Deep Reinforcement Learning with Double Q-learning](https://arxiv.org/abs/1509.06461) — Hado van Hasselt · Arthur Guez · David Silver; 2015 / AAAI 2016. 来源标识: f-double-dqn.
 
 ---
 
@@ -3214,7 +3223,7 @@ Double DQN 可能低估，也不能消除数据覆盖、函数逼近、终止处
 
 从 REINFORCE 出发，逐项拆开 PPO 的更新目标。
 
-**完成本模块后：** 看懂概率比、GAE 与正负优势的裁剪。
+**完成本模块后:** 看懂概率比、GAE 与正负优势的裁剪。
 
 <a id="chapter-12"></a>
 
@@ -3222,9 +3231,9 @@ Double DQN 可能低估，也不能消除数据覆盖、函数逼近、终止处
 
 *不用对环境反向传播，也能知道策略应该朝哪边改。*
 
-**程度：** 进阶　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [03 · 够用的概率：从样本到期望](#chapter-03)；[05 · Bellman 方程：把未来拆成一步](#chapter-05)；[09 · 函数逼近：从 Q 表到共享参数](#chapter-09)
+**先修章节:** [03 · 够用的概率：从样本到期望](#chapter-03)；[05 · Bellman 方程：把未来拆成一步](#chapter-05)；[09 · 函数逼近：从 Q 表到共享参数](#chapter-09)
 
 **学习目标**
 
@@ -3232,7 +3241,7 @@ Double DQN 可能低估，也不能消除数据覆盖、函数逼近、终止处
 - 解释 reward-to-go 和状态 baseline
 - 正确区分梯度上升目标与梯度下降损失
 
-**配套网页实验：** policy-gradient（在网页“交互实验室”打开）
+**配套网页实验:** policy-gradient（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -3552,8 +3561,8 @@ optimizer.step()
 
 #### 本章参考资料
 
-- [R15](#reference-15) · [Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning](https://doi.org/10.1007/BF00992696) — Ronald J. Williams，1992。来源标识：f-reinforce。
-- [R16](#reference-16) · [Intro to Policy Optimization](https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html) — OpenAI Spinning Up，持续维护。来源标识：f-policy-gradient。
+- [R15](#reference-15) · [Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning](https://doi.org/10.1007/BF00992696) — Ronald J. Williams; 1992. 来源标识: f-reinforce.
+- [R16](#reference-16) · [Intro to Policy Optimization](https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html) — OpenAI Spinning Up; 持续维护. 来源标识: f-policy-gradient.
 
 ---
 
@@ -3563,9 +3572,9 @@ optimizer.step()
 
 *让价值估计为策略更新提供更稳定的方向*
 
-**程度：** 进阶　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [07 · MC、TD 与 n-step：向什么目标学习？](#chapter-07)；[12 · REINFORCE：直接学习行动的概率](#chapter-12)
+**先修章节:** [07 · MC、TD 与 n-step：向什么目标学习？](#chapter-07)；[12 · REINFORCE：直接学习行动的概率](#chapter-12)
 
 **学习目标**
 
@@ -3573,7 +3582,7 @@ optimizer.step()
 - 从 TD 残差推导 GAE 的反向递推
 - 正确处理终止、自举和轨迹边界
 
-**配套网页实验：** gae（在网页“交互实验室”打开）
+**配套网页实验:** gae（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -3808,8 +3817,8 @@ flowchart TD
 
 #### 本章参考资料
 
-- [R17](#reference-17) · [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438) — Schulman et al.，2015 / ICLR 2016。来源标识：gae-paper。
-- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation，官方文档。来源标识：gym-time-limits。
+- [R17](#reference-17) · [High-Dimensional Continuous Control Using Generalized Advantage Estimation](https://arxiv.org/abs/1506.02438) — Schulman et al.; 2015 / ICLR 2016. 来源标识: gae-paper.
+- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation; 官方文档. 来源标识: gym-time-limits.
 
 ---
 
@@ -3819,9 +3828,9 @@ flowchart TD
 
 *旧数据能用多久，策略为什么不能一步改太大*
 
-**程度：** 进阶　**建议阅读与推演：** 35 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 35 分钟（按个人基础调整）
 
-**先修章节：** [03 · 够用的概率：从样本到期望](#chapter-03)；[12 · REINFORCE：直接学习行动的概率](#chapter-12)；[13 · Actor-Critic 与 GAE](#chapter-13)
+**先修章节:** [03 · 够用的概率：从样本到期望](#chapter-03)；[12 · REINFORCE：直接学习行动的概率](#chapter-12)；[13 · Actor-Critic 与 GAE](#chapter-13)
 
 **学习目标**
 
@@ -4028,8 +4037,8 @@ approx_kl = ((ratio - 1.0) - (new_log_prob - old_log_prob)).mean()
 
 #### 本章参考资料
 
-- [R18](#reference-18) · [Trust Region Policy Optimization](https://arxiv.org/abs/1502.05477) — Schulman et al.，2015。来源标识：trpo-paper。
-- [R19](#reference-19) · [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347) — Schulman et al.，2017。来源标识：ppo-paper。
+- [R18](#reference-18) · [Trust Region Policy Optimization](https://arxiv.org/abs/1502.05477) — Schulman et al.; 2015. 来源标识: trpo-paper.
+- [R19](#reference-19) · [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347) — Schulman et al.; 2017. 来源标识: ppo-paper.
 
 ---
 
@@ -4039,9 +4048,9 @@ approx_kl = ((ratio - 1.0) - (new_log_prob - old_log_prob)).mean()
 
 *用正负优势、概率比和四个数值例子读懂更新*
 
-**程度：** 进阶　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [13 · Actor-Critic 与 GAE](#chapter-13)；[14 · 重要性采样与信赖域](#chapter-14)
+**先修章节:** [13 · Actor-Critic 与 GAE](#chapter-13)；[14 · 重要性采样与信赖域](#chapter-14)
 
 **学习目标**
 
@@ -4049,7 +4058,7 @@ approx_kl = ((ratio - 1.0) - (new_log_prob - old_log_prob)).mean()
 - 理解 clip 不会硬性限制概率比
 - 建立可调试的 PPO 训练流程
 
-**配套网页实验：** ppo（在网页“交互实验室”打开）
+**配套网页实验:** ppo（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -4274,8 +4283,8 @@ PPO 的环境样本通常不能像离策略经验那样反复长期利用。能�
 
 #### 本章参考资料
 
-- [R19](#reference-19) · [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347) — Schulman et al.，2017。来源标识：ppo-paper。
-- [R20](#reference-20) · [Spinning Up: Proximal Policy Optimization](https://spinningup.openai.com/en/latest/algorithms/ppo.html) — OpenAI，官方文档。来源标识：spinup-ppo。
+- [R19](#reference-19) · [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347) — Schulman et al.; 2017. 来源标识: ppo-paper.
+- [R20](#reference-20) · [Spinning Up: Proximal Policy Optimization](https://spinningup.openai.com/en/latest/algorithms/ppo.html) — OpenAI; 官方文档. 来源标识: spinup-ppo.
 
 ---
 
@@ -4285,7 +4294,7 @@ PPO 的环境样本通常不能像离策略经验那样反复长期利用。能�
 
 从高斯策略到最大熵，理解连续决策的细节。
 
-**完成本模块后：** 算对动作变换，按任务特点选择算法。
+**完成本模块后:** 算对动作变换，按任务特点选择算法。
 
 <a id="chapter-16"></a>
 
@@ -4293,9 +4302,9 @@ PPO 的环境样本通常不能像离策略经验那样反复长期利用。能�
 
 *从“选哪个”走向“调整多少”，同时算对概率密度*
 
-**程度：** 进阶　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [03 · 够用的概率：从样本到期望](#chapter-03)；[12 · REINFORCE：直接学习行动的概率](#chapter-12)；[14 · 重要性采样与信赖域](#chapter-14)
+**先修章节:** [03 · 够用的概率：从样本到期望](#chapter-03)；[12 · REINFORCE：直接学习行动的概率](#chapter-12)；[14 · 重要性采样与信赖域](#chapter-14)
 
 **学习目标**
 
@@ -4303,7 +4312,7 @@ PPO 的环境样本通常不能像离策略经验那样反复长期利用。能�
 - 推导 tanh 和物理缩放的密度修正
 - 区分动作有界与系统安全
 
-**配套网页实验：** gaussian（在网页“交互实验室”打开）
+**配套网页实验:** gaussian（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -4521,8 +4530,8 @@ tanh 只保证候选动作数值在约定区间。相同的小增量，在一个
 
 #### 本章参考资料
 
-- [R21](#reference-21) · [Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290) — Haarnoja et al.，2018。来源标识：sac-paper。
-- [R23](#reference-23) · [Spinning Up: Soft Actor-Critic](https://spinningup.openai.com/en/latest/algorithms/sac.html) — OpenAI，官方文档。来源标识：spinup-sac。
+- [R21](#reference-21) · [Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290) — Haarnoja et al.; 2018. 来源标识: sac-paper.
+- [R23](#reference-23) · [Spinning Up: Soft Actor-Critic](https://spinningup.openai.com/en/latest/algorithms/sac.html) — OpenAI; 官方文档. 来源标识: spinup-sac.
 
 ---
 
@@ -4532,9 +4541,9 @@ tanh 只保证候选动作数值在约定区间。相同的小增量，在一个
 
 *复用经验，同时学习价值、随机策略与探索温度*
 
-**程度：** 进阶　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [10 · DQN：把不稳定的学习循环拆开](#chapter-10)；[13 · Actor-Critic 与 GAE](#chapter-13)；[16 · 连续动作与 tanh 高斯策略](#chapter-16)
+**先修章节:** [10 · DQN：把不稳定的学习循环拆开](#chapter-10)；[13 · Actor-Critic 与 GAE](#chapter-13)；[16 · 连续动作与 tanh 高斯策略](#chapter-16)
 
 **学习目标**
 
@@ -4542,7 +4551,7 @@ tanh 只保证候选动作数值在约定区间。相同的小增量，在一个
 - 写出双 Q 的自举目标和 Actor 损失
 - 区分 SAC 的探索与工业安全约束
 
-**配套网页实验：** gaussian（在网页“交互实验室”打开）
+**配套网页实验:** gaussian（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -4771,9 +4780,9 @@ SAC 可以复用旧经验，但普通在线 SAC 仍依赖交互不断纠正估�
 
 #### 本章参考资料
 
-- [R21](#reference-21) · [Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290) — Haarnoja et al.，2018。来源标识：sac-paper。
-- [R22](#reference-22) · [Soft Actor-Critic Algorithms and Applications](https://arxiv.org/abs/1812.05905) — Haarnoja et al.，2018 / 2019。来源标识：sac-applications。
-- [R23](#reference-23) · [Spinning Up: Soft Actor-Critic](https://spinningup.openai.com/en/latest/algorithms/sac.html) — OpenAI，官方文档。来源标识：spinup-sac。
+- [R21](#reference-21) · [Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290) — Haarnoja et al.; 2018. 来源标识: sac-paper.
+- [R22](#reference-22) · [Soft Actor-Critic Algorithms and Applications](https://arxiv.org/abs/1812.05905) — Haarnoja et al.; 2018 / 2019. 来源标识: sac-applications.
+- [R23](#reference-23) · [Spinning Up: Soft Actor-Critic](https://spinningup.openai.com/en/latest/algorithms/sac.html) — OpenAI; 官方文档. 来源标识: spinup-sac.
 
 ---
 
@@ -4783,9 +4792,9 @@ SAC 可以复用旧经验，但普通在线 SAC 仍依赖交互不断纠正估�
 
 *从数据、动作和交互预算出发，建立可解释的基线*
 
-**程度：** 实践　**建议阅读与推演：** 30 分钟（按个人基础调整）
+**程度:** 实践 · **建议阅读与推演:** 30 分钟（按个人基础调整）
 
-**先修章节：** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[11 · Double DQN：别让同一份噪声既选又评](#chapter-11)；[15 · 把 PPO 的裁剪目标拆开](#chapter-15)；[17 · 最大熵目标与 SAC](#chapter-17)
+**先修章节:** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[11 · Double DQN：别让同一份噪声既选又评](#chapter-11)；[15 · 把 PPO 的裁剪目标拆开](#chapter-15)；[17 · 最大熵目标与 SAC](#chapter-17)
 
 **学习目标**
 
@@ -5003,10 +5012,10 @@ flowchart TD
 
 #### 本章参考资料
 
-- [R26](#reference-26) · [Reinforcement Learning Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) — Stable-Baselines3，官方文档。来源标识：sb3-tips。
-- [R24](#reference-24) · [Addressing Function Approximation Error in Actor-Critic Methods](https://arxiv.org/abs/1802.09477) — Fujimoto, van Hoof & Meger，2018。来源标识：td3-paper。
-- [R30](#reference-30) · [A Minimalist Approach to Offline Reinforcement Learning](https://arxiv.org/abs/2106.06860) — Fujimoto & Gu，2021。来源标识：td3bc-paper。
-- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning，仓库约定。来源标识：project-contract。
+- [R26](#reference-26) · [Reinforcement Learning Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) — Stable-Baselines3; 官方文档. 来源标识: sb3-tips.
+- [R24](#reference-24) · [Addressing Function Approximation Error in Actor-Critic Methods](https://arxiv.org/abs/1802.09477) — Fujimoto, van Hoof & Meger; 2018. 来源标识: td3-paper.
+- [R30](#reference-30) · [A Minimalist Approach to Offline Reinforcement Learning](https://arxiv.org/abs/2106.06860) — Fujimoto & Gu; 2021. 来源标识: td3bc-paper.
+- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; 仓库约定. 来源标识: project-contract.
 
 ---
 
@@ -5016,7 +5025,7 @@ flowchart TD
 
 定义环境、建立基线，让每一条结论都有证据。
 
-**完成本模块后：** 完成一份流程工业决策的模拟实验设计。
+**完成本模块后:** 完成一份流程工业决策的模拟实验设计。
 
 <a id="chapter-19"></a>
 
@@ -5024,9 +5033,9 @@ flowchart TD
 
 *状态、动作、奖励和边界，比算法名称更早决定成败*
 
-**程度：** 实践　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 实践 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [04 · MDP 与 POMDP：先把问题写对](#chapter-04)；[08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[18 · 根据问题选择算法](#chapter-18)
+**先修章节:** [04 · MDP 与 POMDP：先把问题写对](#chapter-04)；[08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[18 · 根据问题选择算法](#chapter-18)
 
 **学习目标**
 
@@ -5245,9 +5254,9 @@ for _ in range(env.horizon):
 
 #### 本章参考资料
 
-- [R25](#reference-25) · [Create a Custom Environment](https://gymnasium.farama.org/introduction/create_custom_env/) — Farama Foundation，官方文档。来源标识：gym-custom。
-- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation，官方文档。来源标识：gym-time-limits。
-- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning，仓库约定。来源标识：project-contract。
+- [R25](#reference-25) · [Create a Custom Environment](https://gymnasium.farama.org/introduction/create_custom_env/) — Farama Foundation; 官方文档. 来源标识: gym-custom.
+- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation; 官方文档. 来源标识: gym-time-limits.
+- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; 仓库约定. 来源标识: project-contract.
 
 ---
 
@@ -5257,9 +5266,9 @@ for _ in range(env.horizon):
 
 *多随机种子、对照与消融，让结果经得起追问*
 
-**程度：** 实践　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 实践 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [18 · 根据问题选择算法](#chapter-18)；[19 · 把真实问题写成可验证环境](#chapter-19)
+**先修章节:** [18 · 根据问题选择算法](#chapter-18)；[19 · 把真实问题写成可验证环境](#chapter-19)
 
 **学习目标**
 
@@ -5267,7 +5276,7 @@ for _ in range(env.horizon):
 - 设计时间划分、基线与消融
 - 报告均值、波动和结论边界
 
-**配套网页实验：** seeds（在网页“交互实验室”打开）
+**配套网页实验:** seeds（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -5477,9 +5486,9 @@ print({"mean": mean_score, "std": std_across_seeds,
 
 #### 本章参考资料
 
-- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Agarwal et al.，2021。来源标识：rliable-paper。
-- [R26](#reference-26) · [Reinforcement Learning Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) — Stable-Baselines3，官方文档。来源标识：sb3-tips。
-- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning，仓库约定。来源标识：project-contract。
+- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Agarwal et al.; 2021. 来源标识: rliable-paper.
+- [R26](#reference-26) · [Reinforcement Learning Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) — Stable-Baselines3; 官方文档. 来源标识: sb3-tips.
+- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; 仓库约定. 来源标识: project-contract.
 
 ---
 
@@ -5489,9 +5498,9 @@ print({"mean": mean_score, "std": std_across_seeds,
 
 *把时序预测、离线策略、约束和实验报告接在一起*
 
-**程度：** 实践　**建议阅读与推演：** 55 分钟（按个人基础调整）
+**程度:** 实践 · **建议阅读与推演:** 55 分钟（按个人基础调整）
 
-**先修章节：** [04 · MDP 与 POMDP：先把问题写对](#chapter-04)；[18 · 根据问题选择算法](#chapter-18)；[19 · 把真实问题写成可验证环境](#chapter-19)；[20 · 做一份可信的强化学习实验](#chapter-20)
+**先修章节:** [04 · MDP 与 POMDP：先把问题写对](#chapter-04)；[18 · 根据问题选择算法](#chapter-18)；[19 · 把真实问题写成可验证环境](#chapter-19)；[20 · 做一份可信的强化学习实验](#chapter-20)
 
 **学习目标**
 
@@ -5499,7 +5508,7 @@ print({"mean": mean_score, "std": std_across_seeds,
 - 建立含历史、软测量和化验年龄的观测
 - 设计五层门控与真实可执行的比较协议
 
-**配套网页实验：** safety（在网页“交互实验室”打开）
+**配套网页实验:** safety（在网页“交互实验室”打开）
 
 #### 跟着水泥案例，一步一步推导
 
@@ -5672,7 +5681,7 @@ $$Y_{t+1}^{sp,\mathrm{candidate}}=Y_t^{sp}+\mathrm{RATE}\odot a_t.$$
 
 奖励沿用煤耗、电耗和动作平滑目标；质量与气体边界作为单独成本：
 
-下面沿用仓库领域约定的 $r_t$ 标签，表示某个动作对应评价窗口的奖励。构造训练转移时，应把该窗口反馈统一记为前文的 $R_{t+1}$，对齐动作生效与指标归属时间，并避免把尚未可见的窗口指标放入 $o_t$。
+下面沿用仓库领域约定的 $r_t$ 标签，表示某个动作对应评价窗口的奖励。构造训练转移时，应把该窗口反馈统一记为前文的 $R_{t+1}$，对齐动作生效与指标归属时间，并避免把尚未可见的窗口指标放入 $o_t$。物理动作平滑项中的 $a_t$ 表示门控后实际执行的增量；请求增量须另行保留。
 
 $$r_t=-w_f\frac{F_t-\bar F}{\sigma_F}-w_e\frac{E_t-\bar E}{\sigma_E}
 -w_s\left(\|a_t\|^2+\|a_t-a_{t-1}\|^2\right).$$
@@ -5726,9 +5735,9 @@ flowchart TD
 
 #### 本章参考资料
 
-- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning，仓库约定。来源标识：project-contract。
-- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Achiam et al.，2017。来源标识：cpo-paper。
-- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation，官方文档。来源标识：gym-time-limits。
+- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; 仓库约定. 来源标识: project-contract.
+- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Achiam et al.; 2017. 来源标识: cpo-paper.
+- [R6](#reference-6) · [Handling Time Limits](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/) — Farama Foundation; 官方文档. 来源标识: gym-time-limits.
 
 ---
 
@@ -5738,7 +5747,7 @@ flowchart TD
 
 在历史数据与模型中学习，识别边界与不确定性。
 
-**完成本模块后：** 形成离线 RL、模型学习与安全约束研究路线。
+**完成本模块后:** 形成离线 RL、模型学习与安全约束研究路线。
 
 <a id="chapter-22"></a>
 
@@ -5746,9 +5755,9 @@ flowchart TD
 
 *理解分布外动作，再比较 BC、TD3+BC、CQL 与 IQL*
 
-**程度：** 进阶　**建议阅读与推演：** 50 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 50 分钟（按个人基础调整）
 
-**先修章节：** [10 · DQN：把不稳定的学习循环拆开](#chapter-10)；[17 · 最大熵目标与 SAC](#chapter-17)；[20 · 做一份可信的强化学习实验](#chapter-20)
+**先修章节:** [10 · DQN：把不稳定的学习循环拆开](#chapter-10)；[17 · 最大熵目标与 SAC](#chapter-17)；[20 · 做一份可信的强化学习实验](#chapter-20)
 
 **学习目标**
 
@@ -5971,9 +5980,9 @@ FQE 固定待评估策略，再拟合它的价值；重要性采样依赖行为�
 
 #### 本章参考资料
 
-- [R28](#reference-28) · [Conservative Q-Learning for Offline Reinforcement Learning](https://arxiv.org/abs/2006.04779) — Kumar et al.，2020。来源标识：cql-paper。
-- [R29](#reference-29) · [Offline Reinforcement Learning with Implicit Q-Learning](https://arxiv.org/abs/2110.06169) — Kostrikov, Nair & Levine，2021 / ICLR 2022。来源标识：iql-paper。
-- [R30](#reference-30) · [A Minimalist Approach to Offline Reinforcement Learning](https://arxiv.org/abs/2106.06860) — Fujimoto & Gu，2021。来源标识：td3bc-paper。
+- [R28](#reference-28) · [Conservative Q-Learning for Offline Reinforcement Learning](https://arxiv.org/abs/2006.04779) — Kumar et al.; 2020. 来源标识: cql-paper.
+- [R29](#reference-29) · [Offline Reinforcement Learning with Implicit Q-Learning](https://arxiv.org/abs/2110.06169) — Kostrikov, Nair & Levine; 2021 / ICLR 2022. 来源标识: iql-paper.
+- [R30](#reference-30) · [A Minimalist Approach to Offline Reinforcement Learning](https://arxiv.org/abs/2106.06860) — Fujimoto & Gu; 2021. 来源标识: td3bc-paper.
 
 ---
 
@@ -5983,9 +5992,9 @@ FQE 固定待评估策略，再拟合它的价值；重要性采样依赖行为�
 
 *把预测模型变成可用的规划资源，同时约束模型误差*
 
-**程度：** 进阶　**建议阅读与推演：** 40 分钟（按个人基础调整）
+**程度:** 进阶 · **建议阅读与推演:** 40 分钟（按个人基础调整）
 
-**先修章节：** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[19 · 把真实问题写成可验证环境](#chapter-19)；[22 · 离线强化学习：从日志到策略](#chapter-22)
+**先修章节:** [08 · SARSA 与 Q-learning：到底在学谁？](#chapter-08)；[19 · 把真实问题写成可验证环境](#chapter-19)；[22 · 离线强化学习：从日志到策略](#chapter-22)
 
 **学习目标**
 
@@ -6207,9 +6216,9 @@ flowchart TD
 
 #### 本章参考资料
 
-- [R31](#reference-31) · [When to Trust Your Model: Model-Based Policy Optimization](https://arxiv.org/abs/1906.08253) — Janner et al.，2019。来源标识：mbpo-paper。
-- [R32](#reference-32) · [MOPO: Model-based Offline Policy Optimization](https://arxiv.org/abs/2005.13239) — Yu et al.，2020。来源标识：mopo-paper。
-- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning，仓库约定。来源标识：project-contract。
+- [R31](#reference-31) · [When to Trust Your Model: Model-Based Policy Optimization](https://arxiv.org/abs/1906.08253) — Janner et al.; 2019. 来源标识: mbpo-paper.
+- [R32](#reference-32) · [MOPO: Model-based Offline Policy Optimization](https://arxiv.org/abs/2005.13239) — Yu et al.; 2020. 来源标识: mopo-paper.
+- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; 仓库约定. 来源标识: project-contract.
 
 ---
 
@@ -6219,9 +6228,9 @@ flowchart TD
 
 *把“学会算法”推进到“提出问题并给出可信证据”*
 
-**程度：** 实践　**建议阅读与推演：** 45 分钟（按个人基础调整）
+**程度:** 实践 · **建议阅读与推演:** 45 分钟（按个人基础调整）
 
-**先修章节：** [20 · 做一份可信的强化学习实验](#chapter-20)；[21 · 贯穿案例：烧成系统设定值决策](#chapter-21)；[22 · 离线强化学习：从日志到策略](#chapter-22)；[23 · 模型学习、Dyna 与短程推演](#chapter-23)
+**先修章节:** [20 · 做一份可信的强化学习实验](#chapter-20)；[21 · 贯穿案例：烧成系统设定值决策](#chapter-21)；[22 · 离线强化学习：从日志到策略](#chapter-22)；[23 · 模型学习、Dyna 与短程推演](#chapter-23)
 
 **学习目标**
 
@@ -6443,10 +6452,10 @@ actor_objective = reward_objective - (lagrange.detach() * cost_objectives).sum()
 
 #### 本章参考资料
 
-- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Achiam et al.，2017。来源标识：cpo-paper。
-- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Agarwal et al.，2021。来源标识：rliable-paper。
-- [R34](#reference-34) · [Direct Preference Optimization: Your Language Model is Secretly a Reward Model](https://arxiv.org/abs/2305.18290) — Rafailov et al.，2023。来源标识：dpo-paper。
-- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning，仓库约定。来源标识：project-contract。
+- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Achiam et al.; 2017. 来源标识: cpo-paper.
+- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Agarwal et al.; 2021. 来源标识: rliable-paper.
+- [R34](#reference-34) · [Direct Preference Optimization: Your Language Model is Secretly a Reward Model](https://arxiv.org/abs/2305.18290) — Rafailov et al.; 2023. 来源标识: dpo-paper.
+- [R35](#reference-35) · [rl-learning 项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; 仓库约定. 来源标识: project-contract.
 
 ---
 
@@ -6736,232 +6745,1158 @@ npm run typecheck
 
 <a id="research"></a>
 
-## 衔接已有研究：流程工业强化学习
+## 运行指标决策研究：九篇完整专题
 
-#### 研究的主问题：让已有过程知识变成可验证的连续决策
+以下保留全部九篇专题正文。按顺序可串起控制层级、运行指标、目标约束、进化优化、序贯学习、网络结构、证据边界与研究议程；也可按目录直接进入一个问题。
 
-可以把研究主线写成四个相互依赖的问题：**当前窑况是什么，质量将怎样变化，哪些设定值轨迹值得比较，下一次应提出什么建议。** 状态感知、质量软测量、时序预测、动态多目标优化已经分别在回答其中一部分。强化学习的新增价值，需要证明它能在延迟反馈和连续决策中更好地分配长期信用，而不是仅仅把原有模块包进一个更复杂的网络。
+已发表证据、教学假设与本教程提出的研究设计分别说明。登记摘要不等于独立复现，官方现场报告不等于本项目现场收益，候选结构不等于已训练或已部署的方法。
 
-本页是一份**待实验检验的研究设计**。公式、字段、对照与失败标准可以用于规划研究；这里没有真实生产日志、可运行的 PG-MOEA/D-IEpsilon 基线或现场闭环结果。网页中的数值与互动只演示机制，不能提供实测节煤、节电或质量改善证据。所有新策略交互均限定于离线数据分析或有权限的模拟推演。
+<a id="research-history"></a>
 
-研究接口继续遵循当前仓库：每五分钟给出归一化 CV 设定值增量，经 RATE、五层门控与 DCS/PID/APC 内环处理。CV 包括分解炉出口温度、窑尾烟室温度、二三次风温度、窑头压力和篦冷机一室压力。它不把煤量、风量或阀门开度直接交给 RL。质量与氧量作为独立成本和执行边界；具体阈值来自[项目领域约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)，不能推广成所有水泥线的通用标准。
+### 01 · 从全厂控制到运行指标决策
+
+先定位决策层，再理解 RTO、跟踪 MPC、经济 MPC 和学习策略各自回答的问题。
+
+**建议阅读:** 24 分钟（按个人基础调整）
+
+<a id="figure-operations-stack"></a>
+
+![运行决策：信息、目标与控制分层](./images/operations-stack.webp)
+
+**运行决策：信息、目标与控制分层**
+
+把测量信息、上层设定值决策、下层跟踪控制与真实烧成过程分开看。上层输出的是受约束的目标建议，实际过程还受到惯性、扰动和下层控制影响。
+
+**逐区读图**
+
+- **01** · 底层：预热、分解、烧成和冷却组成真实物料与能量过程。示意布局不代表工程设计图。
+- **02** · 控制层：PID/APC 跟踪设定值。改变目标温度不等于测量温度立刻改变。
+- **03** · 决策层：结合目标、约束和预测，给出温度或压力等运行指标的设定值建议。
+- **04** · 信息层：在线测量与延迟化验有不同时间戳；只能用决策时已经可用的信息。
+
+这些是原创概念插图，不是实测曲线、辨识模型或工程施工图；精确关系以本篇公式和 Mermaid 为准。
+
+#### 1. 先问“决定什么”，再问“用什么算法”
+
+水泥烧成系统中的控制并不是一个从传感器直接连到执行器的黑箱。生产计划约束产量和产品，运行优化选择可接受的操作区间，上层决策给出温度、压力等 CV 的设定值，下层 PID/APC 再调节实际操纵量。各层解决的问题和反馈速度不同；一层的输出通常是另一层的目标或边界。Skogestad 的[全厂控制原文](https://doi.org/10.1016/S0959-1524(00)00023-8)将“应该控制哪些变量”与“采用哪种控制器”明确分开，这对学习方法同样重要。
+
+本项目研究的接口位于上层运行决策：每五分钟提出有界 CV 设定值增量。它沿用内层调节、权限和安全门，不直接输出给煤量或风机开度。比较一个直接操纵执行器的 RL 与一个只修改设定值的优化器，无法把结果差异全部归因于学习算法，因为控制权限、动态响应和约束已经不同。[项目契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
 ~~~mermaid
 flowchart TD
-    D["当时可用的过程数据"] --> H["状态与可靠性表示"]
-    H --> Q["质量软测量"]
-    H --> F["动作条件预测"]
-    Q --> W["候选后果与不确定性"]
-    F --> W
-    W --> M["动态多目标优化教师"]
-    W --> P["离线或模型辅助策略"]
-    M --> P
-    P --> G["五层安全门控"]
-    G --> S["上层 CV 设定值"]
-    S --> C["内层控制与模拟过程"]
-    C --> D
+    P["生产计划与产品要求"] --> O["经济目标与操作边界"]
+    O --> S["上层设定值决策"]
+    M["状态估计与质量信息"] --> S
+    S --> G["门控与执行授权"]
+    G --> C["DCS 与 PID 或 APC"]
+    C --> K["烧成物理过程"]
+    K --> M
+    K --> A["指标核算与审计"]
+    A --> O
 ~~~
 
-图中的连接是待检验的模块接口。预测器能输出未来值，不代表它已经能回答改变设定值后的反事实问题；优化器能产生候选，也不代表候选值得在所有工况执行。每个箭头都需要数据时间、动作语义和不确定性证据。
+#### 2. 稳态 RTO 将经济要求变成操作点
 
-#### 一、哪些公开工作提供了可靠的连接点
+经典稳态实时优化可以写成：
 
-[流程工业 RL 综述](https://doi.org/10.1109/JAS.2024.124227)将 RL 放在更完整的工业建模与控制问题中讨论。本教程沿用这种系统视角，但下面的实验假设和数据协议是针对本项目提出的研究设计，并非该综述已经验证的结果。
+$$\min_{x_s,u_s}\ \ell_{econ}(x_s,u_s,d),\qquad 0=f_s(x_s,u_s,d),\quad g(x_s,u_s,d)\le0.$$
 
-| 公开工作 | 可核实的研究对象或机制 | 可以提出的连接问题 | 必须保留的边界 |
+下标 $s$ 表示稳态，$d$ 是扰动或工况参数。模型先回答在给定原料、价格和生产要求下，哪个稳态操作点更有利，再把结果转换为下层目标。RTO 还需要数据协调、参数估计、稳态检测和结果实施；求解器找到最优数值，并不意味着这些工程环节已经完成。[Darby 等的综述](https://doi.org/10.1016/j.jprocont.2011.03.009)讨论的是这整套实践，而不只是一个优化表达式。
+
+稳态近似的优点是问题相对清楚、经济解释直接；限制来自“在求解和实施期间可以把工况近似看作稳定”这一条件。频繁原料变化、长物料延迟或转换过程可能使同一个稳态点的即时实施代价很大。这是特定问题表述的限制，不能据此断言 RTO、进化算法或优化技术不能处理动态问题。动态 RTO 和滚动优化正是对这些条件的不同处理。
+
+#### 3. 跟踪 MPC 与经济 MPC 的目标不同
+
+跟踪 MPC 常最小化预测输出与目标之间的偏差，再加动作变化项：
+
+$$\min_{a_{0:H-1}}\sum_{k=0}^{H-1}\left(\|y_k-y^{ref}_k\|_Q^2+\|\Delta a_k\|_R^2\right)+V_f(x_H).$$
+
+这里的 $Q,R$ 是权重矩阵，不是 RL 的动作价值函数。控制器使用动态模型预测一段轨迹，只执行第一步，再用新观测重新求解。这种反馈来自重复估计和重新规划，不要求每次都执行最初计划的全部动作。[Rawlings、Mayne 与 Diehl 的开放教材](https://sites.engineering.ucsb.edu/~jbraw/mpc/)详细讨论其模型、约束和终端条件。
+
+经济 MPC 把阶段目标直接改成经济或运行损失 $\ell_{econ}(x_k,a_k)$。最低经济损失不一定恰好位于某个固定参考点，某些问题甚至可能偏好周期运行；因此传统跟踪代价的稳定性结论不能不加条件地照搬。终端集、终端代价、耗散性和可行性等结构，要与具体设计一起检查。[Engell](https://doi.org/10.1016/j.jprocont.2006.10.011)与[Ellis 等](https://doi.org/10.1016/j.jprocont.2014.03.010)提供了从跟踪到经济运行的理论背景。
+
+#### 4. 一个需要动态比较的设定值算例
+
+假设只有“保持”和“小幅上调”两个已通过门控的候选，两方案均遵守质量与氧含量约束。下面的无量纲能耗/平滑性成本是课堂假设，不是辨识出的烧成规律：保持后两段成本为 $[0,4]$；上调后为 $[1,1]$。若只看第一段，保持更好；两段折扣和取 $\gamma=0.9$，则保持为 $3.6$，上调为 $1.9$。后者用眼前代价换取随后运行成本改善，没有用节能收益交换质量越界。
+
+能够比较这两段轨迹的动态优化器同样可以发现这种取舍，完全不必先变成 RL。真正需要回答的是：后果模型来自哪里，未知未来如何补足，计算预算是否允许每步重算，策略将在哪些未见工况被使用。RL 的候选价值是从数据中学习长期价值或反馈规则，使部分在线搜索转移到训练阶段；它仍要承担数据支持和泛化的代价。
+
+#### 5. 用四个问题比较架构
+
+| 问题 | 稳态 RTO | 动态 MPC / 轨迹优化 | 学习策略或价值 |
 | --- | --- | --- | --- |
-| [TCNSO-MSL-TD3](https://doi.org/10.1088/2631-8695/ae5ed3) | 烧成运行指标时序决策；出版社摘要说明 TCN 滑动观测、多步学习和 TD3 的组合 | 历史表示与多步信用分配各贡献多少？在化验延迟变化时是否仍有效？ | 惩罚项及约束模块不自动等于 CMDP，更不自动提供逐步安全保证 |
-| [OA-DSTR 对应公开论文](https://doi.org/10.1016/j.asoc.2024.111772) | 水泥**粉磨**运行指标的双动态优化 | 动态可行域与滚动优化思想能否帮助烧成设定值候选生成？ | 粉磨与烧成的物理过程、目标指标不同，不能直接搬运模型或结果 |
-| [软测量与时序预测联合训练](https://doi.org/10.1109/TII.2026.3664090) | 公开题名明确联合软测量和时序预测；作者与 DOI 元数据已核实 | 改善质量估计是否通过更好的风险排序，转化为更好的决策？ | 这里没有据此宣称复现全文结构，也不把预测精度当成闭环因果证据 |
-| [TOD-CGAN](https://doi.org/10.1016/j.jfranklin.2026.108704) | 面向烧成运行决策的条件生成方法 | 能否作为候选集生成器、行为先验或策略初始化？ | 条件生成本身不是在线 RL；生成建议仍需约束与评价 |
-| [CoNERL](https://doi.org/10.1016/j.aei.2026.104530) | 进化优化与 RL 结合的水泥回转窑多目标优化工作 | 进化搜索与长期策略的分工应如何比较？ | 属于外部相关工作，作者列表不含 Yonghang Li，不应错误归属 |
+| 优化对象 | 工况下的操作点 | 有限时域动作或设定值路径 | 从信息到动作的规则、长期价值 |
+| 模型如何进入 | 稳态关系与约束 | 动态预测与终端结构 | 交互数据，可同时使用世界模型 |
+| 新观测如何改变决策 | 更新参数或重算操作点 | 状态估计后重新规划 | 策略推断；必要时按受控协议再训练 |
+| 主要验证问题 | 模型失配与实施协调 | 多步误差、可行性、计算延迟 | 支持覆盖、价值偏差与分布变化 |
 
-前四项的出版社页面或 DOI 登记作者中包含 Yonghang Li；这只是书目信息核对，不用来推断各人的具体技术贡献。论文提出的方法、当前仓库实际包含的代码和本页建议新增的实验，是三种不同证据。不能因为论文已公开就假定其数据、实现或实验配置已在当前目录可用。
+这个表是比较维度，不是排名。EA 可作为动态 MPC 的求解器；神经网络可为 MPC 提供模型或末端价值；RL 也可以调节一个优化器的参数。方法可以组合，研究贡献必须通过相同信息、相同动作权限、相同约束和相同资源预算来识别。
 
-#### 二、把现有研究模块映射到 RL 中的明确职责
+#### 6. 自优化控制关心的不是“把误差压到零”
 
-先看一个时刻：策略已知最近过程轨迹、当前设定值、原料模数、软测量估计及已经返回的化验。隐含的物料与热状态不能完全观察，因此可以写成部分可观测决策问题：
+设工况为 $d$，理想可行操作点为 $u^*(d)$。选择某组 CV 并保持其设定值后，内层闭环实际形成操作点 $u(c,d)$。对最小化经济成本 $J$，可以比较损失
 
-$$b_t(x)=P(x_t=x\mid o_{0:t},a_{0:t-1}),\qquad h_t=f_\omega(o_{t-L+1:t}).$$
+$$\mathcal L(c,d)=J(u(c,d),d)-J(u^*(d),d).$$
 
-严格的信念状态是关于潜在状态的条件分布；历史编码器只是其可计算近似。我们不能仅凭使用 Transformer、TCN 或 Mamba，就宣布恢复了 Markov 性。需要检验同一表示下的下一状态预测、质量风险排序和决策效果。
+在两者都满足同一约束、$u^*$ 是全局最优的条件下，损失非负。关注的是扰动和实现误差下，所选 CV 是否仍能保持较小经济损失，而不只是跟踪误差是否接近零。这是[自优化控制](https://doi.org/10.1016/S0959-1524(00)00023-8)对学习架构很有用的提问方式：控制得很准的变量，可能并不是经济上最敏感的变量。
 
-| 模块或研究积累 | 在 RL 系统中可承担的职责 | 应交付的中间证据 |
+用虚构损失举例：方案一在两个等可能工况下损失为 $[1,9]$，方案二为 $[3,4]$。只在第一个工况验证会偏好方案一；平均损失分别为 5 与 3.5，最坏损失为 9 与 4，评价范围扩展后会选方案二。这里比较的是可行闭环的经济损失，不是允许违反约束换利润。该思想提示我们分工况验证软测量、设定值与内层响应的完整链条。
+
+本教程保持仓库已有 CV 接口，不重新选择实际装置控制结构。若以后研究新的 CV 组合，应把它作为独立的工程建模课题：先确定测量与可操纵自由度，再检查内层可跟踪性和经济敏感性，最后讨论学习方法。否则 CV 变化带来的收益会被错误记到新算法名下。
+
+#### 7. 本项目应该保留的历史经验
+
+第一，经济目标必须能落到可测的运行指标，不能只剩一个不知单位的 reward。第二，设定值应与内层可跟踪范围、速度和授权协调；缓慢的外层建议也可能激起快速的内层响应。第三，状态估计、时间同步、模型维护和操作人员退出机制是决策系统的一部分，不能只在算法成功后再补。
+
+最后，所谓“学习到更好的运行策略”，应具体说明它相对于操作员策略、已有 PG-MOEA/D-IEpsilon 与其他合理优化基线多解决了什么问题。如果改进来自更准确的软测量、更晚到但被错误回填的化验，或更多模型调用，就应分别归因。后面的综述沿这条线展开：指标先定义清楚，约束再写准确，算法最后接受公平检验。
+
+#### 本篇原始资料与阅读边界
+
+- [R42](#reference-42) · [Plantwide control: the search for the self-optimizing control structure](https://doi.org/10.1016/S0959-1524(00)00023-8) — Sigurd Skogestad; 2000. 来源标识: r2-skogestad.
+- [R43](#reference-43) · [RTO: An overview and assessment of current practice](https://doi.org/10.1016/j.jprocont.2011.03.009) — Mark L. Darby, Michael Nikolaou, James Jones, Doug Nicholson; 2011. 来源标识: r2-rto.
+- [R44](#reference-44) · [Feedback control for optimal process operation](https://doi.org/10.1016/j.jprocont.2006.10.011) — Sebastian Engell; 2007. 来源标识: r2-engell.
+- [R45](#reference-45) · [A tutorial review of economic model predictive control methods](https://doi.org/10.1016/j.jprocont.2014.03.010) — Matthew Ellis, Helen Durand, Panagiotis D. Christofides; 2014. 来源标识: r2-empc.
+- [R46](#reference-46) · [Model Predictive Control: Theory, Computation, and Design](https://sites.engineering.ucsb.edu/~jbraw/mpc/) — James B. Rawlings, David Q. Mayne, Moritz M. Diehl; 2020, 2nd paperback edition; current online printing. 来源标识: r2-mpcbook.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
+
+**r2-skogestad · Journal of Process Control 10, 487–507:** 作者手稿已读：控制变量选择、分层设定值与经济损失；并非所有工况都适用的恒定设定值结论。
+
+**r2-rto · Journal of Process Control 21, 874–884:** 出版社摘要核验 RTO 与 MPC 的历史和组织实施问题；不从综述推断本项目收益。
+
+**r2-engell · Journal of Process Control 17, 203–219:** 经济目标与反馈优化的综述；区分跟踪目标、稳态优化和动态经济优化。
+
+**r2-empc · Journal of Process Control 24, 1156–1178:** 出版社摘要核验经济 MPC、稳定性与性能主题；具体教学推导另以开放 MPC 教材为依据。
+
+**r2-mpcbook · Nob Hill Publishing:** 作者开放教材；滚动时域、终端条件、状态估计和经济 MPC 的理论入口。
+
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
+
+---
+
+<a id="research-indicators"></a>
+
+### 02 · 运行指标、权衡与因果混杂
+
+把煤耗、电耗、质量、产量、排放与平稳性放回单位、边界和时间，再讨论策略收益。
+
+**建议阅读:** 25 分钟（按个人基础调整）
+
+
+#### 1. 指标定义先于奖励设计
+
+“节能”只有在明确生产边界、产品分母、时间窗和燃料口径后，才是可比较的量。熟料烧成与水泥粉磨是不同边界；每吨熟料电耗与每吨水泥综合电耗不能直接拼成一张算法排名。[EPA 水泥能效指南](https://www.energystar.gov/sites/default/files/buildings/tools/ENERGY%20STAR%20Guide%20for%20the%20Cement%20Industry%2028_08_2013%20Final.pdf)按工序讨论能耗，[欧盟 BREF](https://publications.jrc.ec.europa.eu/repository/handle/JRC83006)同时处理能源、物料与排放。本页借用这种核算思路，不把历史行业平均数当成本项目实测值。
+
+| 指标 | 一个清楚的定义 | 决策研究中容易漏掉什么 |
 | --- | --- | --- |
-| 状态感知与 MC3 / OOD 相关思路 | 区分工况、识别超出可信运行域的观测；辅助表示诊断与回退 | 时间外检测率、误报率、漏报样例和与模型误差的关系 |
-| OAM-Net 可靠性门控与多速率融合思路 | 融合快过程信号与慢化验；化验缺失时回退到在线信息 | 不同化验年龄和缺失模式下的误差、可靠性校准及回退行为 |
-| QC-MTWaveSME 等质量与多任务预测思路 | 估计当前质量和未来轨迹，为成本估计与候选排序提供信息 | 各预测时域、关键阈值附近、原料变化工况的分层误差 |
-| 软测量与时序预测联合建模 | 改善感知与预测之间的一致性，构造质量相关潜在表示 | 是否真正降低决策相关误差，而非只降低平均拟合误差 |
-| PG-MOEA/D-IEpsilon | 核心优化基线；在相同信息与约束下提供教师候选或可行解集 | 可运行实现、相同预算下的可行率与 Pareto 比较 |
-| NURBS 轨迹表示 | 将设定值路径参数化，提供平滑参考或候选轨迹先验 | 离散执行时的 RATE、曲率、绝对边界和回退检查 |
-| RL 策略 | 在有限信息下学习后续收益与成本之间的连续决策关系 | 相对操作员、优化器和行为克隆的独立增益 |
+| 单位燃料质量 | kg 燃料 / t 熟料 | 热值、含水、替代燃料比例和煤耗折算基准 |
+| 单位热耗 | GJ 燃料热输入 / t 熟料 | 低位或高位热值、系统边界、启动和停机段 |
+| 单位电耗 | kWh / t 熟料 | 包含哪些风机、冷却、输送和辅助设备 |
+| 质量 | f-CaO、其他检验与合格率 | 样品时间、发布延迟、采样频率和未检样品 |
+| 产量 | t/h 或窗口合格产品总量 | 降低负荷换取较低瞬时能耗的代价 |
+| 排放 | 质量流量、浓度或单位产品排放 | 干湿基、标态、参考氧和统计时间的统一 |
+| 平稳性 | CV 波动、跟踪误差、增量总变差 | 趋势与波动的区别，以及平稳但偏离目标的状态 |
 
-OAM-Net、QC-MTWaveSME、MC3 在这里作为项目讨论中的模块称呼，只讨论接口和可检验作用，不披露未公开结构、训练数据或结果，也不凭名称臆造论文归属。NURBS 的光滑曲线也不会自动满足每一步 RATE、压力边界或质量约束；连续轨迹参数化与离散执行可行性必须同时检查。
+#### 2. “平均单位能耗”有两种不同算法
 
-若用 MSAKAN 与 MambaMoE 分别承担软测量和时序预测，可以先把它们映射为当前质量估计器与未来过程预测器，再逐项检查输入可用时间、输出时域和不确定性接口。这是本研究方案的模块映射，不据此声称已经复现相关论文的全部结构或性能。新模块应与简单线性、树模型或容量相近的时序基线比较，避免把模型复杂度直接等同于研究贡献。
+设第 $i$ 个时间段能耗为 $E_i$，产量为 $M_i$。只要总产量 $\sum_iM_i>0$，总体单位电耗就按总量核算；当各段均有 $M_i>0$ 时，还可以展开成产量加权平均：
 
-一个特别重要的区别是：**预测未来与评价动作不能混为一谈。** 若预测器没有显式动作输入，或者动作与隐藏的操作员判断存在混杂，它可能只会延续历史操作习惯。要让它参与 RL 推演，应写清楚动作条件、外生扰动和适用支持域：
+$$e_{total}=\frac{\sum_i E_i}{\sum_i M_i}=\sum_i\frac{M_i}{\sum_jM_j}\frac{E_i}{M_i}.$$
 
-$$\hat p_\psi(o_{t+1},r_{t+1},c_{t+1}\mid h_t,a_t,z_t),$$
+所以在各段产量为正的条件下，它是按产量加权的单位能耗，而不是各段比值的普通平均。启停段若 $M_i=0,E_i>0$，该段比值没有定义，但能耗仍须保留在总分子中；不能为计算平均而删除。例如两段 $E=[100,900]$ kWh、$M=[0,100]$ t，总体为 10 kWh/t，删去零产段会错误得到 9。若总产量为零，就不报告该窗口的吨产品比值，而单独列能耗与运行状态。
 
-其中 $z_t$ 表示已知或另行建模的外部条件。这个表达只是建模目标，不是因果可识别性的证明。
+另一个教学例中，两段分别耗电 10,000 和 16,000 kWh，生产 100 和 200 t。各段为 100 和 80 kWh/t；普通平均为 90，总量口径却为 $26000/300\approx86.67$ kWh/t。负荷变化时，混用这两个数会产生虚假的改善。
 
-#### 三、先建立能重放“当时知道什么”的数据表
+同样，若 A 方案用 10,000 kWh 生产 100 t，B 用 14,400 kWh 生产 150 t，B 的单位电耗低 4%，总耗电却高 44%。两句话都可以正确，但回答的问题不同。研究报告应同时给产量、总量和单位量，说明比较是否满足相同生产要求，而不是只选一个有利的百分比。
 
-实验的基本单位是决策转移，而不是独立打散的传感器行。建议使用下面的数据字典。字段尚未提供时，在实验登记中写缺失与影响，不用模型生成值冒充真实记录。
+#### 3. 燃料质量下降不一定代表热输入下降
 
-| 字段组 | 最小字段 | 在实验中的作用 |
+热输入需要把燃料质量乘以对应热值：
+
+$$Q_{fuel}=\sum_j m_j H_j,\qquad q_{spec}=\frac{Q_{fuel}}{M_{clinker}}.$$
+
+教学例 A 使用 100 kg/t、热值 25 MJ/kg 的燃料，热输入为 2.5 GJ/t；B 使用 90 kg/t、热值 30 MJ/kg 的燃料，却是 2.7 GJ/t。质量口径减少 10%，热输入反而增加 8%。这不是对任何实际工厂的判断，而是单位换算说明：不同燃料、含水和替代燃料条件下，先统一基准才能把变化归因于设定值策略。
+
+碳排放还涉及燃烧与原料分解等不同来源；仅降低电耗，不足以推出全部温室气体排放按同一比例下降。排放浓度与排放质量也不同：稀释可能改变浓度，未必减少污染物质量。研究应保存原始流量、测量条件和核算版本，不能让归一化 reward 取代物理核算。[BREF](https://publications.jrc.ec.europa.eu/repository/handle/JRC83006)
+
+#### 4. 质量指标有时间戳，也有适用范围
+
+f-CaO 提供熟料质量相关信息，但不代表所有产品性质都由一个数决定。当前仓库采用 f-CaO 区间 $[0.5,1.5]\%$ 与 $O_2\ge1.2\%$ 等约定；这些是教学与项目接口，不能作为别的窑线的普遍阈值。[项目来源](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
+
+至少要保留样品采集时刻 $\tau$、结果可用时刻 $v$ 和决策时刻 $t$。只有 $v\le t$ 的化验可以进入策略输入；样品年龄是 $t-\tau$。10:00 采样、10:40 返回的结果不能被 10:20 的策略读取。事后可以把它用于正确对齐的质量评价，但“新发布”不等于“反映刚才动作”。物料停留分布不一定是一个精确固定滞后，简单把所有样品平移一个常数也需要验证。
+
+#### 5. 不把相关性直接写成动作效果
+
+操作员可能在原料变难烧、质量已有恶化迹象时提高温度设定值。历史上“高设定值与高 f-CaO 同时出现”，可以是补救动作和困难工况共同造成，不能直接断言提高设定值使质量变差。下图表达这个假设结构；它是诊断思路，不是已识别的工艺因果图。
+
+~~~mermaid
+flowchart TD
+    D["原料与负荷变化"] --> A["操作员设定值建议"]
+    D --> Q["后续质量与能耗"]
+    H["既有历史与隐含判断"] --> A
+    H --> Q
+    A --> X["内层控制后的过程状态"]
+    X --> Q
+~~~
+
+应先检查时间先后、测量来源、操作员当时可见的信息和联合动作覆盖，再决定能做哪类比较。匹配工况、分层分析或因果模型可以减少部分偏差，却不能证明已经控制全部隐藏因素。世界模型拟合误差很低，也可能只是复现历史操作规律，并未识别改变策略后的后果。
+
+#### 6. 质量和产量不能在分母里悄悄消失
+
+另取一个虚构核算例：基线消耗 300 GJ，生产 100 t 且全部合格，单位热耗为 3.0 GJ/t；候选方案消耗 290 GJ，仍生产 100 t，但只有 90 t 合格。按全部产量计算为 2.9 GJ/t，表面下降约 $3.33\%$；按合格产量则为 $290/90\approx3.222$ GJ/t，高于基线。两种分母回答不同问题，不能只选择对方案有利的那个。
+
+本项目质量边界仍独立成立；使用合格产量分母不代表可以付出额外能耗来“抵消”不合格质量，更不让不合格候选变成可执行方案。返工、库存滞后与后续处理若属于核算边界，也应明确归属，不要在改变时间窗时把它们移走。质量检验后来才完成，允许用于事后绩效审计，但不能回流成为当时策略已知的信息。
+
+煤耗、电耗、产量和质量也不是互不相关的旋钮。冷却和余热回收、燃烧条件与风机负荷会改变全系统的折中；某个局部设备指标变好，未必使同一产品边界内的总指标改善。[EPA 能效指南](https://www.energystar.gov/sites/default/files/buildings/tools/ENERGY%20STAR%20Guide%20for%20the%20Cement%20Industry%2028_08_2013%20Final.pdf)的分工序核算可用于组织这个检查。具体方向和幅度必须由本装置数据或经验证模型回答，不能从概念示意图读出节能百分比。
+
+#### 7. 平稳性与收益应分别报告
+
+归一化执行增量可用总变差描述：
+
+$$TV(a^{exec})=\sum_t\|a_t^{exec}-a_{t-1}^{exec}\|_1.$$
+
+同样可记录 CV 方差、跟踪误差、最长连续超限、门控拒绝率和恢复时间。它们互不等价：恒定但错误的温度可以方差很小；从旧工况平滑转向新工况会有趋势，不能把所有变化都视为噪声。门控拒绝后保持设定值，也不会使物理过程、扰动或化验时钟停止。
+
+最后把指标分成主结果和诊断，而不是把主结果合成一个无法解释的总分。主结果保留煤耗、电耗、合格产量、质量和氧量成本；诊断解释数据支持、动作平滑和回退原因。采用时间外评估、按工况分层和独立重复运行，才能区别算法变化与某次有利原料。关于小样本算法比较的不确定性，可继续阅读 [Agarwal 等](https://arxiv.org/abs/2108.13264)。
+
+#### 本篇原始资料与阅读边界
+
+- [R47](#reference-47) · [BAT Reference Document for the Production of Cement, Lime and Magnesium Oxide](https://publications.jrc.ec.europa.eu/repository/handle/JRC83006) — Frauke Schorcht, Ioanna Kourti, Bianca Maria Scalet, Serge Roudier, Luis Delgado Sancho; 2013. 来源标识: r2-cement-bat.
+- [R48](#reference-48) · [Energy Efficiency Improvement and Cost Saving Opportunities for Cement Making](https://www.energystar.gov/sites/default/files/buildings/tools/ENERGY%20STAR%20Guide%20for%20the%20Cement%20Industry%2028_08_2013%20Final.pdf) — Ernst Worrell, Katerina Kermeli, Christina Galitsky; 2013. 来源标识: r2-energy-guide.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
+- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Rishabh Agarwal, Max Schwarzer, Pablo Samuel Castro, Aaron Courville, Marc G. Bellemare; 2021. 来源标识: r2-rliable.
+
+**r2-cement-bat · European Commission JRC, EUR 26129:** 欧盟官方工艺、能耗与排放参考。用于说明指标口径，不将其中规范自动套用于当前窑线。
+
+**r2-energy-guide · US EPA ENERGY STAR, 430-R-13-009:** EPA ENERGY STAR 开放全文；区分熟料烧成、粉磨、燃料与电力核算，不照搬历史行业平均数。
+
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
+
+**r2-rliable · NeurIPS 2021:** 重复实验、不确定性与稳健汇总；不能把时间步当独立训练种子。
+
+---
+
+<a id="research-objectives"></a>
+
+### 03 · 从指标到目标、Pareto 与约束
+
+用完整算例解释尺度、偏好、可行性、机会约束与软约束为什么不能混为一谈。
+
+**建议阅读:** 29 分钟（按个人基础调整）
+
+
+#### 1. 目标函数是研究问题的一部分
+
+对于当前工况 $h$ 和候选设定值路径 $u$，可以先写多目标问题：
+
+$$\min_{u\in\mathcal U(h)}\mathbf f(u;h)=\left(f_F(u;h),f_E(u;h),f_S(u;h)\right),\qquad g_j(u;h)\le0.$$
+
+三个目标可以分别表示煤耗、电耗和平滑性；质量、氧量、设定值范围和授权条件进入可行集合。这里 $u$ 可以是一点、若干步路径或策略参数，不能仅凭这个式子判断是否存在动态优化。选取哪个对象、目标如何累积以及模型怎样预测后果，才定义了问题。[MOEA/D 原文](https://doi.org/10.1109/TEVC.2007.892759)
+
+把质量超限乘一个大数加到能耗里，会改变问题：它可能允许足够大的节能收益交换违反。某些数学罚函数在特定条件和足够参数下具有精确性，但有限训练中的任意惩罚系数没有这种自动保证。项目约定要求独立质量与环境成本；教程不擅自修改边界。[项目契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
+
+#### 2. 单位缩放不能隐藏偏好
+
+直接把 kg/t 和 kWh/t 相加没有清楚的解释。可以换成货币、工程容许尺度，或冻结在训练集上的标准化量：
+
+$$z_F=\frac{F-\mu_F}{s_F},\qquad z_E=\frac{E-\mu_E}{s_E},\qquad L_w=w_Fz_F+w_Ez_E.$$
+
+除数必须大于零，且记录版本。若以标准差归一化，高波动指标的一单位物理改善会被压得更小；这是一种数值选择，不自动对应经济偏好。换测试工况后重新拟合尺度，会使同样物理结果得到不同分数，也可能造成信息泄漏。报告原始单位指标和归一化目标两套数。
+
+给出一组完全虚构的可行方案：A 的 $(F,E)=(95,108)$，B 为 $(100,100)$，C 为 $(104,92)$。取参考均值 $(100,100)$、尺度 $(5,10)$，得到 A=$(-1,0.8)$，B=$(0,0)$，C=$(0.8,-0.8)$。权重 $(0.7,0.3)$ 下损失为 $-0.46,0,0.32$，选 A；换为 $(0.2,0.8)$，损失为 $0.44,0,-0.48$，选 C。模型和候选都没变，改变的是偏好。
+
+把归一化表达式展开，可见 $L_w=(w_F/s_F)F+(w_E/s_E)E-\mathrm{const}$，真正作用在原始指标上的系数是 $w_F/s_F$ 与 $w_E/s_E$。若目标本来是成本 $C=p_FF+p_EE$，想让归一化写法保留同一偏好，可令 $w_F:w_E=p_Fs_F:p_Es_E$。不能先任意标准化，再声称相同权重就代表相同经济重要性。
+
+例如仅为教学假设燃料价格 $p_F=0.8$ 元/kg、电价 $p_E=0.6$ 元/kWh，并假定三个方案产品边界与质量相同，则 A、B、C 分别为 140.8、140.0、138.4 元/t。这个口径选择 C。它没有包含全部生产成本，也不代表当前市场价格；其作用是展示单位怎样相乘、偏好怎样解释。若加入价格变化、产量或返工，必须重新明确定义经济目标，而不是继续沿用这些数字。
+
+#### 3. Pareto 前沿描述取舍，不代替最终选择
+
+最小化时，$u$ 支配 $v$，表示所有目标都不更差，而且至少一项更好：
+
+$$u\prec v\iff [\forall i:f_i(u)\le f_i(v)]\land[\exists j:f_j(u)<f_j(v)].$$
+
+上例 A、B、C 互不支配；D=$(107,110)$ 被 B 支配。若另有 U=$(90,85)$ 但 f-CaO 超项目边界，它首先是不可行候选，不能因为两个能耗指标很好就加入允许执行的前沿。非支配指相对于已比较集合，不等于已证明到达全局真实前沿。[NSGA-II](https://doi.org/10.1109/4235.996017)
+
+加权和也未必找得到所有非凸前沿点。教学点 $(0,2),(1.1,1.1),(2,0)$ 都非支配；任意两目标非负权重归一化后，总有一个端点的加权值不超过 1，而中点恒为 1.1。因此仅扫描线性权重会错过这个中点。分解方式、约束法与解集覆盖要结合问题选择，不是权重扫描次数越多就自动解决。[MOEA/D](https://doi.org/10.1109/TEVC.2007.892759)
+
+#### 4. 两种 epsilon 不应混淆
+
+多目标的 epsilon-constraint 表述可以是：
+
+$$\min_u F(u)\quad\text{subject to}\quad E(u)\le\varepsilon_E,\quad g(u)\le0.$$
+
+对 A、B、C，若电耗预算设为 100，A 被排除，B 的煤耗低于 C，于是选 B。改变预算便能沿不同取舍搜索。预算有明确单位，应来自生产要求或预先声明的研究扫描。
+
+进化约束处理中的 epsilon-level，通常是搜索时比较违反程度的容忍水平。它可能暂时让近可行解参与搜索，以免种群过早丢失通向可行区的路径；这不是批准工厂执行同样超限动作。数学搜索中的松弛、产品指标预算和设备硬边界是三个不同概念。
+
+~~~mermaid
+flowchart TD
+    A["候选点或轨迹"] --> F["量纲与时间核算"]
+    F --> C["可行性检查"]
+    C -->|"不可行"| R["拒绝或继续搜索"]
+    C -->|"可行"| P["Pareto 比较"]
+    P --> W["偏好或预算选择"]
+    W --> G["独立执行审核"]
+    R --> A
+~~~
+
+#### 5. 硬、软、机会和期望约束各控制什么
+
+硬约束要求在所建模型的允许集合内满足 $g\le0$；实际保证仍依赖模型误差和执行条件。软约束引入松弛量 $\xi\ge0$，例如 $g\le\xi$ 并惩罚 $\xi$，使不可行问题有可诊断的折中；不能把它无条件用于不可放宽的物理保护。
+
+机会约束控制指定概率：$P(q\le1.5\mid h,u)\ge0.95$。假设仅用于算例的预测质量为高斯分布，$\sigma_q>0$ 且分布校准可靠，把质量标准化后有 $P(q\le1.5)=\Phi((1.5-\mu_q)/\sigma_q)$。由于标准正态分布函数 $\Phi$ 单调，要求该概率至少 0.95，等价于 $\mu_q+\Phi^{-1}(0.95)\sigma_q\le1.5$。使用近似分位数 $\Phi^{-1}(0.95)\approx1.645$，得到：
+
+$$\mu_q+1.645\sigma_q\le1.5.$$
+
+若 $\mu_q=1.2,\sigma_q=0.2$，左侧约为 1.529，均值虽在范围内，仍未满足该上界概率要求。若均值降为 1.1，左侧约为 1.429。这只是单侧上界；下界、多个变量和整段轨迹还要另分配风险，不能把每步 95% 当成无限运行的整体 95%。[机会约束的原始理论入口](https://doi.org/10.1287/mnsc.6.1.73)
+
+CMDP 中常见 $\mathbb E_\pi[\sum_t\gamma^t c_t]\le d$，控制的是期望累计成本。若 99 次成本为 0、一次为 10，平均为 0.1；平均预算 0.2 可以满足，那次严重事件却仍然存在。成本的幅度、概率、时长和单位都要明确。[CPO](https://arxiv.org/abs/1705.10528)
+
+具体到质量，超限幅度成本可以是 $c_q=(q_{\min}-q)_++(q-q_{\max})_+$；若 q 按百分数的数值表示，单位就是百分点。事件成本 $c_I=\mathbf1_{q\notin[q_{\min},q_{\max}]}$ 是无量纲；持续时间成本可把对应区间长度乘以事件指示。它们衡量的是不同后果，不应共享一个未经换算的预算。
+
+假设三个连续 5 分钟区间的质量分别恒为 $1.4\%,1.6\%,1.9\%$，上界为项目的 $1.5\%$，下界均满足。幅度成本为 $[0,0.1,0.4]$ 个百分点，事件成本为 $[0,1,1]$，超限累计持续 10 分钟。相同平均事件率可能对应完全不同的最大超限程度；所以至少并报频率、幅度与持续时间。这个区间恒值是假设，稀疏化验本身不能直接证明真实连续超限时长。
+
+#### 6. 可审阅的目标设计应交付什么
+
+应交付指标字典、原始单位、归一化版本、时间聚合规则、权重或预算的选择理由、每种约束的语义、不可行时的批准回退，以及候选和执行动作的独立日志。比较算法时冻结这些条件；只有研究目标本身就是偏好敏感性时，才系统改变权重并展示全套结果。
+
+目标写得越清楚，越容易发现奖励被“钻空子”的位置：少生产来降低瞬时耗能、用稀释改善浓度、长期保持却偏离质量要求、利用尚未返回的化验作决策。修复这些问题属于任务定义和数据治理，不能靠换一个更强的优化器补救。
+
+#### 本篇原始资料与阅读边界
+
+- [R50](#reference-50) · [MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition](https://doi.org/10.1109/TEVC.2007.892759) — Qingfu Zhang, Hui Li; 2007. 来源标识: r2-moead.
+- [R49](#reference-49) · [A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II](https://doi.org/10.1109/4235.996017) — Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, T. Meyarivan; 2002. 来源标识: r2-nsga2.
+- [R54](#reference-54) · [Chance-Constrained Programming](https://doi.org/10.1287/mnsc.6.1.73) — Abraham Charnes, William W. Cooper; 1959. 来源标识: r2-chance.
+- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Joshua Achiam, David Held, Aviv Tamar, Pieter Abbeel; 2017. 来源标识: r2-cpo.
+- [R46](#reference-46) · [Model Predictive Control: Theory, Computation, and Design](https://sites.engineering.ucsb.edu/~jbraw/mpc/) — James B. Rawlings, David Q. Mayne, Moritz M. Diehl; 2020, 2nd paperback edition; current online printing. 来源标识: r2-mpcbook.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
+
+**r2-moead · IEEE Transactions on Evolutionary Computation 11, 712–731:** 原论文 PDF 核验分解、邻域与尺度处理；不能由算法名推断具体项目改进版。
+
+**r2-nsga2 · IEEE Transactions on Evolutionary Computation 6, 182–197:** 原论文全文核验非支配排序、拥挤距离、精英保留及约束支配；证据为测试问题。
+
+**r2-chance · Management Science 6, 73–79:** 机会约束的原始理论入口；教程中的高斯分位数算例为独立教学推导。
+
+**r2-cpo · ICML 2017:** 约束策略优化与理论性能界；期望成本不是逐时刻无违规保证。
+
+**r2-mpcbook · Nob Hill Publishing:** 作者开放教材；滚动时域、终端条件、状态估计和经济 MPC 的理论入口。
+
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
+
+---
+
+<a id="research-evolution"></a>
+
+### 04 · 进化优化：从 Pareto 搜索到滚动轨迹
+
+拆开候选表示、评价模型、约束比较与搜索器，推导 NSGA-II 和 MOEA/D，解释动态优化如何与 MPC、RL 连接。
+
+**建议阅读:** 31 分钟（按个人基础调整）
+
+<a id="figure-evolution-search"></a>
+
+![从候选轨迹到可执行的优化建议](./images/evolution-search.webp)
+
+**从候选轨迹到可执行的优化建议**
+
+进化优化依次完成候选编码、代理模型评价、约束比较和偏好选择。它可以搜索动态轨迹；关键问题是模型可信度、计算预算和滚动执行的一致性。
+
+**逐区读图**
+
+- **01** · 候选：曲线卡片代表不同设定值轨迹。编码维度、平滑性和初始点决定可搜索的方案空间。
+- **02** · 评价：用模型估计能耗、质量与其他代价，再检查约束。预测好看并不证明真实过程可行。
+- **03** · 比较：保留不同权衡的可行候选；示意曲线不是实测 Pareto 前沿，也不承载性能结论。
+- **04** · 执行：根据明确偏好选一个方案，通过独立门控后仅执行滚动决策的当前一步。
+
+这些是原创概念插图，不是实测曲线、辨识模型或工程施工图；精确关系以本篇公式和 Mermaid 为准。
+
+#### 1. 先问一个个体表示什么，再问使用哪种进化算法
+
+在烧成优化中，一个种群个体可以表示六个 CV 的下一步设定值增量，也可以表示未来 $H$ 步的增量序列，或一条平滑设定值轨迹的少量控制点。给定观测历史，评价器把候选送进机理模型、代理模型或回放仿真，返回煤耗、电耗、质量成本和可执行性。**表示决定要解决的问题；NSGA-II 或 MOEA/D 决定如何搜索这个表示空间。** 如果评价器只计算稳态煤电耗，搜索得到的就是稳态折中；如果评价器逐步推进动力学并计算延迟质量，EA 同样能够搜索序列决策。
+
+这四部分可以独立改进：动作表示决定维数与光滑性，评价模型决定预测偏差，约束比较决定候选存活规则，搜索器决定有限预算如何分配。把失败统一归因于“进化算法不懂时序”会掩盖真正的瓶颈。[MPC 原理](https://sites.engineering.ucsb.edu/~jbraw/mpc/)并不要求求解器一定是梯度算法；[动态多目标优化原始研究](https://doi.org/10.1109/TEVC.2004.831456)也早已讨论变化的 Pareto 集与控制问题。
+
+~~~mermaid
+flowchart TD
+  O["最新观测与历史"] --> P["候选点或轨迹种群"]
+  P --> M["动力学与指标评价"]
+  M --> C["可行性与约束违反量"]
+  C --> S["非支配排序或分解比较"]
+  S --> V["选择、交叉与变异"]
+  V --> P
+  S --> B["偏好选取与第一步候选"]
+  B --> G["五层门控与内层控制"]
+  G --> O
+~~~
+
+#### 2. NSGA-II：先比较等级，再保留分布
+
+对最小化目标，若个体 $u$ 的所有目标不差于 $v$，且至少一个严格更好，就称 $u$ 支配 $v$。第一非支配层不被任何候选支配；去掉它再求第二层。NSGA-II 合并父代和子代后，从较低等级的前沿依次填充下一代；最后一个装不下的前沿使用拥挤距离维持分布。原论文同时给出了约束支配处理与计算复杂度分析，不能把它缩写成“只保留最小加权和”。[Deb 等，2002](https://doi.org/10.1109/4235.996017)
+
+在某个前沿内，分别按目标 $m$ 排序，内部个体的拥挤距离累计为
+
+$$d_i=\sum_{m=1}^{M}\frac{f_m(i+1)-f_m(i-1)}{f_m^{\max}-f_m^{\min}}.$$
+
+边界个体通常置为无限大以保护极端折中；某目标在该前沿完全相同、分母为零时，工程实现应跳过这个没有区分度的目标。分子中的前后邻居按**当前目标各自排序**，并非只按第一个目标排序后复用。
+
+手算四个教学点 $(0,10),(2,7),(4,4),(10,0)$，两目标都最小化，四者互不支配。中间点 $(2,7)$ 的距离为 $4/10+6/10=1.0$；$(4,4)$ 为 $8/10+7/10=1.5$。若只能从两个内部点保留一个，在等级相同的前提下保留后者。距离大表示附近候选更稀疏，**不表示该工况更安全、经济价值更大或模型更可信**。这些性质要由独立定义的评价项判定。
+
+#### 3. MOEA/D：把前沿拆成相邻的标量子问题
+
+MOEA/D 为多个权重向量维护子问题，并利用权重空间的邻居共享候选改进。常见 Tchebycheff 分解为
+
+$$g(u\mid w,z^*)=\max_m w_m\left|\widetilde f_m(u)-z_m^*\right|,$$
+
+其中 $\widetilde f_m$ 是尺度一致的目标，$z^*$ 是理想点估计。一个新个体可以改善多个相邻子问题；“邻近”主要指权重向量接近，不是两个候选在物理状态空间必然相近。原文还比较了其他分解方式；选定分解后仍要检查前沿覆盖、尺度敏感性和有限种群分辨率。[Zhang 与 Li，2007](https://doi.org/10.1109/TEVC.2007.892759)
+
+取 $z^*=(0,0)$，候选 $A=(1,4)$、$B=(2,2)$。在 $w=(0.8,0.2)$ 下，$g(A)=\max(0.8,0.8)=0.8$，$g(B)=\max(1.6,0.4)=1.6$，选 $A$；在 $w=(0.2,0.8)$ 下变为 $3.2$ 与 $1.6$，选 $B$。这是多个偏好子问题共同覆盖折中的机制。它不能保证有限代搜索已找全真实 Pareto 前沿，代理模型若存在系统偏差，搜索也可能精确地优化错误目标。
+
+#### 4. 可行性处理：搜索时允许考察，不代表执行时允许越界
+
+一种清楚的约束违反量是
+
+$$v(u)=\sum_j\frac{\max(0,g_j(u))}{s_j},\qquad s_j>0,$$
+
+其中 $g_j\le0$ 表示第 $j$ 项约束，$s_j$ 统一量纲。可行性优先比较通常遵循：可行者优于不可行者；两个不可行者比较违反量；两个可行者再比较目标或 Pareto 等级。归一化不能省略，否则温度的数值量级可能压过压力或质量。[Deb 的约束处理研究](https://doi.org/10.1016/S0045-7825(99)00389-8)与 NSGA-II 的约束支配提供了这一思想的原始入口。
+
+$\epsilon$ 水平方法在搜索比较中把足够小的违反量暂按某种容忍水平处理，并随搜索进度改变该水平，以帮助穿越窄可行域附近的搜索障碍。[Takahama 与 Sakai，2006](https://doi.org/10.1109/CEC.2006.1688283)是原始方法之一。具体更新日程需要读对应实现，不能仅凭名字重建本项目的 PG-MOEA/D-IEpsilon。
+
+这里的 $\epsilon$ 是**候选搜索规则**；上一页的 $\epsilon$ 约束是**多目标偏好预算**；设备执行边界则是**工程约束**。三者应使用不同字段、单位和日志。一个搜索阶段仍不满足执行条件的候选，必须被拒绝或由既定回退处理。约束成本的期望预算也不会自动解除五层门控。[本仓库约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
+
+#### 5. “动态”至少有三种含义
+
+| 动态来自哪里 | 应该改变什么 | 容易误判的地方 |
 | --- | --- | --- |
-| 索引 | 匿名设备标识、连续运行段标识、决策时刻、数据版本 | 防止跨设备或跨 reset 错连轨迹 |
-| 时间 | 物理事件时间、采集时间、入库可用时间、修订版本时间 | 重建当时信息集，检查迟到与回填 |
-| 过程信号 | 项目既定 CV、过程变量、单位、有效性标记 | 构造固定观测窗口和数据安全检查 |
-| 控制目标 | 决策前设定值、策略候选增量、门控后执行增量、执行后设定值 | 区分提议与真实因果动作 |
-| 内层执行 | APC 授权、模式、跟踪误差、可用执行时间 | 确认建议是否被接受及是否实际跟踪 |
-| 化验 | 样品 ID、采样时刻、结果可用时刻、f-CaO 值、缺失与修订标记 | 防止未来标签进入过去观测 |
-| 在线估计 | 软测量值、模型版本、估计可用时间、置信度或校准信息 | 防止使用全数据训练的模型回填测试输入 |
-| 外部条件 | KH、SM、IM、负荷及已允许记录的原料扰动信息 | 区分工况变化与策略作用 |
-| 收益组成 | 煤耗、电耗、产量口径、标准化版本、平滑项 | 保留物理量与最终奖励的可追溯关系 |
-| 成本组成 | 质量、氧量各自的幅度或指示成本、评价时间 | 独立报告约束，避免单位与预算混用 |
-| 门控日志 | 每层通过标记、拒绝原因、OOD 分数、回退目标、权限状态 | 评价完整决策链而非只评价 Actor |
-| 边界 | terminated、truncated、末状态观测、原因 | 正确自举并切断跨 reset 的序列 |
+| 原料、价格或设备状态随时变 | 更新评价上下文并跟踪移动的折中集 | 只重跑静态模型，未更新模型条件 |
+| 现在的动作影响未来状态 | 在评价器中推进动力学并优化序列 | 只换成更大种群，仍使用即时目标 |
+| 每个周期获得新测量 | 执行序列第一步并重新规划 | 把整条预测轨迹当作必须开环执行的命令 |
 
-化验要保留两只时钟。设第 $j$ 个样品在 $\tau_j$ 采集，结果在 $v_j$ 可用，则决策时刻 $t$ 的合法化验记录只能来自 $v_j\le t$ 的集合。通常选择其中采样时间最新的记录，并计算样品年龄：
+原始动态多目标文献解决的是随时间变化的问题族；滚动优化则还涉及状态反馈、预测窗口与第一步执行。这些概念可以组合，但不应混用。[Farina 等，2004](https://doi.org/10.1109/TEVC.2004.831456)；[Rawlings 等教材](https://sites.engineering.ucsb.edu/~jbraw/mpc/)。与用户研究相关的 [OA-DSTR 论文](https://doi.org/10.1016/j.asoc.2024.111772)研究对象是水泥**粉磨**的双动态运行指标决策。其搜索与滚动思路值得对照；本次仅核验书目和出版社摘要，不能据此转述烧成现场结果。
 
-$$j^*(t)=\arg\max_{j:v_j\le t}\tau_j,\qquad \mathrm{age}_t=t-\tau_{j^*(t)}.$$
+#### 6. 轨迹参数化减少维数，也引入新检查
 
-例如 10:00 采样、10:40 返回的化验在 10:20 不可见；若上次可用样品来自 09:00，样品年龄是 80 分钟，而非化验返回后经过的时间。事后可以把 10:00 样品用作监督标签或评价信息，但不能放进 10:20 的策略观测。自动插值、离线修订和全数据归一化都需要同样的可用时间审查。
+若直接优化 $H\times K$ 个增量过于昂贵，可以将候选设定值轨迹参数化为少量控制点。例如一个可研究的 NURBS 接口为
 
-离线转移中的动作必须是产生后续状态的**实际执行增量**。如果候选被门控替换，原候选保存在审计字段，不与回退动作产生的结果错误配对。如果研究“Actor 加门控”的复合策略，要明确其转移与优化定义；不能在训练时用原动作、评价时用回退动作，却把两者说成同一策略。
+$$Y^{sp}(s)=\frac{\sum_i N_{i,p}(s)w_iP_i}{\sum_i N_{i,p}(s)w_i},\qquad w_i>0.$$
 
-#### 四、数据划分与比较协议先于调参
+控制点、节点向量和权重是轨迹表示，不是已经验证的本项目实现。即使曲线值保持在控制点包围范围内，也不自动满足每 5 分钟的增量限幅、相邻增量变化率或延迟质量约束；必须在执行采样点和必要的区间上检查。重新规划时还要与当前真实设定值连续衔接，不能把上一轮未执行的轨迹当成事实。
 
-优先使用按时间前推的训练、验证和封存测试段；再增加整段负荷、原料或化验缺失模式的留出测试。相邻历史窗口高度重叠，随机切分会让模型在测试时看见几乎相同的输入。划分边界的隔离范围应从输入历史、目标跨度、样品延迟和修订传播范围推导，不能只机械地留一个固定小时数。
+适合做消融的改进包括：将上一轮种群平移作热启动；保留少量新候选防止工况变化后陷入旧前沿；只在误差或扰动明显时重启昂贵搜索；对模型不确定区间重新评价。它们是待检验设计，不是本文已经证明的收益。比较时固定模型调用预算、墙钟时限、预测窗口、门控和偏好选择规则；若使用超体积，还要固定目标尺度、参考点和可行解筛选。
 
-标准化、软测量拟合、工况聚类、OOD 阈值校准、世界模型、行为模型及奖励尺度，都只使用训练段或预先允许的验证段。测试段只作最终评价；策略不应通过反复观察测试分数选择模型。若研究需要前推更新，应把“截至每个决策时刻能够使用的数据”写成明确的滚动训练协议。
+#### 7. 公平比较应当解释计算花在哪里
 
-比较采用以下共同条件：相同可用观测、决策周期、CV 语义、RATE、绝对设定值范围、门控与回退逻辑，尽可能相同外生扰动序列。报告环境交互数、参数更新数、调参预算和模型容量；不能只比较运行时间或最好种子。操作员策略与 PG-MOEA/D-IEpsilon 是项目必需的核心基线，缺实现时先登记阻塞项，不能用一个随意的贪心策略改名替代。
+在线 EA 将计算花在每次规划的候选评价；离线 RL 将大量计算前置到策略学习，再以网络推理给出候选。谁更合适取决于评价模型、数据支持、实时预算、变化速度及错误代价。二者也能互补：EA 提供可行示范或高质量轨迹，RL 提供热启动、候选分布或终端价值。混合方法需要与相同预算下的强 EA、纯行为克隆和简单离线 RL 比较，不能只与未经调参的静态单点搜索比较。
 
-至少进行多次独立训练并保留全部种子；五个种子可作为初步研究的最低设计起点之一，却不自动足以支撑强结论。报告逐运行结果、合理区间和工况分层。具有自相关的数千个时间步不是数千次独立试验。有关少量随机运行下不确定性的系统讨论可读 [Agarwal 等的原始论文](https://arxiv.org/abs/2108.13264)。
+本项目保留 Operator 与 PG-MOEA/D-IEpsilon 基线要求。当前网页没有接入其实际实现、训练数据和统一评价结果，因此本页解释的是可复现的研究设计，而没有宣称任何网络优于该基线。
 
-#### 五、六个可以被数据推翻的研究假设
+#### 本篇原始资料与阅读边界
 
-##### H1：可靠性与化验年龄能改善决策相关的信息表示
+- [R49](#reference-49) · [A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II](https://doi.org/10.1109/4235.996017) — Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, T. Meyarivan; 2002. 来源标识: r2-nsga2.
+- [R50](#reference-50) · [MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition](https://doi.org/10.1109/TEVC.2007.892759) — Qingfu Zhang, Hui Li; 2007. 来源标识: r2-moead.
+- [R51](#reference-51) · [An efficient constraint handling method for genetic algorithms](https://doi.org/10.1016/S0045-7825(99)00389-8) — Kalyanmoy Deb; 2000. 来源标识: r2-feasibility.
+- [R52](#reference-52) · [Constrained Optimization by the ε Constrained Differential Evolution with Gradient-Based Mutation and Feasible Elites](https://doi.org/10.1109/CEC.2006.1688283) — Tetsuyuki Takahama, Setsuko Sakai; 2006. 来源标识: r2-epsilon.
+- [R53](#reference-53) · [Dynamic Multiobjective Optimization Problems: Test Cases, Approximations, and Applications](https://doi.org/10.1109/TEVC.2004.831456) — Marco Farina, Kalyanmoy Deb, Paolo Amato; 2004. 来源标识: r2-dynamic.
+- [R46](#reference-46) · [Model Predictive Control: Theory, Computation, and Design](https://sites.engineering.ucsb.edu/~jbraw/mpc/) — James B. Rawlings, David Q. Mayne, Moritz M. Diehl; 2020, 2nd paperback edition; current online printing. 来源标识: r2-mpcbook.
+- [R38](#reference-38) · [Collaborative optimization decision making of cement grinding process operational indicators considering dual dynamic problem](https://doi.org/10.1016/j.asoc.2024.111772) — Yonghang Li, Tianqi Yang, Xiaochen Hao, Jieguang Yang, Quanwei Sun; 2024. 来源标识: r2-oadstr.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
 
-**假设。** 在相同观测来源和模型容量预算下，显式利用已到达化验的年龄及可靠性门控，比无年龄的静态融合更能降低长延迟与化验缺失工况下的质量风险低估，并改善门控后的成本。
+**r2-nsga2 · IEEE Transactions on Evolutionary Computation 6, 182–197:** 原论文全文核验非支配排序、拥挤距离、精英保留及约束支配；证据为测试问题。
 
-**为什么可能成立。** 同一个化验值在十分钟前与两小时前采集，表示的当前状态可信度不同。可靠性门控应根据信息新鲜程度分配权重；化验缺失时回退在线估计，可避免策略把占位值当成真实质量。反过来，年龄也可能只是某种排班或工况的代理变量，不能把相关改进直接称为物理因果。
+**r2-moead · IEEE Transactions on Evolutionary Computation 11, 712–731:** 原论文 PDF 核验分解、邻域与尺度处理；不能由算法名推断具体项目改进版。
 
-**对照与消融。** 固定下游策略和训练数据，比较在线软测量、简单保持最近化验、静态融合、含年龄融合、完整可靠性门控。去掉年龄、固定门值、随机打乱合法范围内的年龄作为负对照；缺失模式要区分自然缺失与人工遮蔽，不用随机遮蔽代表所有真实故障。涉及观察维数的变体仅在受控研究分支登记，不能悄悄修改当前项目环境。
+**r2-feasibility · Computer Methods in Applied Mechanics and Engineering 186, 311–338:** 可行性比较的原始方法入口；配合 NSGA-II 原文的约束支配定义阅读。
 
-**评价与失败标准。** 除总体 MAE，还看阈值附近误差、低估风险的比例、预测区间覆盖和按样品年龄分层的误差；再测相同决策器的质量成本、回退率与能耗。若只有总体预测误差改善，长年龄层校准或最终决策未改善，H1 的“帮助决策”部分就不成立。不能只保留感知层的好分数。
+**r2-epsilon · IEEE Congress on Evolutionary Computation:** ε 水平比较与约束搜索的原始文献；搜索容忍度不等于放宽设备执行边界。
 
-##### H2：时序表示与多步信用分配各自贡献可分离
+**r2-dynamic · IEEE Transactions on Evolutionary Computation 8, 425–442:** 动态 Pareto 集与控制问题的原始研究；说明 EA 不限于静态单点优化。
 
-**假设。** 相同上层动作接口下，历史表示改善对潜在窑况的估计，多步学习改善延迟后果的归因；二者可以分别贡献，也可能存在交互，而不是仅靠堆叠获得一个无法解释的增益。
+**r2-mpcbook · Nob Hill Publishing:** 作者开放教材；滚动时域、终端条件、状态估计和经济 MPC 的理论入口。
 
-**实验。** 用一个二维消融表：表示为无历史基线与固定历史编码器，回报为一步与多步目标。保持训练预算和可见变量相同，并补充参数量接近的 MLP、TCN 或 GRU 比较。若比较多个架构，应在验证段确定候选，不在测试上选冠军。TCNSO-MSL-TD3 的公开机制为这个问题提供了直接研究连接，但具体实现和数据需要单独取得与验证。[原论文 DOI](https://doi.org/10.1088/2631-8695/ae5ed3)
+**r2-oadstr · Applied Soft Computing 161, 111772:** 书目与出版社摘要核验；对象是粉磨，动态搜索与滚动思想可借鉴，烧成结果不可据此推定。
 
-**评价与失败标准。** 观察多步目标的偏差与波动、价值校准、工况切换恢复、动作总变差和最终成本。若多步增益仅来自错误跨 reset 累加，或只有编码器参数量扩大后才出现，不能归因于正确的时序信用分配。若历史编码在训练工况有效、留出工况失效，需要报告这种外推边界。
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
 
-##### H3：多目标优化教师与轨迹先验能否减少无效候选
+---
 
-**假设。** 在相同候选评估预算下，PG-MOEA/D-IEpsilon 可行解与平滑轨迹先验能提高候选可行率，为策略初始化或残差学习提供帮助；RL 的长期收益必须超出纯教师模仿才能成立。
+<a id="research-sequential"></a>
 
-**设计。** 保留操作员策略和原优化器两条核心基线，增加 BC、教师行为克隆、教师加有界残差、无需教师的同类离线策略。NURBS 可用于表示候选设定值路径，但每个离散时刻仍检查 RATE、变化限制、绝对边界与门控。策略最终输出仍为既定维数的 CV 增量；轨迹参数化不等于获得改变执行接口的许可。
+### 05 · 从指标优化到序列决策：MDP、POMDP 与 CMDP
 
-**公平性。** 教师不能访问策略没有的新化验或未来扰动；优化候选数、世界模型调用次数及总计算成本一起报告。多目标比较只在同一可行性定义下进行；Pareto 图、可行解比例和超体积的参考点应事先固定。质量与氧量边界不能为扩大 Pareto 前沿而放宽。
+从当前候选、未来轨迹推到反馈策略，说明历史、化验可用性、占用分布、延迟回报与独立约束如何进入同一个问题。
 
-**失败标准。** 如果教师 BC 已达到全部收益，增加 RL 却没有稳健增益，就不能声称长期序列学习是必要原因。如果平滑先验只降低动作变化却严重延迟必要调整，也需报告代价。若原 PG 实现尚不可运行，该假设仍处于研究计划阶段。
+**建议阅读:** 32 分钟（按个人基础调整）
 
-##### H4：离线改进应依赖可见的数据支持，而非外推幻觉
 
-**假设。** 在固定历史数据中，保守价值学习或优势加权模仿能够在覆盖充分区域改善行为，同时限制对未验证动作的偏好；其收益随支持不足而下降，这一边界应可以测量。
+#### 1. 改变的是求解对象，而不只是算法名字
 
-**基线与数据梯度。** 先建立操作员行为模型和 BC，再比较 [TD3+BC](https://arxiv.org/abs/2106.06860)、[CQL](https://arxiv.org/abs/2006.04779)、[IQL](https://arxiv.org/abs/2110.06169)。按工况与联合动作区域构造不同覆盖程度的训练子集，保持测试场景固定；记录删除了哪些支持，而不是仅随机减少样本总数。标准 SAC 在固定日志上的结果可作为失配诊断对照，不应被称为已经正确处理离线分布偏移的方法。
+设当前信息为 $h_t$。单步优化寻找 $a_t^*=\arg\min_a\widehat\ell(h_t,a)$；轨迹优化寻找 $a_{t:t+H-1}$，通过模型把当前选择对未来状态的影响计入目标；反馈策略则学习一个随可用信息改变动作的映射 $\pi(a\mid h)$。轨迹优化每次执行第一步再重算，也是一种反馈策略。RL 的特点是通过交互或日志学习长期价值与决策规律，**不是首次让优化能够考虑未来**。[MPC 教材](https://sites.engineering.ucsb.edu/~jbraw/mpc/)；[Sutton 与 Barto](https://incompleteideas.net/book/the-book-2nd.html)
 
-**评价。** 检查策略与行为分布差异、联合动作近邻距离、Q 值与可验证推演结果的关系、门控拒绝比例及成本。离策略评价必须披露支持假设；高维连续动作中，行为概率模型估错也会破坏重要性权重。若重要样本缺失，不应把单个拟合 Q 评价数值当成可靠闭环收益。
+对于烧成，上层动作始终是 CV 设定值增量；动态评价中应包含内层 DCS/APC 的响应。学到一个保持设定值的动作，并不意味着过程停止变化：原料、传热、反应、冷却及扰动仍然继续。把“当前煤耗最低”直接当作长期最优，或者把“拒绝动作”实现成冻结仿真，都改变了原来要研究的过程。[项目契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-**失败标准。** 改进只来自极少数高权重样本、Q 越出覆盖区越高、换一个合理评估器就反转排名，或同一门控后的收益消失，都会削弱 H4。数据外效果无法识别时，正确结论是证据不足，而非添加更多训练轮数。
+~~~mermaid
+flowchart TD
+  D["已到达的信号与化验"] --> H["历史或信念状态"]
+  H --> P["策略产生候选增量"]
+  H --> O["模型规划产生候选增量"]
+  P --> G["门控得到执行增量"]
+  O --> G
+  G --> K["内层控制与过程推进"]
+  K --> R["能耗回报与独立约束成本"]
+  K --> D
+  R --> L["价值学习或模型校准"]
+  L --> P
+  L --> O
+~~~
 
-##### H5：短时域、经校准的动作条件模型优于盲目长推演
+#### 2. MDP 是条件独立假设，不是把一行数据命名为 state
 
-**假设。** 在已验证的局部支持区，从真实状态分叉的短模型推演，比长时域自由推演更不容易被策略利用误差；联合软测量与预测只有改善动作后果排序，才可能帮助策略。
+如果充分状态 $S_t$ 满足
 
-**设计。** 先比较不带动作的趋势模型与动作条件模型，检查延迟和外生条件；再固定模型集合与策略算法，只改变分支长度、真实与模型数据比例以及不确定性处理。参考 [MBPO](https://arxiv.org/abs/1906.08253) 的短分支思想与 [MOPO](https://arxiv.org/abs/2005.13239) 的离线模型保守思想，明确它们适用的数据条件并不完全相同。
+$$P(S_{t+1},R_{t+1},C_{t+1}\mid S_{0:t},A_{0:t})=P(S_{t+1},R_{t+1},C_{t+1}\mid S_t,A_t),$$
 
-在相同外部扰动下，若局部单步模型误差有界为 $\epsilon$，误差放大满足系数 $L$，则教学推导给出：
+就可以使用 Markov 决策过程。状态应覆盖影响未来分布的重要记忆，例如热状态、物料状态、当前设定值、前次执行增量、设备模式及门控所依赖的变量。右侧不是“没有扰动”，而是“给定当前状态和动作后，更早历史不再额外改变下一步分布”。现实中这些隐变量往往无法全部测量，所以直接把瞬时温度、压力和旧化验拼成向量，并不能证明 Markov 性。
 
-$$e_{k+1}\le Le_k+\epsilon,\qquad e_H\le\epsilon\sum_{j=0}^{H-1}L^j.$$
+理论推导先假定充分状态存在。令 $a$ 表示候选动作，门控为 $G(s,a)$；复合转移核 $P_G$ 包含执行门控和内层响应。价值满足
 
-若真实过程与模型执行同一动作序列，$L$ 可取动力学对状态的敏感度；若策略根据各自状态闭环选动作，$L$ 必须覆盖整个闭环映射，例如取状态、动作和策略的局部敏感度组合 $L_x+L_aL_\pi$。漏掉策略响应会低估误差传播。这解释了为什么多步误差可能累积；实际平均 RMSE 不能直接充当这个最坏情形的 $\epsilon$。模型集合分歧也不是自动有效的误差界，需要测试其与实际误差、OOD 和阈值低估的关系。
+$$V^\pi(s)=\mathbb E_{a\sim\pi(\cdot\mid s)}\!\left[\mathbb E_{(s',r)\sim P_G(\cdot\mid s,a)}\!\left[r+\gamma V^\pi(s')\right]\right].$$
 
-**失败标准。** 长分支带来高回报的同时，留出动作响应误差增加、策略更频繁进入模型低支持区，说明存在利用模型偏差的可能。若新预测结构只改善平均拟合，却未改善候选排序或完整策略指标，不认定其对决策有益。所有结果只能称为相应模型条件下的模拟推演。
+外层平均策略可能选的动作，内层平均过程在该动作下的随机结果。最优性方程把动作平均换成优化，但仍保留对随机转移的期望。一步差异会改变后续访问的状态，因此优化的是由策略诱导的整条轨迹分布，而非在固定历史数据的每一行上分别找最小预测煤耗。
 
-##### H6：期望成本学习与逐次门控应提供不同且可观察的贡献
+一个完全虚构且两方案均满足约束的能耗例子：方案 A 两步成本为 $[1,5]$，方案 B 为 $[2,1]$。即时优化选 A；取 $\gamma=0.9$，负成本回报分别为 $-1-0.9\times5=-5.5$ 与 $-2-0.9\times1=-2.9$，长期选择 B。这里没有把质量违规塞入奖励，差异只是早期动作造成后续能耗变化。EA 轨迹规划、MPC 或正确学习的价值函数都可能识别这个差异。
 
-**假设。** 成本 Critic 与拉格朗日更新可减少策略提出的违规候选，门控可拒绝剩余的不可执行建议；两者同时使用时，应在相同工艺边界下减少拒绝与回退，而不是靠门控掩盖策略本身的失效。
+#### 3. 部分可观测：需要对“尚不知道什么”建模
 
-$$\mathcal L(\pi,\lambda)=J_R(\pi)-\sum_k\lambda_k(J_{C_k}(\pi)-d_k),\qquad \lambda_k\leftarrow[\lambda_k+\eta_\lambda(\hat J_{C_k}-d_k)]_+.$$
+POMDP 区分隐藏状态 $S_t$ 与观测 $O_t$。理想信念 $b_t(s)=P(S_t=s\mid O_{0:t},A_{0:t-1})$ 通过转移预测和观测更新递推：
 
-成本超预算时乘子增加，改变后续策略的优化偏好。预算必须与成本口径一致：违反指示量、超限幅度、折扣累计和长期平均都不是同一个量。[约束策略优化原始论文](https://arxiv.org/abs/1705.10528)提供了相关理论入口，但有限样本、函数近似和模型误差仍要单独评估。
+$$b_{t+1}(s')\propto P(o_{t+1}\mid s')\int P_G(s'\mid s,a_t)b_t(s)\,ds.$$
 
-**消融方式。** 在离线审计或模拟中，可以对比候选层的有无成本学习、不同乘子步长、可信度诊断开关的影响；真正执行路径始终保留五层门控。记录门控前后的候选统计与同一执行结果，避免为了消融让不可接受建议进入执行路径。
+实际项目通常没有足够可信的完整概率模型，因此使用历史窗口、循环网络或时序编码器近似信息状态。这是可检验的逼近，不是“用了 TCN 就自动成为 MDP”。比较窗口长度和编码器时，应控制参数量、延迟标签对齐与训练预算；验证剩余预测误差是否还系统依赖更早历史。[流程工业 RL 综述](https://doi.org/10.1109/JAS.2024.124227)提供领域问题的组织框架，具体建模仍须依过程而定。
 
-**失败标准。** 平均成本合格但出现更严重的单次超限、乘子持续振荡、回退比例上升、或预算缩放稍变就完全失稳，都需要否定“已得到稳健约束策略”的强结论。$\mathbb E[C]\le d$ 不意味着每一条轨迹、每一个时间点都满足边界。保持当前设定值也只是本教程契约中的回退示意，不能替代实际异常工况的批准保护逻辑。
+项目全量接口含每 5 分钟一次的 24 个采样点、当前设定值、软测量、已发布化验与化验年龄、原料率值。24 点窗口名义上覆盖约两小时，但首末采样点间隔是 $23\times5=115$ 分钟；不要把窗口命名当成精确物理时滞。教学工作台的 13 维观测、3 维动作也不等于全量 36 变量、6 CV 方案。
 
-#### 六、结果表应该怎样设计，才能解释为什么有效
+一份化验在 10:00 取样、10:40 发布：10:20 的策略不得读取它；10:45 可读取它，但该值描述 10:00 的材料，样品年龄为 45 分钟、发布后年龄为 5 分钟，两者含义不同。训练软测量可在标签发布后对齐到取样时刻进行监督；这并不允许重建历史决策输入时提前填入该标签。数据表至少要保留采样时间、发布时间、缺失标记和当时可用值。[项目观测约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-建议按三个证据层组织结果。每层都同时给基线、候选、差值与不确定性，先展示关键失败，再讨论平均改进。
+#### 4. CMDP：把目标与约束分开，并保持单位一致
 
-| 层级 | 主结果 | 必须同时报告的诊断 |
+定义奖励 $r$ 衡量煤、电和执行平滑性，成本 $c_j$ 衡量第 $j$ 项约束。一个便于解释单位的折扣形式是
+
+$$\max_\pi J_r(\pi),\quad J_{c_j}(\pi)\le d_j,$$
+$$J_r=(1-\gamma)\mathbb E_\pi\sum_{t\ge0}\gamma^t r_{t+1},\qquad J_{c_j}=(1-\gamma)\mathbb E_\pi\sum_{t\ge0}\gamma^t c_{j,t+1}.$$
+
+乘上 $1-\gamma$ 后，常值成本的指标等于该常值；去掉这个因子也完全可以，但预算必须同步换算。平均成本形式又是另一种长期定义，不能直接复用未经转换的预算。本项目中的质量和氧含量阈值属于项目约定，作为独立成本与执行保护使用，不是全球水泥工艺标准。
+
+拉格朗日函数为 $\mathcal L=J_r-\sum_j\lambda_j(J_{c_j}-d_j)$，$\lambda_j\ge0$。策略方向提高 $\mathcal L$，乘子通过
+
+$$\lambda_j\leftarrow\left[\lambda_j+\eta_\lambda(\widehat J_{c_j}-d_j)\right]_+$$
+
+提高超预算约束的代价。若估计成本 $0.12$、预算 $0.10$、步长 $0.5$，乘子增加 $0.01$；若成本低于预算，则倾向降低乘子，但不会降到负数。这是带估计噪声的优化更新，不是每一步都可行的证明。平均成本小可以与少量严重违规并存；训练期的预算满足、测试期的预算满足和逐时刻工程安全也不是同一命题。[CPO 原论文](https://arxiv.org/abs/1705.10528)
+
+因此门控和成本学习各有作用：门控阻止当前已知不合规候选执行，成本价值让策略学会提前避开未来风险。门控拒绝率应独立报告，否则一个不断提出危险建议、总靠回退保持运行的策略，可能在仅看执行后违规率时显得很好。
+
+#### 5. 从日志学策略，需要行为支持而不仅是样本数量
+
+设日志行为策略为 $\mu$，目标策略为 $\pi$。重要性比率 $\pi(a\mid h)/\mu(a\mid h)$ 有意义的必要支持条件是：目标策略给正概率的动作，行为策略在相同信息条件下也要有支持。工业日志常集中在窄工况和小幅调整区；一百万条近乎保持动作，并不等于可靠覆盖所有六维联合增量。
+
+普通在线 SAC/TD3 依靠后续交互纠正价值误差；直接让它们在固定日志上反复最大化 Critic，可能选择数据外的虚高价值动作。CQL 等离线方法正是针对这种分布外评价风险提出约束或保守学习，理论结论也依赖数据、函数逼近和优化假设。[CQL](https://arxiv.org/abs/2006.04779)。离线学习可以生成研究候选，但不能从“训练结束”推导出“允许现场探索”。本仓库交互范围仍是离线与仿真。
+
+#### 6. RL 与优化的连接点应当可替换、可消融
+
+可以让 RL 学终端价值、为优化器提供热启动、在可行示范附近学习策略，或调整经济 MPC 的参数。Gros 与 Zanon 研究了经济 NMPC 作为 RL 函数逼近器的联系，并分析了模型与成本修正之间的关系。相关定理有明确的修改阶段成本、终端价值及存在性条件；不能概括为“即使模型任意错误，RL 也保证控制最优且安全”。[原论文](https://arxiv.org/abs/1904.04152)
+
+比较时先固定同一个状态信息、动作接口、偏好、约束与评价环境，再替换终端价值、候选生成器或策略学习器。持续过程在有限模拟窗口结束时是截断：价值目标可以对最终观测 bootstrap，但优势递推不能跨越重置串接下一段轨迹。这样得到的差异才能主要归因于决策方法，而不是标签泄漏、动作权限或终止语义被悄悄改变。
+
+#### 本篇原始资料与阅读边界
+
+- [R55](#reference-55) · [Reinforcement Learning: An Introduction, Second Edition](https://incompleteideas.net/book/the-book-2nd.html) — Richard S. Sutton, Andrew G. Barto; 2018. 来源标识: r2-rlbook.
+- [R46](#reference-46) · [Model Predictive Control: Theory, Computation, and Design](https://sites.engineering.ucsb.edu/~jbraw/mpc/) — James B. Rawlings, David Q. Mayne, Moritz M. Diehl; 2020, 2nd paperback edition; current online printing. 来源标识: r2-mpcbook.
+- [R56](#reference-56) · [Data-driven Economic NMPC using Reinforcement Learning](https://arxiv.org/abs/1904.04152) — Sébastien Gros, Mario Zanon; 2019 preprint / 2020 journal. 来源标识: r2-mpc-rl.
+- [R36](#reference-36) · [Reinforcement Learning in Process Industries: Review and Perspective](https://doi.org/10.1109/JAS.2024.124227) — Oguzhan Dogru, Junyao Xie, Om Prakash et al.; 2024. 来源标识: r2-process-rl.
+- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Joshua Achiam, David Held, Aviv Tamar, Pieter Abbeel; 2017. 来源标识: r2-cpo.
+- [R28](#reference-28) · [Conservative Q-Learning for Offline Reinforcement Learning](https://arxiv.org/abs/2006.04779) — Aviral Kumar, Aurick Zhou, George Tucker, Sergey Levine; 2020. 来源标识: r2-cql.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
+
+**r2-rlbook · MIT Press:** 作者教材，涵盖 MDP、Bellman、函数逼近与策略梯度；本页窑案例独立编写。
+
+**r2-mpcbook · Nob Hill Publishing:** 作者开放教材；滚动时域、终端条件、状态估计和经济 MPC 的理论入口。
+
+**r2-mpc-rl · IEEE Transactions on Automatic Control 65, 636–648:** 原文理论条件与例子支持 MPC 作为 RL 函数逼近器的联系；不声称任意错误模型都可安全使用。
+
+**r2-process-rl · IEEE/CAA Journal of Automatica Sinica 11, 283–300:** 流程工业 RL 综述；文献分类不替代每篇论文的部署证据核查。
+
+**r2-cpo · ICML 2017:** 约束策略优化与理论性能界；期望成本不是逐时刻无违规保证。
+
+**r2-cql · NeurIPS 2020:** 原论文区分策略价值下界与逐点下界；理论和数据假设不可省略。
+
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
+
+---
+
+<a id="research-architecture"></a>
+
+### 06 · 网络与数据路径：一个可审计的上层决策系统
+
+逐一说明历史编码、软测量、tanh Actor、双 Critic、温度、成本、离线支持与世界模型各自学习什么，以及门控改变了哪些语义。
+
+**建议阅读:** 39 分钟（按个人基础调整）
+
+<a id="figure-safe-agent"></a>
+
+![历史编码、策略、评价网络与执行门控](./images/safe-agent.webp)
+
+**历史编码、策略、评价网络与执行门控**
+
+先把过去可用的信息编码，再由策略产生增量建议；图中三个滑块对应教学子集，完整项目采用六个 CV，维度以配套正文为准。价值/成本网络负责评价，独立门控决定实际执行。网络中的节点数量为示意，具体张量与损失以配套正文和 Mermaid 为准。
+
+**逐区读图**
+
+- **01** · 输入：历史在线信号、动作和化验年龄；不得把未来发布的化验结果提前放入观测。
+- **02** · 编码：时序网络把历史窗口压缩为表示；学得的表示不自动满足 Markov 性或因果充分性。
+- **03** · 策略与评价：三个滑块表示教学子集的有界请求增量；完整项目不限定为三个 CV。旁边的网络是评价模块概念，不是网络数量或具体算法的完整规定。
+- **04** · 门控与过程：五层依次检查数据有效性、当前状态（含质量与氧边界）、模型可信度/OOD、变化率/曲率、绝对边界与授权。惩罚项不能代替这条执行路径。
+
+这些是原创概念插图，不是实测曲线、辨识模型或工程施工图；精确关系以本篇公式和 Mermaid 为准。
+
+#### 1. 一张网络结构图必须同时是一张信息权限图
+
+设计从数据路径开始，而不是从“堆更多模块”开始。快速 DCS 信号、当前 CV 设定值、原料率值、缺失掩码、已发布化验及其年龄进入时序编码器；软测量输出质量估计与经验证的不确定性描述。Actor 读取当时可用的表示，产生归一化候选增量，五层门控决定真正执行什么。奖励、成本和下一时刻观测形成训练记录。隐藏的当前真实质量只属于仿真评价或后来取得的监督标签，不得偷偷进入历史决策输入。[项目契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
+
+~~~mermaid
+flowchart TD
+  D["已到达信号、掩码与化验年龄"] --> E["历史编码与质量软测量"]
+  E --> A["有界 Actor：候选增量"]
+  E --> Q["双奖励 Critic 与成本 Critic"]
+  A --> G["五层门控：执行增量"]
+  G --> P["CV 设定值与内层控制"]
+  P --> R["下一观测、奖励、成本与日志"]
+  R --> D
+  R --> Q
+  Q --> A
+~~~
+
+这是建议的研究接口，不是已经训练和部署的工业网络。模块名称 OAM-Net、QC-MTWaveSME、MC3/OOD 在后续研究页中作为可接入接口讨论；此图不推断这些已有模块的层数、参数量、损失配方或未公开实验成绩。
+
+#### 2. 表示学习与质量监督各自回答不同问题
+
+用 $h_t=f_\omega(X_{t-L+1:t},m_t,Y_t^{sp},q_t^{\rm available},\mathrm{age}_t,R_t)$ 表示信息编码。$m_t$ 表示缺失与有效性，$R_t$ 在本节指原料特征，不是奖励。编码器可以是 TCN、RNN、注意力网络或简单堆叠；选择应由时滞、数据规模、推理预算和消融结果决定。较低预测误差不自动说明表示保留了控制所需的全部信息。
+
+若软测量输出均值 $\mu_i$ 和标准差 $\sigma_i>0$，一个高斯观测模型的监督损失是
+
+$$L_{\rm soft}=\sum_i m_i^{\rm label}\left[\frac{(q_i-\mu_i)^2}{2\sigma_i^2}+\log\sigma_i\right].$$
+
+这是省略常数的负对数似然；$m_i^{\rm label}$ 只选择合法可用标签。它要求残差分布假设及独立校准检查，输出一个数字 $\sigma$ 并不等于获得可靠置信区间。标签应对齐取样时刻，输入必须按决策时的可用性重建。若共享编码器同时接收预测损失、Critic 损失和 Actor 梯度，需要报告哪些梯度被截断、各损失如何缩放及表示版本；否则难以解释性能来自哪里。
+
+#### 3. 有界 Actor：边界来自变量变换，密度也必须跟着变
+
+SAC 常使用可重参数化的高斯样本，再压缩到动作区间：
+
+$$\epsilon\sim\mathcal N(0,I),\quad u=\mu_\theta(h)+\sigma_\theta(h)\odot\epsilon,\quad a^{\rm req}=\tanh u.$$
+$$\log\pi_\theta(a^{\rm req}\mid h)=\log\mathcal N(u;\mu_\theta,\sigma_\theta^2)-\sum_i\log(1-\tanh^2u_i).$$
+
+第二项来自变量替换的 Jacobian。若一维 $\mu=0,\sigma=1,a=0.5$，则 $u=\operatorname{atanh}(0.5)\approx0.5493$，高斯 log-density 约为 $-1.0698$；减去 $\log(0.75)\approx-0.2877$ 后，变换后的对数密度约为 $-0.7821$。省略 Jacobian 会改变熵目标和策略梯度。数值实现需处理饱和附近的稳定性，物理单位缩放若进入密度坐标也须加上对应常数 Jacobian。[SAC 原论文](https://arxiv.org/abs/1801.01290)
+
+门控后执行为
+
+$$a_t^{\rm exec}=G(h_t,a_t^{\rm req}),\qquad Y_{t+1}^{sp}=Y_t^{sp}+\mathrm{RATE}\odot a_t^{\rm exec}.$$
+
+例如分解炉通道的项目 RATE 为每步 $2^\circ\mathrm C$，候选 $0.4$ 只有在通过时才对应 $0.8^\circ\mathrm C$ 的设定值变化。拒绝并保持时该通道实际增量为零，但过程照常推进。平滑性项必须使用执行增量及其变化。tanh 只限制归一化动作大小，不保证下一步氧含量、质量或机械状态可行。
+
+#### 4. Critic 到底评价候选，还是评价执行？必须选清楚
+
+有两种一致的设计。**执行域 Critic** $Q^{\rm exec}(h,a^{\rm exec})$ 学习物理执行的后果，训练记录使用实际执行动作；要优化候选，就要考虑 $Q^{\rm exec}(h,G(h,a^{\rm req}))$。含拒绝和替换的门控通常不光滑，不能把它默认为可微层直接套用普通 SAC 梯度。
+
+**候选域 Critic** $Q_G(h,a^{\rm req})$ 则把门控作为环境的一部分，评价“提出该候选后，既定 Gate 会如何执行”的长期结果。训练必须同时记录候选、执行、门控原因和版本，并使表示足以描述该复合环境。若老日志只有执行动作，不能假造被拒绝的候选去训练这个定义。换 Gate 后，转移关系也可能变化。
+
+下文 SAC 公式使用第二种定义，并省略下标 $G$。策略 log-prob 始终属于采样得到的候选动作。若候选被替换为保持动作，**不能在替换值上计算原高斯 log-prob，并声称它是本次采样的概率**。执行动作分布可能因回退而包含原点质量，与原连续高斯变换密度不同。候选熵很高、执行却一直保持也是可能的；必须联合报告执行多样性与拒绝率。
+
+#### 5. 双 Critic、Actor 与温度的更新方向
+
+现代 SAC 使用两个奖励 Critic 与慢更新目标网络。对于下一候选 $a'\sim\pi_\theta(\cdot\mid h')$，目标为
+
+$$y=r+\gamma(1-d)\left[\min_{i=1,2}\overline Q_i(h',a')-\alpha\log\pi_\theta(a'\mid h')\right],$$
+$$L_{Q_i}=\mathbb E_{\mathcal D}\left[(Q_i(h,a^{\rm req})-\operatorname{stopgrad}(y))^2\right].$$
+
+$d$ 只表示真实终止，不是时间窗口截断。双 Q 取较小值用于缓解过估计；这不是可靠性置信下界，两个网络共享偏差时仍会一起犯错。[TD3](https://arxiv.org/abs/1802.09477)；[SAC Algorithms and Applications](https://arxiv.org/abs/1812.05905)。取 $r=-0.4,\gamma=0.9,d=0$，两目标 Q 为 $-2,-1.6$，$\alpha=0.2,\log\pi=-0.7$，则 $y=-0.4+0.9[-2+0.14]=-2.074$。
+
+Actor 最小化
+
+$$L_\pi=\mathbb E_{h,\epsilon}\left[\alpha\log\pi_\theta(a^{\rm req}\mid h)-\min_iQ_i(h,a^{\rm req})\right].$$
+
+重参数化使随机性来自固定采样分布，梯度可沿 $\theta\to u\to a^{\rm req}\to Q$ 传播。优化 Actor 时固定 Critic 参数，不等于阻断 Q 对动作的导数。常见温度目标的方向可写成 $L_\alpha=\alpha(\widehat H-H_{\rm target})$，$\alpha>0$；把熵估计视为此步常数。若熵 $0.5$ 低于目标 $0.8$，梯度下降会提高 $\alpha$，增加保持随机性的动力。连续变量的微分熵依坐标尺度变化，目标值不是普适常数；更高熵也不是更安全。
+
+成本 Critic 另外估计 $Q_{c_j}$，目标可用 $c_j+\gamma(1-d)\overline Q_{c_j}(h',a')$，不加入奖励熵项。约束 Actor 可以在损失中加 $\sum_j\lambda_jQ_{c_j}$，预算与折扣归一化保持一致。质量成本仍需来自正确标签或经验证的代理及不确定性处理；用同一个偏置软测量同时训练和评价，可能产生自我证明。
+
+#### 6. 离线数据改变了学习目标，不能只关闭采样循环
+
+普通 SAC 在固定日志上最大化 Q，容易利用数据外误差。CQL 在 Bellman 误差之外，对高估的数据外动作施加保守压力。离散动作下，一个示意项为
+
+$$L_{\rm conservative}=\beta\left[\mathbb E_h\log\sum_a e^{Q(h,a)}-\mathbb E_{(h,a)\sim\mathcal D}Q(h,a)\right].$$
+
+连续动作需要积分及相应采样/密度校正，不能直接把六维网格穷举当成现实实现。原文关于策略价值的保守性结论有假设，不能改写为“任意神经网络 Q 在每个点都一定低于真值”。[CQL](https://arxiv.org/abs/2006.04779)
+
+IQL 通过数据动作上的 expectile 回归学习状态价值：
+
+$$L_V=\mathbb E_{\mathcal D}\left[\left|\tau-\mathbf1_{\delta<0}\right|\delta^2\right],\qquad\delta=\overline Q(h,a)-V(h).$$
+
+$\tau=0.7$ 时，$\delta=2$ 的损失为 $2.8$，$\delta=-2$ 为 $1.2$，正残差受到更大权重，使 V 倾向拟合较好的数据动作。随后 Q 拟合 $r+\gamma V(h')$，Actor 进行由优势加权的行为克隆，常用权重与 $e^{\beta(Q-V)}$ 成正比，并设置数值上限。它减少价值训练时查询未见动作的需要，仍不保证拟合策略永不越出行为支持。[IQL](https://arxiv.org/abs/2110.06169)。普通 BC 和 [TD3+BC](https://arxiv.org/abs/2106.06860)应是保留的简单基线。
+
+#### 7. 世界模型必须显式看到动作，且不能替代证据
+
+用于控制的模型应估计 $\widehat P_\psi(x_{t+1},r_{t+1},c_{t+1}\mid h_t,a_t^{\rm exec})$，或明确估计包含 Gate 的候选域转移。只根据历史预测下一温度的网络，可能准确复现操作员策略下的相关性，却未学会改变设定值后的反事实响应。动作条件、模式切换、延迟标签和模型不确定性需要专门验证。
+
+MBPO 从真实状态分叉较短模型推演来减轻长序列模型误差，原始算法仍包含采集真实交互和更新模型；把它用于固定日志需重新考虑离线分布支持。[MBPO](https://arxiv.org/abs/1906.08253)。MOPO 将离线模型的不确定性纳入保守目标，但惩罚不是设备硬约束证明。[MOPO](https://arxiv.org/abs/2005.13239)。模型生成一万条轨迹仍是一万次模型推演，不是新增的一万次现场验证。
+
+最后，五层阈值门控是项目执行规则；预测安全过滤器的形式化保证通常另需有效模型误差界、终端安全集合、备用控制器和可行性条件。应把“架构中有 Gate”与“满足特定安全定理”分开表述。[Wabersich 与 Zeilinger](https://doi.org/10.1016/j.automatica.2021.109597)。当前网站提供推导与教学模拟，没有在后台训练 SAC、运行工业世界模型或证明现场收益。
+
+#### 本篇原始资料与阅读边界
+
+- [R21](#reference-21) · [Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290) — Tuomas Haarnoja, Aurick Zhou, Pieter Abbeel, Sergey Levine; 2018. 来源标识: r2-sac.
+- [R22](#reference-22) · [Soft Actor-Critic Algorithms and Applications](https://arxiv.org/abs/1812.05905) — Tuomas Haarnoja et al.; 2018 / 2019. 来源标识: r2-sac-apps.
+- [R24](#reference-24) · [Addressing Function Approximation Error in Actor-Critic Methods](https://arxiv.org/abs/1802.09477) — Scott Fujimoto, Herke van Hoof, David Meger; 2018. 来源标识: r2-td3.
+- [R28](#reference-28) · [Conservative Q-Learning for Offline Reinforcement Learning](https://arxiv.org/abs/2006.04779) — Aviral Kumar, Aurick Zhou, George Tucker, Sergey Levine; 2020. 来源标识: r2-cql.
+- [R29](#reference-29) · [Offline Reinforcement Learning with Implicit Q-Learning](https://arxiv.org/abs/2110.06169) — Ilya Kostrikov, Ashvin Nair, Sergey Levine; 2021 / 2022. 来源标识: r2-iql.
+- [R30](#reference-30) · [A Minimalist Approach to Offline Reinforcement Learning](https://arxiv.org/abs/2106.06860) — Scott Fujimoto, Shixiang Shane Gu; 2021. 来源标识: r2-td3bc.
+- [R31](#reference-31) · [When to Trust Your Model: Model-Based Policy Optimization](https://arxiv.org/abs/1906.08253) — Michael Janner, Justin Fu, Marvin Zhang, Sergey Levine; 2019. 来源标识: r2-mbpo.
+- [R32](#reference-32) · [MOPO: Model-based Offline Policy Optimization](https://arxiv.org/abs/2005.13239) — Tianhe Yu et al.; 2020. 来源标识: r2-mopo.
+- [R57](#reference-57) · [A predictive safety filter for learning-based control of constrained nonlinear dynamical systems](https://doi.org/10.1016/j.automatica.2021.109597) — Kim Peter Wabersich, Melanie N. Zeilinger; 2021. 来源标识: r2-safety-filter.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
+
+**r2-sac · ICML 2018:** 原文最大熵目标和变换密度；熵不提供工艺安全保证。
+
+**r2-sac-apps · arXiv:1812.05905:** 现代 SAC 更新、自动温度与实际机器人案例；不能转译为烧成部署证据。
+
+**r2-td3 · ICML 2018:** TD3 的双 Critic、延迟策略更新与目标平滑；原基准不等于工业效果。
+
+**r2-cql · NeurIPS 2020:** 原论文区分策略价值下界与逐点下界；理论和数据假设不可省略。
+
+**r2-iql · ICLR 2022:** Expectile 价值学习与优势加权行为克隆；不保证最终策略绝不越出数据支持。
+
+**r2-td3bc · NeurIPS 2021:** TD3+BC 作为应保留的简单离线比较对象，而非宣布某个复杂架构必然更好。
+
+**r2-mbpo · NeurIPS 2019:** 从真实状态分叉的短模型推演；模型调用不是新增现实证据。
+
+**r2-mopo · NeurIPS 2020:** 离线模型不确定性惩罚及其假设；惩罚并非硬约束认证。
+
+**r2-safety-filter · Automatica 129, 109597:** 开放作者稿核验模型置信、终端安全集及可行性条件；不同于简单阈值门控。
+
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
+
+---
+
+<a id="research-evidence"></a>
+
+### 07 · 证据地图：论文、仿真、现场与尚未回答的问题
+
+按实际可读的一手材料建立证据矩阵，区分生产数据、模型闭环、现场试验和运营报告，核验相关论文归属与适用范围。
+
+**建议阅读:** 29 分钟（按个人基础调整）
+
+
+#### 1. “用了工业数据”不能回答“谁在现场决定动作”
+
+本综述核验日期为 **2026-11-14**。证据按实际可访问的一手材料记录：作者原文或开放手稿、出版社摘要、出版社登记的 DOI 书目、官方运营说明。全文无法取得时，明确保留未知，不用检索摘要拼出未见过的实验细节。对相关论文的介绍只陈述已核验范围；本文的网络接口、教学算例与研究假设另外标明为原创设计。
+
+以下层级不是论文价值排名，而是回答不同问题的证据类型。理论证明回答“在这些假设下是否成立”；数值基准回答“在规定的仿真问题上表现怎样”；生产数据预测回答“在日志分布上能否预测”；基于生产数据训练的模拟闭环回答“在该代理模型内选择动作会怎样”；现场建议模式回答“人如何采用建议”；实际执行试验回答“设备是否按照该策略改变了动作”。**有生产数据，仍可能完全没有进行现场控制。** [流程工业 RL 综述](https://doi.org/10.1109/JAS.2024.124227)是文献地图，不能替代每篇工作的实验核查。
+
+~~~mermaid
+flowchart TD
+  C["待核验的具体结论"] --> A["原论文或官方运营材料"]
+  A --> T["理论与仿真证据"]
+  A --> D["生产日志或代理模型证据"]
+  A --> F["现场执行证据"]
+  T --> L["记录假设、对照与适用边界"]
+  D --> L
+  F --> L
+  L --> R["允许的表述与未回答问题"]
+~~~
+
+#### 2. 方法论文的证据不能直接兑换为烧成收益
+
+| 原始来源 | 本次核验材料 | 可以支持什么 | 不能由此推出什么 |
+| --- | --- | --- | --- |
+| [Skogestad 2000](https://doi.org/10.1016/S0959-1524(00)00023-8) | 作者手稿 | 控制变量选择、层次与自优化控制的条件性论证 | 固定 CV 对所有工况都最优 |
+| [NSGA-II](https://doi.org/10.1109/4235.996017) / [MOEA/D](https://doi.org/10.1109/TEVC.2007.892759) | 原文 | 多目标排序、拥挤度、分解与测试问题表现 | 已优化本项目真实煤电耗 |
+| [SAC Algorithms and Applications](https://arxiv.org/abs/1812.05905) | 开放原文 | 最大熵更新及论文中的数值与机器人实验 | 六 CV 烧成系统已实现自主控制 |
+| [预测安全过滤器](https://doi.org/10.1016/j.automatica.2021.109597) | 开放作者稿 | 在模型、终端集合与可行性条件下的过滤方法 | 任意阈值 Gate 都继承同样保证 |
+| [统计评估研究](https://arxiv.org/abs/2108.13264) | 作者论文 | 少量随机种子与不稳定汇总的评估问题 | 五个种子必然足够，或同一轨迹的时间步互相独立 |
+
+理论来源最有价值的部分经常是限定条件。把一个条件性结果删掉前提后迁移到工业系统，会比直接承认未知更危险。算法在标准控制基准上获得高回报，也不能说明工业任务的传感器故障、长化验时滞、停窑风险、操作权限和目标分母已经被正确表达。
+
+#### 3. 与本研究主线相关的论文：核验归属，也核验工艺对象
+
+| 论文 | 已核验的作者/对象与材料 | 本综述允许的结论 | 保留的未知 |
+| --- | --- | --- | --- |
+| [TCNSO-MSL-TD3 相关论文，2026](https://doi.org/10.1088/2631-8695/ae5ed3) | DOI 登记题名、作者和出版社摘要；作者包含 Yonghang Li；对象为烧成 | 摘要描述时序观测、多步学习与约束相关设计 | 未取得全文，不能确定完整实验设置或现场执行层级 |
+| [OA-DSTR 相关论文，2024](https://doi.org/10.1016/j.asoc.2024.111772) | 书目与出版社摘要；Yonghang Li 等；对象为水泥粉磨 | 可作为动态搜索与滚动决策的相关工作 | 不能把粉磨的对象、指标响应或结果直接当作烧成验证 |
+| [软测量与时序预测联合训练，2026](https://doi.org/10.1109/TII.2026.3664090) | 出版社登记题名、作者、期刊与页码；Yonghang Li 等 | 可确认研究主题与书目归属 | 本次未取得全文，不重建内部网络与损失细节 |
+| [TOD-CGAN，2026](https://doi.org/10.1016/j.jfranklin.2026.108704) | 书目与出版社摘要；作者包含 Yonghang Li | 条件生成用于烧成运行决策的相关思路 | 条件生成不自动等于 RL，也不自动说明现场自主执行 |
+| [CoNERL，2026](https://doi.org/10.1016/j.aei.2026.104530) | 书目、作者列表与出版社记录中的仿真表述 | 外部进化与 RL 结合的相关工作 | 作者列表不含 Yonghang Li；不能列为用户成果，也不能将仿真改称现场节能 |
+
+这些书目为后续精读提供入口，不是为了给任何方法背书。以 TCNSO-MSL-TD3 为例，出版社摘要足以确认其研究主题，却不足以回答划分是否严格按时间、是否有独立装置、对照策略如何调参、Gate 是否一致等问题。获得全文与补充材料后，应逐项填写，而不是把“comprehensive experiments”解释成已完成现场随机对照。
+
+用户已有 OAM-Net、QC-MTWaveSME、MC3/OOD、PG-MOEA/D-IEpsilon 和 NURBS 轨迹等研究模块，可作为本项目已知接口背景；其准确实现与本文提出的 RL 连接方案应分别说明。论文题名相近、缩写相似或作者中包含熟悉姓名，都不能代替原始书目与全文证据。
+
+#### 4. 两个真实运营来源，分别能说明什么
+
+**Yokogawa 与 JSR 的 2022 年官方联合报告**明确记录了一个蒸馏装置的 FKDPP 控制现场试验：从 2022-01-17 到 02-21，持续 35 天。报告描述了模拟器训练、DCS 集成及既有联锁等环节。因此它可以支持“该运营方报告了特定装置上的实际自主控制试验”，比仅使用工厂数据的仿真证据更接近执行层。[官方原页](https://www.yokogawa.com/news/press-releases/2022/2022-03-22/)
+
+但是，这是一份运营方与供应商的一手报告，而不是本文独立复现的随机对照研究。蒸馏装置也不是水泥窑。这里不移植其经济数字，不推断本项目可以直接复制同一算法，不把 35 天试验等同于覆盖所有原料、故障和季节工况的长期保证。要评估其外推性，仍需控制变量、过程时标、约束与失效处置的具体比较。
+
+**DeepMind 的 2018 年官方运营说明**描述了数据中心冷却的自主 AI 系统：预测候选后进行约束筛选，再由本地系统复核，并保留不确定性处理和人工退出路径。它支持“预测、候选筛选、本地检查与人类权限可以构成分层执行架构”这一事实。[官方原页](https://deepmind.google/blog/safety-first-ai-for-autonomous-data-centre-cooling-and-industrial-control/)
+
+该运营说明本身不够确定具体使用了 PPO 或 SAC，也不能据其架构图反推本项目的网络结构。本文不引用其中的节能比例来估计烧成收益。两份材料的共同启发是：现场系统必须说明训练、推理、权限与回退如何连接；这并不构成某个 RL 算法普适优越的证据。
+
+#### 5. 一个可以复核的效果声明需要哪些分母
+
+假设论文报告“单位煤耗下降”。至少还要追问：按总燃料质量还是热值折算；产量是否变化；质量不合格品是否计入；原料、燃料热值和设备状态是否匹配；对照是否经历相同扰动；模型是否用测试期数据调过参数；人工接管期间是否被删除。若算法 A 只保留容易工况而 B 承担全部工况，平均数差异可能主要来自样本选择。
+
+同样，一条曲线的点数不能当成样本量。每个时间点共享同一训练策略和强时间相关性；训练随机种子、连续工况窗口、装置和季节是不同的变异来源。应按设计进行配对、区间估计或分层汇总，并公开失败运行。[Agarwal 等](https://arxiv.org/abs/2108.13264)解释了 RL 评估为何容易受有限样本和汇总方式影响；将其思想迁移到工业时，还要额外处理过程自相关。
+
+#### 6. 当前网页的证据位置
+
+本网站已经提供的是：原创推导、显式计算的教学例子、浏览器中的教学动力学、可查看的项目契约和研究接口。它没有提供实际工业日志、PG-MOEA/D-IEpsilon 可运行基线、训练后的工业 SAC 模型、现场对照试验或可验证的收益数字。[仓库约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
+
+因此本综述将主张限定为“为什么值得研究、如何定义问题、如何避免错误比较、什么证据会支持或推翻假设”。后续一旦获得真实数据与实现，应在同一证据矩阵中更新材料类型、实验协议、失败例与复现实验，而不是仅把介绍图换成更复杂的架构。
+
+#### 本篇原始资料与阅读边界
+
+- [R42](#reference-42) · [Plantwide control: the search for the self-optimizing control structure](https://doi.org/10.1016/S0959-1524(00)00023-8) — Sigurd Skogestad; 2000. 来源标识: r2-skogestad.
+- [R49](#reference-49) · [A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II](https://doi.org/10.1109/4235.996017) — Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, T. Meyarivan; 2002. 来源标识: r2-nsga2.
+- [R50](#reference-50) · [MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition](https://doi.org/10.1109/TEVC.2007.892759) — Qingfu Zhang, Hui Li; 2007. 来源标识: r2-moead.
+- [R22](#reference-22) · [Soft Actor-Critic Algorithms and Applications](https://arxiv.org/abs/1812.05905) — Tuomas Haarnoja et al.; 2018 / 2019. 来源标识: r2-sac-apps.
+- [R36](#reference-36) · [Reinforcement Learning in Process Industries: Review and Perspective](https://doi.org/10.1109/JAS.2024.124227) — Oguzhan Dogru, Junyao Xie, Om Prakash et al.; 2024. 来源标识: r2-process-rl.
+- [R57](#reference-57) · [A predictive safety filter for learning-based control of constrained nonlinear dynamical systems](https://doi.org/10.1016/j.automatica.2021.109597) — Kim Peter Wabersich, Melanie N. Zeilinger; 2021. 来源标识: r2-safety-filter.
+- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Rishabh Agarwal, Max Schwarzer, Pablo Samuel Castro, Aaron Courville, Marc G. Bellemare; 2021. 来源标识: r2-rliable.
+- [R37](#reference-37) · [A novel constrained off-policy deep reinforcement learning approach for temporal decision-making in the cement calcination system](https://doi.org/10.1088/2631-8695/ae5ed3) — Lei Chang, Chong Liu, Xin Shi, Mengyu Bai, Xingzhi Zheng, LiBin Wei, Yonghang Li; 2026. 来源标识: r2-tcnso.
+- [R38](#reference-38) · [Collaborative optimization decision making of cement grinding process operational indicators considering dual dynamic problem](https://doi.org/10.1016/j.asoc.2024.111772) — Yonghang Li, Tianqi Yang, Xiaochen Hao, Jieguang Yang, Quanwei Sun; 2024. 来源标识: r2-oadstr.
+- [R39](#reference-39) · [Predictive Monitoring of Industrial Processes and Quality Indices via Joint Training of Soft Sensor and Time-Series Forecasting](https://doi.org/10.1109/TII.2026.3664090) — Yonghang Li, Xiaochen Hao, Xunian Yang, Xingzhi Zheng, Libin Wei; 2026. 来源标识: r2-monitoring.
+- [R40](#reference-40) · [TOD-CGAN: Transformer-based conditional generative adversarial network for optimising operational decisions in cement calcination systems](https://doi.org/10.1016/j.jfranklin.2026.108704) — Xiaochen Hao, Boxun Li, Yonghang Li, Xunian Yang, Junze Jiao, Yangdong Su; 2026. 来源标识: r2-todcgan.
+- [R41](#reference-41) · [Co-evolutionary reinforcement learning for industrial optimization: a multi-objective optimization framework for cement rotary kilns](https://doi.org/10.1016/j.aei.2026.104530) — Gang Liu, Shangjian Xie, Xiaochen Hao, Ran Zheng, Shuaixiang Zhai, Mohan Liu; 2026. 来源标识: r2-conerl.
+- [R58](#reference-58) · [Yokogawa and JSR: 35-day autonomous chemical-plant field test](https://www.yokogawa.com/news/press-releases/2022/2022-03-22/) — Yokogawa Electric Corporation; JSR Corporation; 2022-03-22. 来源标识: r2-yokogawa.
+- [R59](#reference-59) · [Safety-first AI for autonomous data centre cooling and industrial control](https://deepmind.google/blog/safety-first-ai-for-autonomous-data-centre-cooling-and-industrial-control/) — Chris Gamble, Jim Gao; 2018-08-17. 来源标识: r2-deepmind.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
+
+**r2-skogestad · Journal of Process Control 10, 487–507:** 作者手稿已读：控制变量选择、分层设定值与经济损失；并非所有工况都适用的恒定设定值结论。
+
+**r2-nsga2 · IEEE Transactions on Evolutionary Computation 6, 182–197:** 原论文全文核验非支配排序、拥挤距离、精英保留及约束支配；证据为测试问题。
+
+**r2-moead · IEEE Transactions on Evolutionary Computation 11, 712–731:** 原论文 PDF 核验分解、邻域与尺度处理；不能由算法名推断具体项目改进版。
+
+**r2-sac-apps · arXiv:1812.05905:** 现代 SAC 更新、自动温度与实际机器人案例；不能转译为烧成部署证据。
+
+**r2-process-rl · IEEE/CAA Journal of Automatica Sinica 11, 283–300:** 流程工业 RL 综述；文献分类不替代每篇论文的部署证据核查。
+
+**r2-safety-filter · Automatica 129, 109597:** 开放作者稿核验模型置信、终端安全集及可行性条件；不同于简单阈值门控。
+
+**r2-rliable · NeurIPS 2021:** 重复实验、不确定性与稳健汇总；不能把时间步当独立训练种子。
+
+**r2-tcnso · Engineering Research Express 8, 085407:** 出版社登记摘要确认 TCNSO-MSL-TD3 与实验表述；未取得全文，不把摘要当现场部署证明。
+
+**r2-oadstr · Applied Soft Computing 161, 111772:** 书目与出版社摘要核验；对象是粉磨，动态搜索与滚动思想可借鉴，烧成结果不可据此推定。
+
+**r2-monitoring · IEEE Transactions on Industrial Informatics 22, 5254–5265:** 出版社登记题名和作者已核验，未取得全文；模块接口是本教程设计，不臆造论文细节。
+
+**r2-todcgan · Journal of the Franklin Institute 363, 108704:** 题名、作者与生成式决策主题已核验；条件生成不自动等同于 RL 或现场自主控制。
+
+**r2-conerl · Advanced Engineering Informatics 73, 104530:** 外部相关工作；作者列表不含 Yonghang Li。出版社记录中的仿真表述不等于现场闭环部署。
+
+**r2-yokogawa · Official joint press release:** 运营方/供应商一手报告：FKDPP、蒸馏装置、模拟训练及 2022 年 35 天现场试验。非独立随机试验，不外推到水泥。
+
+**r2-deepmind · Google DeepMind official account:** 官方运营说明：预测、候选筛选、当地复核与人工退出。本文不据此判定使用 PPO/SAC，也不搬用节能百分比。
+
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
+
+---
+
+<a id="research-open-problems"></a>
+
+### 08 · 开放问题：从预测准确到决策可信还缺什么
+
+围绕隐藏状态、离线支持、闭环模型误差、罕见风险、目标漂移和评价统计提出可检验的下一步，而不是把复杂网络当作答案。
+
+**建议阅读:** 32 分钟（按个人基础调整）
+
+<a id="figure-world-model"></a>
+
+![从真实状态分叉的短时模型推演](./images/world-model.webp)
+
+**从真实状态分叉的短时模型推演**
+
+用多个模型比较短期候选未来，并把不确定性带入决策。随着推演加深，误差可能累积，因此长模型轨迹不能当成新的真实试验或安全证明。
+
+**逐区读图**
+
+- **01** · 锚点：从真实记录中的当前状态或历史表示开始，明确数据属于哪个工况。
+- **02** · 模型组：多个预测器用于比较分歧；模型一致不等于模型都正确。
+- **03** · 短推演：不同候选动作生成不同未来；逐渐变淡表示不确定性累积的概念，不是定量置信区间。
+- **04** · 选择与回到现实：综合预测目标、约束与不确定性选择建议，实际执行后再用新观测校正。
+
+这些是原创概念插图，不是实测曲线、辨识模型或工程施工图；精确关系以本篇公式和 Mermaid 为准。
+
+#### 1. 缺少的可能是信息，而不是更深的网络
+
+同样的温度、压力和设定值，可以对应不同的物料停留状态与潜在质量。历史编码能减少这种歧义，但窗口长度不能凭方便选定。应检查：预测残差是否依赖更早的进料、工况切换、前次调整或未记录的人工判断；对变化事件是否始终响应过晚；扩大窗口后收益是否只是多看到了将来发布的化验。一个能预测正常工况平均趋势的网络，未必能在异常来临前区分两个表面相似的状态。
+
+化验缺失也可能不是随机的：操作员可能在怀疑质量波动时加密取样。如果只在有化验时评价误差，得到的是被采样机制选择过的分布。研究应保留采样请求、取样、发布、缺失和失效原因，分层报告误差与校准；没有这些字段时就承认识别边界，不能把插值值当成独立真值。这里是对项目 POMDP 接口的研究推论，不是声称已有数据具备这些字段。[项目观测约定](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
+
+#### 2. 联合动作覆盖比每个通道的直方图更重要
+
+设历史中两个 CV 只出现过 $(+,+)$ 与 $(-,-)$ 两种联合调整。两个通道各自都覆盖了正负动作，但 $(+,-)$ 仍是未验证的组合。六维动作下这种稀疏性会更严重。应同时考察状态条件下的联合动作、近邻距离、行为策略似然及不同装置模式，而不是只画每维最大最小值。分布外检测也只是针对某个表示和参照数据的诊断，无法证明未见动作具有可接受后果。[CQL](https://arxiv.org/abs/2006.04779)；[IQL](https://arxiv.org/abs/2110.06169)
+
+离线评价的难点可以用重要性权重直观看出：
+
+$$w_{0:T-1}=\prod_{t=0}^{T-1}\frac{\pi(a_t\mid h_t)}{\mu(a_t\mid h_t)}.$$
+
+在一个教学行为策略中，“上调”概率为 $0.1$，目标策略为 $0.5$。连续五次上调的轨迹权重为 $5^5=3125$，而该轨迹在行为策略中的概率只有 $10^{-5}$。少量稀有轨迹可以支配估计方差。截断权重可降低方差，却引入偏差；行为概率未知、隐藏判断未记录或支持为零时，问题更严重。这个算例只是说明统计机制，并非建议把轨迹重要性采样直接作为本项目最终评估器。
+
+#### 3. 单步预测好，并不意味着闭环推演可靠
+
+考虑真实和模型轨迹从同一状态开始。若在比较域内有统一单步模型误差 $\varepsilon$，且真实闭环映射的敏感度上界为 $L$，则可以得到一个教学误差递推：
+
+$$e_{k+1}\le Le_k+\varepsilon,\qquad e_0=0,$$
+$$e_H\le\varepsilon\sum_{i=0}^{H-1}L^i=\begin{cases}\varepsilon\dfrac{L^H-1}{L-1},&L\ne1,\\H\varepsilon,&L=1.\end{cases}$$
+
+如果比较的是同一动作序列，$L$ 可取动力学对状态的敏感度；如果策略分别读取各自的真实/模型状态，$L$ 必须覆盖闭环映射，例如在相应 Lipschitz 假设下取 $L_x+L_aL_\pi$。含离散拒绝的门控可能没有这样的全局连续界。**测试集 RMSE 不是统一误差上界，未经验证的 $L$ 也不是证书。**
+
+取归一化误差 $\varepsilon=0.02,L=1.2$，三步上界为 $0.02(1+1.2+1.44)=0.0728$，十步约为 $0.5192$。这不是实际窑误差，而是解释长推演为何可能放大偏差。短分叉、模型集合、保守惩罚和停止规则可以作为控制模型利用风险的设计；它们仍需在行动后分布上校准。[MBPO](https://arxiv.org/abs/1906.08253)；[MOPO](https://arxiv.org/abs/2005.13239)
+
+~~~mermaid
+flowchart TD
+  D["按时间隔离的真实日志"] --> M["动作条件模型集合"]
+  M --> U["误差与不确定性校准"]
+  U --> S["受限短分叉推演"]
+  S --> P["候选策略学习"]
+  P --> E["独立工况与故障评价"]
+  E --> F["失败机制与停止规则"]
+  F --> U
+  D --> E
+~~~
+
+#### 4. 不确定性要在真正关心的条件下校准
+
+一个总体覆盖率 95% 的质量区间，仍可能在旧化验、高负荷或原料变化时系统失准。因此除了总体覆盖，还应按化验年龄、装置模式、动作幅度与 OOD 距离分组，报告覆盖率、区间宽度及数据数量。宽到毫无行动价值的区间不能仅凭覆盖高就称为优秀；窄而失真的区间也不能只凭好看的平均误差进入 Gate。
+
+同样，机会约束 $P(q\le q_{\max})\ge1-\delta$ 的保证对象必须说清楚：单个时刻、某个工况条件还是整条轨迹。若每一步都声称违规概率最多 $1\%$，并不意味着 100 步中至少一次违规的概率也只有 $1\%$。例如，若各步事件独立且每步违规概率恰为 $1\%$，则后者为 $1-0.99^{100}\approx63.4\%$；独立但每步仅有“至多 $1\%$”时，这个数是上界而非等式。有依赖时不能使用这个乘积式，但仍不能把逐步概率当成全程概率。[机会约束原始理论](https://doi.org/10.1287/mnsc.6.1.73)。将预算分配到时域需要明确联合风险模型，不能只调大一个损失权重。
+
+#### 5. 期望约束、执行门控和正式安全保证之间仍有距离
+
+CMDP 的期望成本约束能表达长期预算，却允许风险在时间和轨迹间不均匀分布。成本 Critic 偏差、乘子振荡或软测量错误，都会影响学到的规避行为。[CPO](https://arxiv.org/abs/1705.10528)。项目五层门控检查数据、状态、模型可信度、动作可行性与执行权限；当前观测满足阈值，也不能推出延迟质量永远不越界。
+
+形式化预测安全过滤需要更强的对象：可信的误差集合、能安全到达的终端集合、备用控制器，以及使后续仍有可行方案的条件。是否满足这些前提要单独建模证明。[预测安全过滤器原论文](https://doi.org/10.1016/j.automatica.2021.109597)。在研究中应保持 Gate 激活，对未经执行的候选做影子诊断，而非通过关闭执行保护来“展示 RL 的上限”。
+
+零违规样本也不是零风险的证明。对一个固定策略，若进行了 100 次真正独立、相同分布的实验，每次事件定义为“该完整实验是否至少出现一次违规”，观察到零次事件时，二项模型下单侧 95% 上置信界为 $1-0.05^{1/100}\approx2.95\%$。这是**每次实验**发生事件的概率界，不是每个时间步的风险界；将同一相关轨迹切成 100 点不满足独立假设。工业稀有事件评价更需要故障场景与明确的外推边界。
+
+#### 6. 经济目标也会变，策略更新不能绕开评价版本
+
+原料、产品任务、电价、燃料热值与设备磨损会改变折中。一个固定权重策略可能对新偏好反应差；一个不断调权重的系统又使实验不可比。可以研究偏好条件策略、动态 Pareto 搜索或滚动重规划，但必须保存偏好版本、归一化常数和门控版本。[动态多目标优化](https://doi.org/10.1109/TEVC.2004.831456)。在测试期看到结果后挑选最有利的偏好，相当于使用测试集选择模型。
+
+#### 7. 把未来工作排成证据顺序
+
+| 未知问题 | 首个可执行诊断 | 什么结果会阻止进一步复杂化 |
 | --- | --- | --- |
-| 感知与预测 | 质量和过程量分时域误差、阈值附近校准 | 化验年龄、缺失、原料变化、OOD 分层；未来信息审查 |
-| 候选决策 | 可行率、行为支持、候选价值排序、动作平滑性 | 模型调用预算、联合动作覆盖、门控各层拒绝原因 |
-| 完整执行推演 | 煤耗、电耗、质量与氧量成本、连续超限时长 | 原始物理量、成本口径、回退比例、最坏工况、全部种子 |
+| 历史是否足够 | 控制容量后的窗口消融与残差依赖分析 | 更长窗口无稳健收益或只靠泄漏获益 |
+| 候选是否有数据支持 | 条件联合动作覆盖与分工况误差 | 高收益只出现在无支持区域 |
+| 模型能否回答动作后果 | 动作条件验证、短长推演误差与策略迁移测试 | 低单步误差伴随闭环失稳或指标反转 |
+| Gate 是否掩盖坏策略 | 请求/执行差异、拒绝原因、恢复时间 | 执行表现靠大比例回退维持 |
+| 结果是否可复现 | 配对扰动、多种子与独立时间窗口 | 排名依赖单个种子、窗口或测试调参 |
 
-改进门槛应在实验开始前由目标需求确定。例如先设一个具有实际意义的收益差 $\delta_R$，再要求关键成本不劣于容许差 $\delta_C$；这些差值需要业务与统计依据，本教程不凭空规定某个百分比。统计显著但极小的收益不一定值得增加系统复杂度；样本不足时没有显著差异，也不等于两种方法完全等价。
+重复运行的目标不是取得一条好看的曲线，而是估计结果对训练与工况的敏感性。应预先声明实际关心的改善幅度，并报告其区间；固定少数种子是起点，不是充分性证明。[RL 统计评估](https://arxiv.org/abs/2108.13264)。这些检查都可以先在离线材料与仿真中完成。本页没有提出在真实窑上进行试错探索。
 
-候选模块是否有贡献，最好通过相邻消融来回答：保持其他条件，移除年龄；保持表示，改单步回报；保持教师，移除 RL 改进；保持模型，改变分支长度；保持策略，检查门控前后。这比一次替换整套系统，更容易将“为什么有效”连接到证据。
+#### 本篇原始资料与阅读边界
 
-以下情形应单独列为失败结果：未来化验泄漏、候选和执行动作误配、测试归一化泄漏、缺少必需基线、忽略真实成本、用生成数据数量冒充现实样本量，以及把模拟收益直接写成现场收益。修复后应重新进行受影响的实验，不能只在结论段加一句局限性继续沿用原数字。
+- [R28](#reference-28) · [Conservative Q-Learning for Offline Reinforcement Learning](https://arxiv.org/abs/2006.04779) — Aviral Kumar, Aurick Zhou, George Tucker, Sergey Levine; 2020. 来源标识: r2-cql.
+- [R29](#reference-29) · [Offline Reinforcement Learning with Implicit Q-Learning](https://arxiv.org/abs/2110.06169) — Ilya Kostrikov, Ashvin Nair, Sergey Levine; 2021 / 2022. 来源标识: r2-iql.
+- [R31](#reference-31) · [When to Trust Your Model: Model-Based Policy Optimization](https://arxiv.org/abs/1906.08253) — Michael Janner, Justin Fu, Marvin Zhang, Sergey Levine; 2019. 来源标识: r2-mbpo.
+- [R32](#reference-32) · [MOPO: Model-based Offline Policy Optimization](https://arxiv.org/abs/2005.13239) — Tianhe Yu et al.; 2020. 来源标识: r2-mopo.
+- [R54](#reference-54) · [Chance-Constrained Programming](https://doi.org/10.1287/mnsc.6.1.73) — Abraham Charnes, William W. Cooper; 1959. 来源标识: r2-chance.
+- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Joshua Achiam, David Held, Aviv Tamar, Pieter Abbeel; 2017. 来源标识: r2-cpo.
+- [R57](#reference-57) · [A predictive safety filter for learning-based control of constrained nonlinear dynamical systems](https://doi.org/10.1016/j.automatica.2021.109597) — Kim Peter Wabersich, Melanie N. Zeilinger; 2021. 来源标识: r2-safety-filter.
+- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Rishabh Agarwal, Max Schwarzer, Pablo Samuel Castro, Aaron Courville, Marc G. Bellemare; 2021. 来源标识: r2-rliable.
+- [R53](#reference-53) · [Dynamic Multiobjective Optimization Problems: Test Cases, Approximations, and Applications](https://doi.org/10.1109/TEVC.2004.831456) — Marco Farina, Kalyanmoy Deb, Paolo Amato; 2004. 来源标识: r2-dynamic.
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
 
-#### 七、一个可以开始执行的分阶段研究顺序
+**r2-cql · NeurIPS 2020:** 原论文区分策略价值下界与逐点下界；理论和数据假设不可省略。
 
-**阶段一：数据与时间审计。** 交付字段字典、可用时间规则、匿名化决策转移、缺失报告、时间划分与边界测试。通过标准是能重放一个历史决策时刻真正知道的信息，且动作与结果可以追溯；如果做不到，先暂停策略效果比较。
+**r2-iql · ICLR 2022:** Expectile 价值学习与优势加权行为克隆；不保证最终策略绝不越出数据支持。
 
-**阶段二：感知与行为基线。** 在冻结划分上评价在线质量估计、化验融合、可靠性与 OOD，再建立 BC 和操作员行为基线。交付分工况误差与合法可见特征清单；不以随机切分的高拟合分数作为通过条件。
+**r2-mbpo · NeurIPS 2019:** 从真实状态分叉的短模型推演；模型调用不是新增现实证据。
 
-**阶段三：动态优化与离线改进。** 接入可运行的 PG-MOEA/D-IEpsilon，固定预算和门控，比较教师候选、教师模仿与选定离线方法。先用最少方法回答一个清楚的问题；只有出现可解释差异，再扩大算法矩阵。
+**r2-mopo · NeurIPS 2020:** 离线模型不确定性惩罚及其假设；惩罚并非硬约束认证。
 
-**阶段四：动作条件模型与短推演。** 确认模型能够在覆盖区域比较动作后果，再开展短分支与不确定性消融。交付分支长度敏感性、自由推演误差与模型被利用的诊断；预测验证不过关时，不继续扩大模型生成数据。
+**r2-chance · Management Science 6, 73–79:** 机会约束的原始理论入口；教程中的高斯分位数算例为独立教学推导。
 
-**阶段五：成本与完整链路。** 校准成本口径和乘子，保留五层门控，评价候选与执行两种统计。交付多种子、时间外及工况外结果，明确哪些收益被回退消除、哪些风险仍然存在。
+**r2-cpo · ICML 2017:** 约束策略优化与理论性能界；期望成本不是逐时刻无违规保证。
 
-这五个阶段的产物可以形成一条连贯的研究论证：更可靠的状态感知是否改善质量风险估计；更好的预测是否改善候选排序；动态优化先验是否减少无效探索；长期信用分配是否超越模仿；约束学习是否减少门控负担。每一问都允许答案是否定的，而每个否定结果都能定位下一步应补的数据或模型。
+**r2-safety-filter · Automatica 129, 109597:** 开放作者稿核验模型置信、终端安全集及可行性条件；不同于简单阈值门控。
 
-#### 八、学完本页应能回答的三个问题
+**r2-rliable · NeurIPS 2021:** 重复实验、不确定性与稳健汇总；不能把时间步当独立训练种子。
 
-<details><summary>为什么预测 f-CaO 更准，仍不能直接宣称 RL 更安全？</summary>
+**r2-dynamic · IEEE Transactions on Evolutionary Computation 8, 425–442:** 动态 Pareto 集与控制问题的原始研究；说明 EA 不限于静态单点优化。
 
-预测误差是特定数据分布上的监督指标。策略会改变后续状态与动作分布，并可能主动选择预测器不擅长的区域；总体误差下降也可能掩盖阈值附近的低估。需要继续检查当时信息可用性、动作条件有效性、支持覆盖、阈值校准、独立成本和同一门控下的完整执行结果。
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
 
-</details>
+---
 
-<details><summary>为什么保留多目标优化器，而不是一开始就用 RL 替代全部模块？</summary>
+<a id="research-agenda"></a>
 
-优化器提供明确的可行域处理与候选比较，也是检验 RL 新增价值的基线。它还可以作为教师或轨迹先验，但是否帮助需要相同预算下的实验。如果教师模仿已达到全部收益，或者 RL 增益来自额外信息，就没有证据支持更复杂的替换方案。
+### 09 · 研究路线：把已有模块变成六个可证伪问题
 
-</details>
+沿“状态感知→质量预测→动态多目标优化→设定值决策”主线，定义数据契约、基线、消融、失败标准和分阶段产物。
 
-<details><summary>哪一种结果足以支持“这个研究连接值得继续”，又不会过度承诺？</summary>
+**建议阅读:** 38 分钟（按个人基础调整）
 
-在预先规定的时间与工况留出测试上，排除数据泄漏、保持相同动作和门控、运行必需基线后，模块消融显示可重复的中间改进，并在多种子完整模拟推演中改善目标而未恶化指定成本。此时可以说“在明确模型和数据条件下，该连接得到支持”，仍不能说已经证明现场长期节能或逐步安全。
 
-</details>
+#### 1. 研究主线应从决策问题贯穿到证据
 
-#### 继续阅读
+本项目可沿“状态感知 → 质量软测量与时序预测 → 动态多目标优化 → 上层 CV 设定值决策”组织。已有模块分别回答一部分问题；新的 RL 研究应说明在哪个接口增加了什么能力，以及什么观察会推翻这项主张。将全部模块连接起来之后回报上升，不能单独证明每个模块都有必要。
 
-先结合第 19–24 章完成时间对齐、离线支持、模型误差与成本更新的手算；再阅读上表的流程工业综述与直接相关原始论文。算法方法可回到 [CQL](https://arxiv.org/abs/2006.04779)、[IQL](https://arxiv.org/abs/2110.06169)、[MBPO](https://arxiv.org/abs/1906.08253)、[MOPO](https://arxiv.org/abs/2005.13239) 和 [CPO](https://arxiv.org/abs/1705.10528) 检查各自假设。文献之间的模块连接是研究问题的来源；完整、可证伪的实验才决定这些连接是否成立。
+OAM-Net 的可靠性门控与多速率融合、化验缺失时回退到在线信息；QC-MTWaveSME 的质量与预测接口；MC3/OOD 的监测与域外诊断；PG-MOEA/D-IEpsilon 的多目标候选；NURBS 的轨迹表示，均在此作为**已知项目背景接口**讨论。具体层数、参数、训练配方和成绩没有在本次工作中重建。相关公开书目为[联合软测量与预测](https://doi.org/10.1109/TII.2026.3664090)、[OA-DSTR](https://doi.org/10.1016/j.asoc.2024.111772)、[TCNSO-MSL-TD3 相关工作](https://doi.org/10.1088/2631-8695/ae5ed3)与 [TOD-CGAN](https://doi.org/10.1016/j.jfranklin.2026.108704)；本综述对其访问范围见证据页，下面是待检验的新连接，而不是这些论文已经证明的结论。
+
+~~~mermaid
+flowchart TD
+  D["按可用时间重建的数据"] --> S["状态、质量与可靠性接口"]
+  S --> E["多目标优化与轨迹候选"]
+  S --> R["离线策略与成本价值学习"]
+  E --> R
+  E --> G["统一五层门控"]
+  R --> G
+  G --> V["配对仿真与独立工况评价"]
+  V --> H["六项假设的支持或失败证据"]
+  H --> S
+  H --> E
+  H --> R
+~~~
+
+#### 2. 先固定数据契约，避免不同模块看到不同的过去
+
+| 字段组 | 至少保留什么 | 为什么进入研究协议 |
+| --- | --- | --- |
+| 时钟与信号 | 决策时间、传感器采样时间、到达时间、有效性与缺失原因 | 对齐可用信息，识别通信延迟 |
+| 化验 | 取样时间、发布时间、结果、失效标记与采样事件 | 分开质量对应时刻与策略可读取时刻 |
+| 设定值 | 调整前后 CV 设定值、RATE 与边界版本 | 将归一化动作还原到物理单位 |
+| 动作与门控 | 候选、执行、各层结果、拒绝原因、权限与 Gate 版本 | 区分策略能力与回退贡献 |
+| 原料和工况 | KH、SM、IM、负荷、设备模式及可取得的燃料热值 | 描述扰动、混杂与分工况范围 |
+| 原始指标 | 燃料质量/热值、电量、熟料产量、质量记录、时间边界 | 重算总量比，不只接受预制平均指标 |
+| 实验版本 | 数据划分、模型、归一化、偏好、种子、仿真与代码版本 | 允许复现与归因 |
+
+历史日志没有候选动作、权限或采样请求时，应记为“未记录”，而不是由执行值复制生成虚假的完整记录。仿真可以提供隐藏真值用于最终评价，但训练输入依然按真实可用信息构造。研究不改变[现有 5 分钟周期、有界 CV 增量及五层门控契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)，也不把煤量、风量或阀门开度当作可绕过内层控制的动作。
+
+划分必须满足两个时间顺序条件：
+
+$$\max t(\mathcal D_{\rm train})<\min t(\mathcal D_{\rm val}),\qquad \max t(\mathcal D_{\rm val})<\min t(\mathcal D_{\rm test}).$$
+
+但仅按决策时间分界仍不够。根据历史窗口、预测目标跨度与化验发布延迟设置隔离区，防止同一原始片段、尚未发布标签或同一事件通过窗口重叠跨入两侧。标准化、特征选择、软测量拟合和策略训练使用训练期；超参数、停止条件和预算选择使用验证期；测试期冻结后只作最终评价。额外装置或季节留出只有在相应数据实际存在时才报告。
+
+#### 3. H1：可靠性与化验年龄是否改善决策，而不仅是平均预测
+
+**假设。** 在化验缺失或变旧时，显式使用可用性、样品年龄和可靠性描述，比简单前向填充更能校准质量风险，并在相同门控下减少无效候选与延迟恢复。
+
+**设计。** 记录每份化验的双时间戳、在线信号和故障掩码，比较同一编码容量下的前向填充、带掩码/年龄、可靠性融合三个版本；所有版本共享相同软测量标签和策略预算。再单独删除年龄或可靠性输入，而不把未来化验作为“理想基线”。可在仿真评价中提供一个明确标注的特权信息上限，但不能混入可部署结果。
+
+**判定。** 同时报告质量 MAE、分年龄区间覆盖、违规持续时间、Gate 拒绝和扰动后恢复。若只降低正常工况平均误差，却让旧化验条件下的区间失准或闭环风险上升，则该决策收益假设不获支持。若容量匹配后收益消失，应把结论归为容量差异，不能宣称可靠性机制已被验证。
+
+#### 4. H2：历史表示与多步价值，各自解决了多少延迟
+
+**假设。** 对具有物料与热惯性的模拟扰动，历史编码和多步价值目标分别减少状态混叠与延迟信用误差，且两者的组合收益可与单纯增大网络区分。
+
+**设计。** 做“瞬时/历史输入 × 一步/多步目标”的 $2\times2$ 设计，固定参数量范围、更新次数和有效数据窗口。多步目标的基本形式为
+
+$$y_t^{(n)}=\sum_{k=0}^{n-1}\gamma^k r_{t+k+1}+\gamma^n\overline V(h_{t+n}),$$
+
+在真实终止时截断后续项；时间窗口截断保留合法末观测 bootstrap，但不跨 reset 拼接。离线行为轨迹与目标策略不同，多步学习还要说明采用的离策略修正或接受了何种偏差，不能把上式直接当作无条件无偏估计。[RL 教材](https://incompleteideas.net/book/the-book-2nd.html)
+
+**判定。** 使用不同扰动起点与时滞范围，报告回报、质量成本、时滞响应及价值误差。若效果仅出现在训练过的固定延迟，换延迟即反转，或多步收益来自跨边界标签泄漏，则不支持稳健延迟建模；若预算不足导致区间过宽，应报告结论不确定，而不是自动宣布无效。
+
+#### 5. H3：优化示范与轨迹表示，是否真的带来序列改进
+
+**假设。** PG-MOEA/D-IEpsilon 提供的可行候选/轨迹可作为离线策略的示范或热启动；NURBS 参数化可减少搜索维数。但 RL 必须在相同偏好和计算预算下，表现出超出“复制优化器”的增益，混合才有研究价值。
+
+**设计。** 必须保留 Operator、实际 PG-MOEA/D-IEpsilon、示范 BC 和混合策略四组。先固定评价模型、预测窗口、门控及目标尺度，再比较逐步增量与轨迹参数化；报告生成示范的模型调用数、策略训练成本和每次决策延迟。轨迹必须与当前真实 SP 衔接，通过采样点的 RATE、增量变化和工艺可行性检查。
+
+**判定。** 若混合方法只是把更长规划窗口或更多模型调用隐藏到离线阶段，不能归因于 RL；若 BC 已达到同等效果，证据支持策略压缩而不支持额外价值学习。当前仓库网页没有实际 PG 基线实现和数据，这项实验在接入它们之前保持为协议，不填入虚构对比数字。粉磨领域的 [OA-DSTR](https://doi.org/10.1016/j.asoc.2024.111772)可启发动态比较设计，但不代替烧成对照。
+
+#### 6. H4：离线保守性是否在覆盖下降时仍有价值
+
+**假设。** 数据支持减少或工况改变时，保守/受约束的离线学习比普通在线算法直接拟合日志更少利用数据外虚高价值；同时应证明其并未退化成永远保持设定值。
+
+**设计。** 比较 BC、TD3+BC、CQL、IQL，以及明确标为“在线算法直接用于固定日志”的诊断基线；不允许该基线在真实设备补采探索。构造不同覆盖条件时，尽量匹配样本量并分开“少数据”与“缺少联合动作支持”。固定状态表示、Actor 容量、调参次数和 Gate，记录条件动作距离、Q 校准、执行变化、拒绝率与成本。[TD3+BC](https://arxiv.org/abs/2106.06860)；[CQL](https://arxiv.org/abs/2006.04779)；[IQL](https://arxiv.org/abs/2110.06169)
+
+**判定。** 若改善只存在于训练代理中，在独立模型/扰动下消失，或高回报伴随无支持候选与大量回退，则不支持可迁移决策收益。若所有方法都退回 BC 水平，说明当前数据可能不足以识别超越行为策略的改进，不能靠再换更复杂缩写解决。
+
+#### 7. H5：动作条件世界模型是否优于只预测趋势
+
+**假设。** 含执行动作的模型能够在被数据支持的范围内预测调整后果；从真实状态开始的短分叉，比无约束长推演更不容易让策略利用模型偏差。
+
+**设计。** 比较无动作预测、执行动作条件预测、模型集合三个版本；再比较零模型推演、短分叉和较长推演，统一总更新预算。把真实日志与合成转移分别标记，记录分叉源、长度与模型版本。训练损失之外，验证对动作变化的响应、工况外校准及政策改变后的闭环误差；不把相同模型既当训练环境又当唯一裁判。[MBPO](https://arxiv.org/abs/1906.08253)；[MOPO](https://arxiv.org/abs/2005.13239)
+
+**判定。** 若预测 MAE 改善但调整方向错误，或推演越长回报越好而独立评价越差，则出现了模型利用，不支持“更准确模型带来更好决策”。短分叉只有在数据起点、长度控制和不确定性校准共同固定时才能归因；减少真实数据量后仍须报告支持边界。
+
+#### 8. H6：成本学习能否减少对 Gate 的依赖
+
+**假设。** 独立成本 Critic 与拉格朗日预算学习，使候选提前避开未来风险，因而在不改变执行规则的前提下减少拒绝、回退与恢复时间，并保持可接受的能耗折中。
+
+**设计。** 执行时始终保留同样的五层门控。比较有/无成本价值、有/无不确定性条件输入和不同合法成本预算，记录每层拒绝、候选与执行差、质量/氧含量的峰值违反量和持续时间。未经门控的候选只做离线或影子审计，不执行。成本预算的折扣定义、物理单位和拉格朗日步长必须登记。[CPO](https://arxiv.org/abs/1705.10528)与[预测安全过滤](https://doi.org/10.1016/j.automatica.2021.109597)分别提供学习约束和执行保护的理论参照，不能互相替代。
+
+**判定。** 若执行后违规少只是因为回退更多，或成本均值下降但罕见峰值更高，假设尚未成立；若预算只在训练模型中满足，不能称现场安全。评价重点是能否提前规避风险，而非证明 Gate 可以删除。
+
+#### 9. 共同验收协议与阶段产物
+
+六项假设都先声明主指标、实际重要的最小改善量 $\delta_R$、固定约束预算 $d_j$ 和失败情形。例如定义 $\Delta R=J_r^{\rm candidate}-J_r^{\rm baseline}$；只有效应区间足以支持 $\Delta R>\delta_R$、约束指标在预定预算内且关键分工况没有不可接受退化时，才支持对应实验范围内的改善。区间不足以区分时报告“不确定”。这些研究判定不修改硬边界或工程权限。[评估方法参考](https://arxiv.org/abs/2108.13264)
+
+| 阶段 | 应交付的可检查产物 | 进入下一阶段前需要的证据 |
+| --- | --- | --- |
+| 数据与指标 | 时间字典、缺失报告、分母核算、冻结划分 | 无可用性泄漏，指标能从原始量重算 |
+| 预测与基线 | 简单模型、软测量校准、Operator/PG 接口 | 比较边界一致，实际基线可运行 |
+| 六项离线实验 | 配置、种子、消融、失败日志与统计区间 | 效应来源明确，未用测试结果调参 |
+| 仿真压力评价 | 扰动/故障场景、请求执行日志、模型失配分析 | 报告适用范围与不能外推的条件 |
+| 研究结论 | 证据矩阵、可复现脚本、负结果与下一问题 | 只声称实验真正支持的能力 |
+
+这条路线的第一步是把数据、基线和接口变得可验证，而不是立即进行大型离线训练。本文未运行这些研究实验，未生成任何真实节能结果，也未提出在实体烧成系统上探索。它把已有工作组织成可以逐项被支持、被推翻或被判定仍不确定的研究计划。
+
+#### 本篇原始资料与阅读边界
+
+- [R35](#reference-35) · [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) — bahayonghang / rl-learning; Repository contract. 来源标识: r2-project.
+- [R39](#reference-39) · [Predictive Monitoring of Industrial Processes and Quality Indices via Joint Training of Soft Sensor and Time-Series Forecasting](https://doi.org/10.1109/TII.2026.3664090) — Yonghang Li, Xiaochen Hao, Xunian Yang, Xingzhi Zheng, Libin Wei; 2026. 来源标识: r2-monitoring.
+- [R38](#reference-38) · [Collaborative optimization decision making of cement grinding process operational indicators considering dual dynamic problem](https://doi.org/10.1016/j.asoc.2024.111772) — Yonghang Li, Tianqi Yang, Xiaochen Hao, Jieguang Yang, Quanwei Sun; 2024. 来源标识: r2-oadstr.
+- [R37](#reference-37) · [A novel constrained off-policy deep reinforcement learning approach for temporal decision-making in the cement calcination system](https://doi.org/10.1088/2631-8695/ae5ed3) — Lei Chang, Chong Liu, Xin Shi, Mengyu Bai, Xingzhi Zheng, LiBin Wei, Yonghang Li; 2026. 来源标识: r2-tcnso.
+- [R40](#reference-40) · [TOD-CGAN: Transformer-based conditional generative adversarial network for optimising operational decisions in cement calcination systems](https://doi.org/10.1016/j.jfranklin.2026.108704) — Xiaochen Hao, Boxun Li, Yonghang Li, Xunian Yang, Junze Jiao, Yangdong Su; 2026. 来源标识: r2-todcgan.
+- [R28](#reference-28) · [Conservative Q-Learning for Offline Reinforcement Learning](https://arxiv.org/abs/2006.04779) — Aviral Kumar, Aurick Zhou, George Tucker, Sergey Levine; 2020. 来源标识: r2-cql.
+- [R29](#reference-29) · [Offline Reinforcement Learning with Implicit Q-Learning](https://arxiv.org/abs/2110.06169) — Ilya Kostrikov, Ashvin Nair, Sergey Levine; 2021 / 2022. 来源标识: r2-iql.
+- [R30](#reference-30) · [A Minimalist Approach to Offline Reinforcement Learning](https://arxiv.org/abs/2106.06860) — Scott Fujimoto, Shixiang Shane Gu; 2021. 来源标识: r2-td3bc.
+- [R31](#reference-31) · [When to Trust Your Model: Model-Based Policy Optimization](https://arxiv.org/abs/1906.08253) — Michael Janner, Justin Fu, Marvin Zhang, Sergey Levine; 2019. 来源标识: r2-mbpo.
+- [R32](#reference-32) · [MOPO: Model-based Offline Policy Optimization](https://arxiv.org/abs/2005.13239) — Tianhe Yu et al.; 2020. 来源标识: r2-mopo.
+- [R33](#reference-33) · [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) — Joshua Achiam, David Held, Aviv Tamar, Pieter Abbeel; 2017. 来源标识: r2-cpo.
+- [R57](#reference-57) · [A predictive safety filter for learning-based control of constrained nonlinear dynamical systems](https://doi.org/10.1016/j.automatica.2021.109597) — Kim Peter Wabersich, Melanie N. Zeilinger; 2021. 来源标识: r2-safety-filter.
+- [R27](#reference-27) · [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) — Rishabh Agarwal, Max Schwarzer, Pablo Samuel Castro, Aaron Courville, Marc G. Bellemare; 2021. 来源标识: r2-rliable.
+- [R55](#reference-55) · [Reinforcement Learning: An Introduction, Second Edition](https://incompleteideas.net/book/the-book-2nd.html) — Richard S. Sutton, Andrew G. Barto; 2018. 来源标识: r2-rlbook.
+
+**r2-project · Project repository:** 本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
+
+**r2-monitoring · IEEE Transactions on Industrial Informatics 22, 5254–5265:** 出版社登记题名和作者已核验，未取得全文；模块接口是本教程设计，不臆造论文细节。
+
+**r2-oadstr · Applied Soft Computing 161, 111772:** 书目与出版社摘要核验；对象是粉磨，动态搜索与滚动思想可借鉴，烧成结果不可据此推定。
+
+**r2-tcnso · Engineering Research Express 8, 085407:** 出版社登记摘要确认 TCNSO-MSL-TD3 与实验表述；未取得全文，不把摘要当现场部署证明。
+
+**r2-todcgan · Journal of the Franklin Institute 363, 108704:** 题名、作者与生成式决策主题已核验；条件生成不自动等同于 RL 或现场自主控制。
+
+**r2-cql · NeurIPS 2020:** 原论文区分策略价值下界与逐点下界；理论和数据假设不可省略。
+
+**r2-iql · ICLR 2022:** Expectile 价值学习与优势加权行为克隆；不保证最终策略绝不越出数据支持。
+
+**r2-td3bc · NeurIPS 2021:** TD3+BC 作为应保留的简单离线比较对象，而非宣布某个复杂架构必然更好。
+
+**r2-mbpo · NeurIPS 2019:** 从真实状态分叉的短模型推演；模型调用不是新增现实证据。
+
+**r2-mopo · NeurIPS 2020:** 离线模型不确定性惩罚及其假设；惩罚并非硬约束认证。
+
+**r2-cpo · ICML 2017:** 约束策略优化与理论性能界；期望成本不是逐时刻无违规保证。
+
+**r2-safety-filter · Automatica 129, 109597:** 开放作者稿核验模型置信、终端安全集及可行性条件；不同于简单阈值门控。
+
+**r2-rliable · NeurIPS 2021:** 重复实验、不确定性与稳健汇总；不能把时间步当独立训练种子。
+
+**r2-rlbook · MIT Press:** 作者教材，涵盖 MDP、Bellman、函数逼近与策略梯度；本页窑案例独立编写。
+
+---
 
 <a id="glossary"></a>
 
@@ -6973,11 +7908,11 @@ $$\mathcal L(\pi,\lambda)=J_R(\pi)-\sum_k\lambda_k(J_{C_k}(\pi)-d_k),\qquad \lam
 
 根据可用信息选择动作的决策者。
 
-**在烧成系统中：** 上层设定值建议策略，按每 5 分钟一次的教学节奏工作。
+**在烧成系统中:** 上层设定值建议策略，按每 5 分钟一次的教学节奏工作。
 
-**容易混淆：** 整个工厂不是智能体；下层 PID/APC 也不必由 RL 取代。
+**容易混淆:** 整个工厂不是智能体；下层 PID/APC 也不必由 RL 取代。
 
-**继续阅读：** [第 01 章](#chapter-01)
+**继续阅读:** [第 01 章](#chapter-01)
 
 ### 环境 · Environment
 
@@ -6985,71 +7920,71 @@ $$\mathcal L(\pi,\lambda)=J_R(\pi)-\sum_k\lambda_k(J_{C_k}(\pi)-d_k),\qquad \lam
 
 接收动作、演化状态并产生反馈的系统。
 
-**在烧成系统中：** 教学或世界模型中的烧成过程、跟踪回路、扰动与测量链。
+**在烧成系统中:** 教学或世界模型中的烧成过程、跟踪回路、扰动与测量链。
 
-**容易混淆：** 学习环境必须说明模型误差和观测生成过程。
+**容易混淆:** 学习环境必须说明模型误差和观测生成过程。
 
-**继续阅读：** [第 01 章](#chapter-01)
+**继续阅读:** [第 01 章](#chapter-01)
 
 ### 状态 · State
 
-**符号：** $s_t$
+**符号:** $s_t$
 
 若完整已知，能足以描述未来演化所需信息的变量集合。
 
-**在烧成系统中：** 可能包括物料热状态、化学反应状态、设备状态等。
+**在烧成系统中:** 可能包括物料热状态、化学反应状态、设备状态等。
 
-**容易混淆：** 一组测量值不自动等于完整马尔可夫状态。
+**容易混淆:** 一组测量值不自动等于完整马尔可夫状态。
 
-**继续阅读：** [第 04 章](#chapter-04)
+**继续阅读:** [第 04 章](#chapter-04)
 
 ### 观测 · Observation
 
-**符号：** $o_t$
+**符号:** $o_t$
 
 决策当时实际可以获得的信息。
 
-**在烧成系统中：** DCS 历史、当前 SP、已公布化验、化验年龄与软测量。
+**在烧成系统中:** DCS 历史、当前 SP、已公布化验、化验年龄与软测量。
 
-**容易混淆：** 当前尚未公布的化验不能提前放进观测。
+**容易混淆:** 当前尚未公布的化验不能提前放进观测。
 
-**继续阅读：** [第 04 章](#chapter-04)
+**继续阅读:** [第 04 章](#chapter-04)
 
 ### 历史表示 · History / Representation
 
-**符号：** $h_t$
+**符号:** $h_t$
 
 把过去一段观测与动作整理成策略输入。
 
-**在烧成系统中：** 24 步历史窗口，或由 TCN/GRU/Transformer 编码的历史。
+**在烧成系统中:** 24 步历史窗口，或由 TCN/GRU/Transformer 编码的历史。
 
-**容易混淆：** 增加历史只是缓解部分可观测，不能证明完全恢复马尔可夫性。
+**容易混淆:** 增加历史只是缓解部分可观测，不能证明完全恢复马尔可夫性。
 
-**继续阅读：** [第 04 章](#chapter-04)
+**继续阅读:** [第 04 章](#chapter-04)
 
 ### 动作 · Action
 
-**符号：** $a_t$
+**符号:** $a_t$
 
 智能体当前选择的决策量。
 
-**在烧成系统中：** 有界归一化 CV 设定值增量，乘 RATE 后变成物理单位。
+**在烧成系统中:** 有界归一化 CV 设定值增量，乘 RATE 后变成物理单位。
 
-**容易混淆：** 请求动作与门控后真正执行的动作要分别记录。
+**容易混淆:** 请求动作与门控后真正执行的动作要分别记录。
 
-**继续阅读：** [第 01 章](#chapter-01)
+**继续阅读:** [第 01 章](#chapter-01)
 
 ### 设定值与过程变量 · Setpoint / Process Variable · SP / PV
 
-**符号：** $Y_t^{sp}$
+**符号:** $Y_t^{sp}$
 
 SP 是下层跟踪目标，PV 是实际测量结果。
 
-**在烧成系统中：** Tc 的 SP 从 880°C 调到 881°C，PV 随动态逐渐响应。
+**在烧成系统中:** Tc 的 SP 从 880°C 调到 881°C，PV 随动态逐渐响应。
 
-**容易混淆：** 改 SP 不等于温度瞬间改变；零增量不等于过程静止。
+**容易混淆:** 改 SP 不等于温度瞬间改变；零增量不等于过程静止。
 
-**继续阅读：** [第 21 章](#chapter-21)
+**继续阅读:** [第 21 章](#chapter-21)
 
 ### 操纵变量 · Manipulated Variable / MV
 
@@ -7057,119 +7992,119 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 下层控制回路实际调节的执行量。
 
-**在烧成系统中：** 例如由 APC/PID 调节的给煤、风机或阀门等量。
+**在烧成系统中:** 例如由 APC/PID 调节的给煤、风机或阀门等量。
 
-**容易混淆：** 本项目上层动作定义不直接输出 MV。
+**容易混淆:** 本项目上层动作定义不直接输出 MV。
 
-**继续阅读：** [第 21 章](#chapter-21)
+**继续阅读:** [第 21 章](#chapter-21)
 
 ### 策略 · Policy
 
-**符号：** $\pi_\theta(a\mid o)$
+**符号:** $\pi_\theta(a\mid o)$
 
 在给定观测下选择动作的规则或概率分布。
 
-**在烧成系统中：** 看到较低温度与陈旧化验后，倾向保持还是小幅上调。
+**在烧成系统中:** 看到较低温度与陈旧化验后，倾向保持还是小幅上调。
 
-**容易混淆：** 策略概率大小与动作物理幅值是不同概念。
+**容易混淆:** 策略概率大小与动作物理幅值是不同概念。
 
-**继续阅读：** [第 12 章](#chapter-12)
+**继续阅读:** [第 12 章](#chapter-12)
 
 ### 即时奖励 · Reward
 
-**符号：** $r_{t+1}$
+**符号:** $r_{t+1}$
 
 执行当前动作后得到的一步目标评分。
 
-**在烧成系统中：** 煤耗、电耗的标准化项，加上设定值平滑性项。
+**在烧成系统中:** 煤耗、电耗的标准化项，加上设定值平滑性项。
 
-**容易混淆：** 奖励的定义需要解释单位、权重和时间归属。
+**容易混淆:** 奖励的定义需要解释单位、权重和时间归属。
 
-**继续阅读：** [第 01 章](#chapter-01)
+**继续阅读:** [第 01 章](#chapter-01)
 
 ### 约束成本 · Constraint Cost
 
-**符号：** $c_{t+1}^{(k)}$
+**符号:** $c_{t+1}^{(k)}$
 
 单独记录某种约束违背或风险的信号。
 
-**在烧成系统中：** f-CaO 越界、氧含量不足分别作为质量与安全成本。
+**在烧成系统中:** f-CaO 越界、氧含量不足分别作为质量与安全成本。
 
-**容易混淆：** 高奖励不能抵消未满足的工程约束。
+**容易混淆:** 高奖励不能抵消未满足的工程约束。
 
-**继续阅读：** [第 24 章](#chapter-24)
+**继续阅读:** [第 24 章](#chapter-24)
 
 ### 回报 · Return
 
-**符号：** $G_t$
+**符号:** $G_t$
 
 从当前起，未来多步奖励的加权和。
 
-**在烧成系统中：** 现在调节的代价与后续能耗、稳定性后果一起评价。
+**在烧成系统中:** 现在调节的代价与后续能耗、稳定性后果一起评价。
 
-**容易混淆：** 回报不是当前一次测得的奖励。
+**容易混淆:** 回报不是当前一次测得的奖励。
 
-**继续阅读：** [第 01 章](#chapter-01)
+**继续阅读:** [第 01 章](#chapter-01)
 
 ### 折扣因子 · Discount Factor
 
-**符号：** $\gamma$
+**符号:** $\gamma$
 
 同一项未来回报每推迟一步，权重再乘一次 γ。
 
-**在烧成系统中：** 5 分钟一步，60 分钟之后的尾部价值乘 γ¹²；60 分钟时收到的单条奖励 Rₜ₊₁₂ 乘 γ¹¹，因为第一条 Rₜ₊₁ 的权重为 1。
+**在烧成系统中:** 5 分钟一步，60 分钟之后的尾部价值乘 γ¹²；60 分钟时收到的单条奖励 Rₜ₊₁₂ 乘 γ¹¹，因为第一条 Rₜ₊₁ 的权重为 1。
 
-**容易混淆：** 先区分单条奖励与尾部回报。1/(1−γ) 是粗略权重尺度，不是硬截止时间。
+**容易混淆:** 先区分单条奖励与尾部回报。1/(1−γ) 是粗略权重尺度，不是硬截止时间。
 
-**继续阅读：** [第 05 章](#chapter-05)
+**继续阅读:** [第 05 章](#chapter-05)
 
 ### 状态价值 · State Value
 
-**符号：** $V^\pi(s)$
+**符号:** $V^\pi(s)$
 
 从一个状态出发、随后遵循策略的期望回报。
 
-**在烧成系统中：** 按当前操作策略继续运行，这个窑况整体有多好。
+**在烧成系统中:** 按当前操作策略继续运行，这个窑况整体有多好。
 
-**容易混淆：** 价值取决于后续策略，不能脱离策略谈“这个状态的唯一价值”。
+**容易混淆:** 价值取决于后续策略，不能脱离策略谈“这个状态的唯一价值”。
 
-**继续阅读：** [第 05 章](#chapter-05)
+**继续阅读:** [第 05 章](#chapter-05)
 
 ### 动作价值 · Action Value
 
-**符号：** $Q^\pi(s,a)$
+**符号:** $Q^\pi(s,a)$
 
 当前先做指定动作，再遵循策略的期望回报。
 
-**在烧成系统中：** 在同一窑况下先保持与先升温的长期后果比较。
+**在烧成系统中:** 在同一窑况下先保持与先升温的长期后果比较。
 
-**容易混淆：** 大写 Q 是动作价值，小写 q 常指质量，两者不是同一量。
+**容易混淆:** 大写 Q 是动作价值，小写 q 常指质量，两者不是同一量。
 
-**继续阅读：** [第 05 章](#chapter-05)
+**继续阅读:** [第 05 章](#chapter-05)
 
 ### 优势 · Advantage
 
-**符号：** $A^\pi(s,a)$
+**符号:** $A^\pi(s,a)$
 
 动作价值减去同状态下策略平均价值。
 
-**在烧成系统中：** 这个建议比当前策略通常的选择好多少。
+**在烧成系统中:** 这个建议比当前策略通常的选择好多少。
 
-**容易混淆：** 优势为正不表示奖励为正，也不表示约束满足。
+**容易混淆:** 优势为正不表示奖励为正，也不表示约束满足。
 
-**继续阅读：** [第 13 章](#chapter-13)
+**继续阅读:** [第 13 章](#chapter-13)
 
 ### 条件期望 · Conditional Expectation
 
-**符号：** $\mathbb E[R\mid s,a]$
+**符号:** $\mathbb E[R\mid s,a]$
 
 固定已知工况和动作后，按可能结果的概率平均。
 
-**在烧成系统中：** 分别在正常原料与难烧原料下评价同样升温。
+**在烧成系统中:** 分别在正常原料与难烧原料下评价同样升温。
 
-**容易混淆：** “平均”需要正确概率/样本分布，不能只选成功记录。
+**容易混淆:** “平均”需要正确概率/样本分布，不能只选成功记录。
 
-**继续阅读：** [第 03 章](#chapter-03)
+**继续阅读:** [第 03 章](#chapter-03)
 
 ### Bellman 备份 · Bellman Backup
 
@@ -7177,11 +8112,11 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 用当前奖励与下一状态价值来更新当前价值。
 
-**在烧成系统中：** 先计算下一步可能进入哪些窑况，再把未来价值带回当前。
+**在烧成系统中:** 先计算下一步可能进入哪些窑况，再把未来价值带回当前。
 
-**容易混淆：** 策略评估的加权平均与最优控制的取最大值不同。
+**容易混淆:** 策略评估的加权平均与最优控制的取最大值不同。
 
-**继续阅读：** [第 05 章](#chapter-05)
+**继续阅读:** [第 05 章](#chapter-05)
 
 ### 自举 · Bootstrapping
 
@@ -7189,35 +8124,35 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 用已有估计参与构造新的学习目标。
 
-**在烧成系统中：** 不用等到很久以后，而先用下一状态价值帮助更新。
+**在烧成系统中:** 不用等到很久以后，而先用下一状态价值帮助更新。
 
-**容易混淆：** 估计误差也可能随目标传播；不是统计重采样 bootstrap 的同一用途。
+**容易混淆:** 估计误差也可能随目标传播；不是统计重采样 bootstrap 的同一用途。
 
-**继续阅读：** [第 07 章](#chapter-07)
+**继续阅读:** [第 07 章](#chapter-07)
 
 ### TD 误差 · Temporal-Difference Error
 
-**符号：** $\delta_t$
+**符号:** $\delta_t$
 
 一步奖励加折扣后的未来估值，再减当前估值。
 
-**在烧成系统中：** 这一步真实反馈比模型原先预期好多少。
+**在烧成系统中:** 这一步真实反馈比模型原先预期好多少。
 
-**容易混淆：** TD 误差不是质量预测残差，也不天然等于真实优势。
+**容易混淆:** TD 误差不是质量预测残差，也不天然等于真实优势。
 
-**继续阅读：** [第 07 章](#chapter-07)
+**继续阅读:** [第 07 章](#chapter-07)
 
 ### 学习率 · Learning Rate
 
-**符号：** $\eta$
+**符号:** $\eta$
 
 参数更新时沿梯度或误差方向移动的步幅。
 
-**在烧成系统中：** 决定价值网络/策略网络一次更新改多少。
+**在烧成系统中:** 决定价值网络/策略网络一次更新改多少。
 
-**容易混淆：** 它不等于设定值 RATE，也不等于 SAC 熵温度 α。
+**容易混淆:** 它不等于设定值 RATE，也不等于 SAC 熵温度 α。
 
-**继续阅读：** [第 09 章](#chapter-09)
+**继续阅读:** [第 09 章](#chapter-09)
 
 ### 经验回放 · Experience Replay
 
@@ -7225,11 +8160,11 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 保存历史转移，从中抽样训练。
 
-**在烧成系统中：** 重复利用仿真交互产生的工况、请求/执行动作与反馈。
+**在烧成系统中:** 重复利用仿真交互产生的工况、请求/执行动作与反馈。
 
-**容易混淆：** 随机抽样不保证完全独立同分布，也不让在线算法自动变成可靠离线 RL。
+**容易混淆:** 随机抽样不保证完全独立同分布，也不让在线算法自动变成可靠离线 RL。
 
-**继续阅读：** [第 10 章](#chapter-10)
+**继续阅读:** [第 10 章](#chapter-10)
 
 ### 同策略与离策略 · On-policy / Off-policy
 
@@ -7237,11 +8172,11 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 采数据的行为策略与正在学习/评价的目标策略是否一致。
 
-**在烧成系统中：** 用当前策略推演，或复用旧策略和操作员数据。
+**在烧成系统中:** 用当前策略推演，或复用旧策略和操作员数据。
 
-**容易混淆：** 离策略能力不等于允许在固定历史日志外随意估值。
+**容易混淆:** 离策略能力不等于允许在固定历史日志外随意估值。
 
-**继续阅读：** [第 08 章](#chapter-08)
+**继续阅读:** [第 08 章](#chapter-08)
 
 ### 自然终止与截断 · Terminated / Truncated
 
@@ -7249,23 +8184,23 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 任务自身结束，与人为停止采样是两种边界。
 
-**在烧成系统中：** 持续运行任务在 72 步停止教学采样，使用 truncated。
+**在烧成系统中:** 持续运行任务在 72 步停止教学采样，使用 truncated。
 
-**容易混淆：** 人工截止仍保留最终观测自举，不能拿 reset 后观测接续。
+**容易混淆:** 人工截止仍保留最终观测自举，不能拿 reset 后观测接续。
 
-**继续阅读：** [第 19 章](#chapter-19)
+**继续阅读:** [第 19 章](#chapter-19)
 
 ### 重要性采样 · Importance Sampling
 
-**符号：** $\rho$
+**符号:** $\rho$
 
 用目标分布与采样分布的概率比校正期望。
 
-**在烧成系统中：** 旧策略偏好保持，新策略更常升温，样本贡献需重加权。
+**在烧成系统中:** 旧策略偏好保持，新策略更常升温，样本贡献需重加权。
 
-**容易混淆：** 旧分布不覆盖的动作不能靠除法凭空创造证据。
+**容易混淆:** 旧分布不覆盖的动作不能靠除法凭空创造证据。
 
-**继续阅读：** [第 14 章](#chapter-14)
+**继续阅读:** [第 14 章](#chapter-14)
 
 ### PPO 裁剪 · PPO-Clip
 
@@ -7273,47 +8208,47 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 限制代理目标继续奖励某些过大概率变化的方式。
 
-**在烧成系统中：** 避免一次更新过分鼓励同一批设定值建议。
+**在烧成系统中:** 避免一次更新过分鼓励同一批设定值建议。
 
-**容易混淆：** 实际概率比可越界；它不是硬 KL 约束或工业安全门。
+**容易混淆:** 实际概率比可越界；它不是硬 KL 约束或工业安全门。
 
-**继续阅读：** [第 15 章](#chapter-15)
+**继续阅读:** [第 15 章](#chapter-15)
 
 ### 概率密度 · Probability Density
 
-**符号：** $p(a)$
+**符号:** $p(a)$
 
 连续变量的区间概率由密度积分得到。
 
-**在烧成系统中：** 连续设定值增量的高斯/tanh 分布。
+**在烧成系统中:** 连续设定值增量的高斯/tanh 分布。
 
-**容易混淆：** 密度可以大于 1，密度值本身不是事件概率。
+**容易混淆:** 密度可以大于 1，密度值本身不是事件概率。
 
-**继续阅读：** [第 16 章](#chapter-16)
+**继续阅读:** [第 16 章](#chapter-16)
 
 ### 最大熵与温度 · Entropy / Temperature
 
-**符号：** $\alpha$
+**符号:** $\alpha$
 
 用熵项控制策略分布保持多少随机性。
 
-**在烧成系统中：** 在教学仿真训练中权衡高价值动作与分布多样性。
+**在烧成系统中:** 在教学仿真训练中权衡高价值动作与分布多样性。
 
-**容易混淆：** SAC 温度不是窑温；现场决策不采用随机试错。
+**容易混淆:** SAC 温度不是窑温；现场决策不采用随机试错。
 
-**继续阅读：** [第 17 章](#chapter-17)
+**继续阅读:** [第 17 章](#chapter-17)
 
 ### 软测量 · Soft Sensor
 
-**符号：** $\hat q_t$
+**符号:** $\hat q_t$
 
 从可测信号估计暂时不可直接测到的质量量。
 
-**在烧成系统中：** 融合多速率 DCS 与已可用化验，估计 f-CaO。
+**在烧成系统中:** 融合多速率 DCS 与已可用化验，估计 f-CaO。
 
-**容易混淆：** 预测值需要误差/可靠性说明，不能当作无误差真值。
+**容易混淆:** 预测值需要误差/可靠性说明，不能当作无误差真值。
 
-**继续阅读：** [第 21 章](#chapter-21)
+**继续阅读:** [第 21 章](#chapter-21)
 
 ### 化验年龄 · Assay Age
 
@@ -7321,11 +8256,11 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 当前时间与最近已公布样品采样时间的差。
 
-**在烧成系统中：** 同样是 1.0% 的化验，10 分钟前与 100 分钟前含义不同。
+**在烧成系统中:** 同样是 1.0% 的化验，10 分钟前与 100 分钟前含义不同。
 
-**容易混淆：** 同时保存采样时刻与公布时刻，按公布时间决定能否使用。
+**容易混淆:** 同时保存采样时刻与公布时刻，按公布时间决定能否使用。
 
-**继续阅读：** [第 21 章](#chapter-21)
+**继续阅读:** [第 21 章](#chapter-21)
 
 ### 离线强化学习 · Offline RL
 
@@ -7333,11 +8268,11 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 学习期间只使用固定日志，不再向环境索要新交互。
 
-**在烧成系统中：** 从历史运行与操作记录学习候选设定值策略。
+**在烧成系统中:** 从历史运行与操作记录学习候选设定值策略。
 
-**容易混淆：** 历史记录覆盖不足、操作员混杂与反事实不可见是关键困难。
+**容易混淆:** 历史记录覆盖不足、操作员混杂与反事实不可见是关键困难。
 
-**继续阅读：** [第 22 章](#chapter-22)
+**继续阅读:** [第 22 章](#chapter-22)
 
 ### 行为克隆 · Behavior Cloning / BC
 
@@ -7345,23 +8280,23 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 用监督学习模仿日志中的行为动作。
 
-**在烧成系统中：** 先学习操作员在不同窑况下如何调整 SP。
+**在烧成系统中:** 先学习操作员在不同窑况下如何调整 SP。
 
-**容易混淆：** 它学习已有行为，不自动超越操作员，也不能消除分布外误差。
+**容易混淆:** 它学习已有行为，不自动超越操作员，也不能消除分布外误差。
 
-**继续阅读：** [第 22 章](#chapter-22)
+**继续阅读:** [第 22 章](#chapter-22)
 
 ### 世界模型 · World Model
 
-**符号：** $W_\psi$
+**符号:** $W_\psi$
 
 预测给定状态/历史与动作后的转移和反馈。
 
-**在烧成系统中：** 让候选设定轨迹在模型中短时推演，与已有预测优化框架衔接。
+**在烧成系统中:** 让候选设定轨迹在模型中短时推演，与已有预测优化框架衔接。
 
-**容易混淆：** 只会无条件预测历史延续的模型，不自动具有动作因果响应能力。
+**容易混淆:** 只会无条件预测历史延续的模型，不自动具有动作因果响应能力。
 
-**继续阅读：** [第 23 章](#chapter-23)
+**继续阅读:** [第 23 章](#chapter-23)
 
 ### 分布外与动作支持 · OOD / Action Support
 
@@ -7369,11 +8304,11 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 候选工况或动作离开已有数据覆盖范围。
 
-**在烧成系统中：** 罕见原料与大幅设定组合可能让估值虚高。
+**在烧成系统中:** 罕见原料与大幅设定组合可能让估值虚高。
 
-**容易混淆：** 状态在分布内不保证该状态下所有动作都有数据支持。
+**容易混淆:** 状态在分布内不保证该状态下所有动作都有数据支持。
 
-**继续阅读：** [第 22 章](#chapter-22)
+**继续阅读:** [第 22 章](#chapter-22)
 
 ### 约束决策过程 · CMDP
 
@@ -7381,11 +8316,11 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 最大化奖励的同时，单独限制累计成本。
 
-**在烧成系统中：** 分别处理质量、氧含量和执行约束。
+**在烧成系统中:** 分别处理质量、氧含量和执行约束。
 
-**容易混淆：** 期望累计成本约束不是每个时刻绝对不越界的保证。
+**容易混淆:** 期望累计成本约束不是每个时刻绝对不越界的保证。
 
-**继续阅读：** [第 24 章](#chapter-24)
+**继续阅读:** [第 24 章](#chapter-24)
 
 ### 影子运行与基线 · Shadow Mode / Baseline
 
@@ -7393,92 +8328,92 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 记录候选建议但不执行，并与预先固定的参考方法比较。
 
-**在烧成系统中：** 对比保持、操作员、BC、MPC及 PG-MOEA/D-IEpsilon 的协议。
+**在烧成系统中:** 对比保持、操作员、BC、MPC及 PG-MOEA/D-IEpsilon 的协议。
 
-**容易混淆：** 影子建议没有真实执行结果，不能据此直接声称节能收益。
+**容易混淆:** 影子建议没有真实执行结果，不能据此直接声称节能收益。
 
-**继续阅读：** [第 20 章](#chapter-20)
+**继续阅读:** [第 20 章](#chapter-20)
 
 <a id="references"></a>
 
 ## 完整参考资料
 
-以下按网址去重，共 41 条资料；保留全部 42 个来源标识，便于与网页章节对应。相同网址的不同来源记录合并展示，未丢弃原有映射。
+以下按网址去重，共 59 条资料；保留全部 77 个来源标识，便于与网页章节及研究专题对应。相同网址的不同来源记录合并展示，未丢弃原有映射。
 
 <a id="reference-1"></a>
 <a id="source-f-sutton"></a>
 
 ### R1 · Reinforcement Learning: An Introduction, 2nd edition
 
-**作者：** Richard S. Sutton · Andrew G. Barto
+**作者:** Richard S. Sutton · Andrew G. Barto
 
-**年份或维护状态：** 2018
+**年份或维护状态:** 2018
 
-**链接：** [查看原始资料](https://mitpress.mit.edu/9780262039246/reinforcement-learning/)
+**链接:** [查看原始资料](https://mitpress.mit.edu/9780262039246/reinforcement-learning/)
 
-**阅读提示：** 基础概念、表格方法与函数逼近的参考书；本文的例子与讲解为独立创作。
+**阅读提示:** 基础概念、表格方法与函数逼近的参考书；本文的例子与讲解为独立创作。
 
-**来源标识：** f-sutton
+**来源标识:** f-sutton
 
 <a id="reference-2"></a>
 <a id="source-f-silver"></a>
 
 ### R2 · UCL Reinforcement Learning Lectures
 
-**作者：** David Silver
+**作者:** David Silver
 
-**年份或维护状态：** 2015
+**年份或维护状态:** 2015
 
-**链接：** [查看原始资料](https://www.davidsilver.uk/teaching/)
+**链接:** [查看原始资料](https://www.davidsilver.uk/teaching/)
 
-**阅读提示：** MDP、动态规划、无模型预测与控制、函数逼近和策略梯度的原始课程资料。
+**阅读提示:** MDP、动态规划、无模型预测与控制、函数逼近和策略梯度的原始课程资料。
 
-**来源标识：** f-silver
+**来源标识:** f-silver
 
 <a id="reference-3"></a>
 <a id="source-f-probability"></a>
 
 ### R3 · Statistics 110: Probability
 
-**作者：** Joe Blitzstein · Harvard University
+**作者:** Joe Blitzstein · Harvard University
 
-**年份或维护状态：** 持续维护
+**年份或维护状态:** 持续维护
 
-**链接：** [查看原始资料](https://stat110.hsites.harvard.edu/)
+**链接:** [查看原始资料](https://stat110.hsites.harvard.edu/)
 
-**阅读提示：** 条件概率、期望、方差与全期望公式的补充学习入口。
+**阅读提示:** 条件概率、期望、方差与全期望公式的补充学习入口。
 
-**来源标识：** f-probability
+**来源标识:** f-probability
 
 <a id="reference-4"></a>
 <a id="source-f-decision"></a>
 
 ### R4 · Algorithms for Decision Making
 
-**作者：** Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray
+**作者:** Mykel J. Kochenderfer · Tim A. Wheeler · Kyle H. Wray
 
-**年份或维护状态：** 2022
+**年份或维护状态:** 2022
 
-**链接：** [查看原始资料](https://algorithmsbook.com/decisionmaking/)
+**链接:** [查看原始资料](https://algorithmsbook.com/decisionmaking/)
 
-**阅读提示：** 作者提供的决策算法教材，含 MDP、POMDP、规划与学习。
+**阅读提示:** 作者提供的决策算法教材，含 MDP、POMDP、规划与学习。
 
-**来源标识：** f-decision
+**来源标识:** f-decision
 
 <a id="reference-5"></a>
 <a id="source-f-ucb"></a>
 
 ### R5 · Finite-time Analysis of the Multiarmed Bandit Problem
 
-**作者：** Peter Auer · Nicolò Cesa-Bianchi · Paul Fischer
+**作者:** Peter Auer · Nicolò Cesa-Bianchi · Paul Fischer
 
-**年份或维护状态：** 2002
+**年份或维护状态:** 2002
 
-**链接：** [查看原始资料](https://doi.org/10.1023/A:1013689704352)
+**链接:** [查看原始资料](https://doi.org/10.1023/A:1013689704352)
 
-**阅读提示：** UCB 的原始分析；理论界依赖有界、平稳奖励等条件。
+**阅读提示:** UCB 的原始分析；理论界依赖有界、平稳奖励等条件。
 
-**来源标识：** f-ucb
+**来源标识:** f-ucb
 
 <a id="reference-6"></a>
 <a id="source-f-gym"></a>
@@ -7486,540 +8421,827 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 
 ### R6 · Handling Time Limits
 
-**作者：** Farama Foundation
+**作者:** Farama Foundation
 
-**年份或维护状态：** 持续维护；官方文档
+**年份或维护状态:** 持续维护；官方文档
 
-**链接：** [查看原始资料](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
+**链接:** [查看原始资料](https://gymnasium.farama.org/tutorials/gymnasium_basics/handling_time_limits/)
 
-**阅读提示：** terminated、truncated 与 bootstrap 的官方解释。；自然终止和外部截断的自举差异。
+**阅读提示:** terminated、truncated 与 bootstrap 的官方解释。；自然终止和外部截断的自举差异。
 
-**来源标识：** f-gym、gym-time-limits
+**来源标识:** f-gym, gym-time-limits
 
 <a id="reference-7"></a>
 <a id="source-f-td"></a>
 
 ### R7 · Learning to Predict by the Methods of Temporal Differences
 
-**作者：** Richard S. Sutton
+**作者:** Richard S. Sutton
 
-**年份或维护状态：** 1988
+**年份或维护状态:** 1988
 
-**链接：** [查看原始资料](https://jmvidal.cse.sc.edu/library/sutton88a.pdf)
+**链接:** [查看原始资料](https://jmvidal.cse.sc.edu/library/sutton88a.pdf)
 
-**阅读提示：** 时序差分预测的原始论文（大学托管副本）。
+**阅读提示:** 时序差分预测的原始论文（大学托管副本）。
 
-**来源标识：** f-td
+**来源标识:** f-td
 
 <a id="reference-8"></a>
 <a id="source-f-qlearning"></a>
 
 ### R8 · Q-learning
 
-**作者：** Christopher J. C. H. Watkins · Peter Dayan
+**作者:** Christopher J. C. H. Watkins · Peter Dayan
 
-**年份或维护状态：** 1992
+**年份或维护状态:** 1992
 
-**链接：** [查看原始资料](https://www.gatsby.ucl.ac.uk/~dayan/papers/wd92.html)
+**链接:** [查看原始资料](https://www.gatsby.ucl.ac.uk/~dayan/papers/wd92.html)
 
-**阅读提示：** 作者页面，含原文与勘误；收敛结论必须保留其假设。
+**阅读提示:** 作者页面，含原文与勘误；收敛结论必须保留其假设。
 
-**来源标识：** f-qlearning
+**来源标识:** f-qlearning
 
 <a id="reference-9"></a>
 <a id="source-f-triad"></a>
 
 ### R9 · Emphatic Algorithms for Deep Reinforcement Learning
 
-**作者：** Ray Jiang et al.
+**作者:** Ray Jiang et al.
 
-**年份或维护状态：** 2021
+**年份或维护状态:** 2021
 
-**链接：** [查看原始资料](https://proceedings.mlr.press/v139/jiang21j.html)
+**链接:** [查看原始资料](https://proceedings.mlr.press/v139/jiang21j.html)
 
-**阅读提示：** 函数逼近、离策略与自举组合的不稳定性及其研究背景。
+**阅读提示:** 函数逼近、离策略与自举组合的不稳定性及其研究背景。
 
-**来源标识：** f-triad
+**来源标识:** f-triad
 
 <a id="reference-10"></a>
 <a id="source-f-target"></a>
 
 ### R10 · Why Target Networks Stabilise Temporal Difference Methods
 
-**作者：** Mattie Fellows · Matthew J. A. Smith · Shimon Whiteson
+**作者:** Mattie Fellows · Matthew J. A. Smith · Shimon Whiteson
 
-**年份或维护状态：** 2023
+**年份或维护状态:** 2023
 
-**链接：** [查看原始资料](https://proceedings.mlr.press/v202/fellows23a.html)
+**链接:** [查看原始资料](https://proceedings.mlr.press/v202/fellows23a.html)
 
-**阅读提示：** 目标网络稳定性的理论分析，不能简化为任意配置都保证收敛。
+**阅读提示:** 目标网络稳定性的理论分析，不能简化为任意配置都保证收敛。
 
-**来源标识：** f-target
+**来源标识:** f-target
 
 <a id="reference-11"></a>
 <a id="source-f-dqn"></a>
 
 ### R11 · Human-level control through deep reinforcement learning
 
-**作者：** Volodymyr Mnih et al.
+**作者:** Volodymyr Mnih et al.
 
-**年份或维护状态：** 2015
+**年份或维护状态:** 2015
 
-**链接：** [查看原始资料](https://doi.org/10.1038/nature14236)
+**链接:** [查看原始资料](https://doi.org/10.1038/nature14236)
 
-**阅读提示：** DQN 原始研究：神经网络、经验回放与目标网络。
+**阅读提示:** DQN 原始研究：神经网络、经验回放与目标网络。
 
-**来源标识：** f-dqn
+**来源标识:** f-dqn
 
 <a id="reference-12"></a>
 <a id="source-f-pytorch"></a>
 
 ### R12 · Reinforcement Learning (DQN) Tutorial
 
-**作者：** PyTorch contributors
+**作者:** PyTorch contributors
 
-**年份或维护状态：** 持续维护
+**年份或维护状态:** 持续维护
 
-**链接：** [查看原始资料](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html)
+**链接:** [查看原始资料](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html)
 
-**阅读提示：** 可运行的 CartPole 与 PyTorch 教程，版本以官方页面为准。
+**阅读提示:** 可运行的 CartPole 与 PyTorch 教程，版本以官方页面为准。
 
-**来源标识：** f-pytorch
+**来源标识:** f-pytorch
 
 <a id="reference-13"></a>
 <a id="source-f-doubleq"></a>
 
 ### R13 · Double Q-learning
 
-**作者：** Hado van Hasselt
+**作者:** Hado van Hasselt
 
-**年份或维护状态：** 2010
+**年份或维护状态:** 2010
 
-**链接：** [查看原始资料](https://proceedings.neurips.cc/paper_files/paper/2010/hash/091d584fced301b442654dd8c23b3fc9-Abstract.html)
+**链接:** [查看原始资料](https://proceedings.neurips.cc/paper_files/paper/2010/hash/091d584fced301b442654dd8c23b3fc9-Abstract.html)
 
-**阅读提示：** 双估计器方法及最大化偏差的原始论文。
+**阅读提示:** 双估计器方法及最大化偏差的原始论文。
 
-**来源标识：** f-doubleq
+**来源标识:** f-doubleq
 
 <a id="reference-14"></a>
 <a id="source-f-double-dqn"></a>
 
 ### R14 · Deep Reinforcement Learning with Double Q-learning
 
-**作者：** Hado van Hasselt · Arthur Guez · David Silver
+**作者:** Hado van Hasselt · Arthur Guez · David Silver
 
-**年份或维护状态：** 2015 / AAAI 2016
+**年份或维护状态:** 2015 / AAAI 2016
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1509.06461)
+**链接:** [查看原始资料](https://arxiv.org/abs/1509.06461)
 
-**阅读提示：** Double DQN 将动作选择与动作估值分离。
+**阅读提示:** Double DQN 将动作选择与动作估值分离。
 
-**来源标识：** f-double-dqn
+**来源标识:** f-double-dqn
 
 <a id="reference-15"></a>
 <a id="source-f-reinforce"></a>
 
 ### R15 · Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning
 
-**作者：** Ronald J. Williams
+**作者:** Ronald J. Williams
 
-**年份或维护状态：** 1992
+**年份或维护状态:** 1992
 
-**链接：** [查看原始资料](https://doi.org/10.1007/BF00992696)
+**链接:** [查看原始资料](https://doi.org/10.1007/BF00992696)
 
-**阅读提示：** REINFORCE 原始论文。
+**阅读提示:** REINFORCE 原始论文。
 
-**来源标识：** f-reinforce
+**来源标识:** f-reinforce
 
 <a id="reference-16"></a>
 <a id="source-f-policy-gradient"></a>
 
 ### R16 · Intro to Policy Optimization
 
-**作者：** OpenAI Spinning Up
+**作者:** OpenAI Spinning Up
 
-**年份或维护状态：** 持续维护
+**年份或维护状态:** 持续维护
 
-**链接：** [查看原始资料](https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html)
+**链接:** [查看原始资料](https://spinningup.openai.com/en/latest/spinningup/rl_intro3.html)
 
-**阅读提示：** 轨迹概率、log-derivative trick、reward-to-go 与 baseline 推导。
+**阅读提示:** 轨迹概率、log-derivative trick、reward-to-go 与 baseline 推导。
 
-**来源标识：** f-policy-gradient
+**来源标识:** f-policy-gradient
 
 <a id="reference-17"></a>
 <a id="source-gae-paper"></a>
 
 ### R17 · High-Dimensional Continuous Control Using Generalized Advantage Estimation
 
-**作者：** Schulman et al.
+**作者:** Schulman et al.
 
-**年份或维护状态：** 2015 / ICLR 2016
+**年份或维护状态:** 2015 / ICLR 2016
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1506.02438)
+**链接:** [查看原始资料](https://arxiv.org/abs/1506.02438)
 
-**阅读提示：** 优势估计、偏差与方差的折中；阅读公式时区分完整轨迹与截断轨迹。
+**阅读提示:** 优势估计、偏差与方差的折中；阅读公式时区分完整轨迹与截断轨迹。
 
-**来源标识：** gae-paper
+**来源标识:** gae-paper
 
 <a id="reference-18"></a>
 <a id="source-trpo-paper"></a>
 
 ### R18 · Trust Region Policy Optimization
 
-**作者：** Schulman et al.
+**作者:** Schulman et al.
 
-**年份或维护状态：** 2015
+**年份或维护状态:** 2015
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1502.05477)
+**链接:** [查看原始资料](https://arxiv.org/abs/1502.05477)
 
-**阅读提示：** 策略分布变化、KL 约束与实际算法近似。
+**阅读提示:** 策略分布变化、KL 约束与实际算法近似。
 
-**来源标识：** trpo-paper
+**来源标识:** trpo-paper
 
 <a id="reference-19"></a>
 <a id="source-ppo-paper"></a>
 
 ### R19 · Proximal Policy Optimization Algorithms
 
-**作者：** Schulman et al.
+**作者:** Schulman et al.
 
-**年份或维护状态：** 2017
+**年份或维护状态:** 2017
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1707.06347)
+**链接:** [查看原始资料](https://arxiv.org/abs/1707.06347)
 
-**阅读提示：** PPO 裁剪代理目标的原始论文。
+**阅读提示:** PPO 裁剪代理目标的原始论文。
 
-**来源标识：** ppo-paper
+**来源标识:** ppo-paper
 
 <a id="reference-20"></a>
 <a id="source-spinup-ppo"></a>
 
 ### R20 · Spinning Up: Proximal Policy Optimization
 
-**作者：** OpenAI
+**作者:** OpenAI
 
-**年份或维护状态：** 官方文档
+**年份或维护状态:** 官方文档
 
-**链接：** [查看原始资料](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
+**链接:** [查看原始资料](https://spinningup.openai.com/en/latest/algorithms/ppo.html)
 
-**阅读提示：** 正负优势的裁剪解释，以及裁剪并非硬约束的实现说明。
+**阅读提示:** 正负优势的裁剪解释，以及裁剪并非硬约束的实现说明。
 
-**来源标识：** spinup-ppo
+**来源标识:** spinup-ppo
 
 <a id="reference-21"></a>
 <a id="source-sac-paper"></a>
+<a id="source-r2-sac"></a>
 
 ### R21 · Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor
 
-**作者：** Haarnoja et al.
+**作者:** Haarnoja et al.；Tuomas Haarnoja, Aurick Zhou, Pieter Abbeel, Sergey Levine
 
-**年份或维护状态：** 2018
+**年份或维护状态:** 2018
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1801.01290)
+**链接:** [查看原始资料](https://arxiv.org/abs/1801.01290)
 
-**阅读提示：** 最大熵目标与变换后策略密度。
+**阅读提示:** 最大熵目标与变换后策略密度。；原文最大熵目标和变换密度；熵不提供工艺安全保证。
 
-**来源标识：** sac-paper
+**来源标识:** sac-paper, r2-sac
 
 <a id="reference-22"></a>
 <a id="source-sac-applications"></a>
+<a id="source-r2-sac-apps"></a>
 
 ### R22 · Soft Actor-Critic Algorithms and Applications
 
-**作者：** Haarnoja et al.
+**作者:** Haarnoja et al.；Tuomas Haarnoja et al.
 
-**年份或维护状态：** 2018 / 2019
+**年份或维护状态:** 2018 / 2019
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1812.05905)
+**链接:** [查看原始资料](https://arxiv.org/abs/1812.05905)
 
-**阅读提示：** 自动温度与常见现代 SAC 变体。
+**阅读提示:** 自动温度与常见现代 SAC 变体。；现代 SAC 更新、自动温度与实际机器人案例；不能转译为烧成部署证据。
 
-**来源标识：** sac-applications
+**来源标识:** sac-applications, r2-sac-apps
 
 <a id="reference-23"></a>
 <a id="source-spinup-sac"></a>
 
 ### R23 · Spinning Up: Soft Actor-Critic
 
-**作者：** OpenAI
+**作者:** OpenAI
 
-**年份或维护状态：** 官方文档
+**年份或维护状态:** 官方文档
 
-**链接：** [查看原始资料](https://spinningup.openai.com/en/latest/algorithms/sac.html)
+**链接:** [查看原始资料](https://spinningup.openai.com/en/latest/algorithms/sac.html)
 
-**阅读提示：** 双 Q、重参数化和目标网络的参考实现说明。
+**阅读提示:** 双 Q、重参数化和目标网络的参考实现说明。
 
-**来源标识：** spinup-sac
+**来源标识:** spinup-sac
 
 <a id="reference-24"></a>
 <a id="source-td3-paper"></a>
+<a id="source-r2-td3"></a>
 
 ### R24 · Addressing Function Approximation Error in Actor-Critic Methods
 
-**作者：** Fujimoto, van Hoof & Meger
+**作者:** Fujimoto, van Hoof & Meger；Scott Fujimoto, Herke van Hoof, David Meger
 
-**年份或维护状态：** 2018
+**年份或维护状态:** 2018
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1802.09477)
+**链接:** [查看原始资料](https://arxiv.org/abs/1802.09477)
 
-**阅读提示：** TD3、双 Critic 和延迟策略更新。
+**阅读提示:** TD3、双 Critic 和延迟策略更新。；TD3 的双 Critic、延迟策略更新与目标平滑；原基准不等于工业效果。
 
-**来源标识：** td3-paper
+**来源标识:** td3-paper, r2-td3
 
 <a id="reference-25"></a>
 <a id="source-gym-custom"></a>
 
 ### R25 · Create a Custom Environment
 
-**作者：** Farama Foundation
+**作者:** Farama Foundation
 
-**年份或维护状态：** 官方文档
+**年份或维护状态:** 官方文档
 
-**链接：** [查看原始资料](https://gymnasium.farama.org/introduction/create_custom_env/)
+**链接:** [查看原始资料](https://gymnasium.farama.org/introduction/create_custom_env/)
 
-**阅读提示：** Gymnasium reset、step、空间定义与环境随机性。
+**阅读提示:** Gymnasium reset、step、空间定义与环境随机性。
 
-**来源标识：** gym-custom
+**来源标识:** gym-custom
 
 <a id="reference-26"></a>
 <a id="source-sb3-tips"></a>
 
 ### R26 · Reinforcement Learning Tips and Tricks
 
-**作者：** Stable-Baselines3
+**作者:** Stable-Baselines3
 
-**年份或维护状态：** 官方文档
+**年份或维护状态:** 官方文档
 
-**链接：** [查看原始资料](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html)
+**链接:** [查看原始资料](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html)
 
-**阅读提示：** 独立评估、多次运行、环境检查和实验实践。
+**阅读提示:** 独立评估、多次运行、环境检查和实验实践。
 
-**来源标识：** sb3-tips
+**来源标识:** sb3-tips
 
 <a id="reference-27"></a>
 <a id="source-rliable-paper"></a>
+<a id="source-r2-rliable"></a>
 
 ### R27 · Deep Reinforcement Learning at the Edge of the Statistical Precipice
 
-**作者：** Agarwal et al.
+**作者:** Agarwal et al.；Rishabh Agarwal, Max Schwarzer, Pablo Samuel Castro, Aaron Courville, Marc G. Bellemare
 
-**年份或维护状态：** 2021
+**年份或维护状态:** 2021
 
-**链接：** [查看原始资料](https://arxiv.org/abs/2108.13264)
+**链接:** [查看原始资料](https://arxiv.org/abs/2108.13264)
 
-**阅读提示：** 少量随机种子下的不确定性、区间估计与跨任务汇总。
+**阅读提示:** 少量随机种子下的不确定性、区间估计与跨任务汇总。；重复实验、不确定性与稳健汇总；不能把时间步当独立训练种子。
 
-**来源标识：** rliable-paper
+**来源标识:** rliable-paper, r2-rliable
 
 <a id="reference-28"></a>
 <a id="source-cql-paper"></a>
+<a id="source-r2-cql"></a>
 
 ### R28 · Conservative Q-Learning for Offline Reinforcement Learning
 
-**作者：** Kumar et al.
+**作者:** Kumar et al.；Aviral Kumar, Aurick Zhou, George Tucker, Sergey Levine
 
-**年份或维护状态：** 2020
+**年份或维护状态:** 2020
 
-**链接：** [查看原始资料](https://arxiv.org/abs/2006.04779)
+**链接:** [查看原始资料](https://arxiv.org/abs/2006.04779)
 
-**阅读提示：** 离线数据分布偏移和保守价值学习。
+**阅读提示:** 离线数据分布偏移和保守价值学习。；原论文区分策略价值下界与逐点下界；理论和数据假设不可省略。
 
-**来源标识：** cql-paper
+**来源标识:** cql-paper, r2-cql
 
 <a id="reference-29"></a>
 <a id="source-iql-paper"></a>
+<a id="source-r2-iql"></a>
 
 ### R29 · Offline Reinforcement Learning with Implicit Q-Learning
 
-**作者：** Kostrikov, Nair & Levine
+**作者:** Kostrikov, Nair & Levine；Ilya Kostrikov, Ashvin Nair, Sergey Levine
 
-**年份或维护状态：** 2021 / ICLR 2022
+**年份或维护状态:** 2021 / ICLR 2022；2021 / 2022
 
-**链接：** [查看原始资料](https://arxiv.org/abs/2110.06169)
+**链接:** [查看原始资料](https://arxiv.org/abs/2110.06169)
 
-**阅读提示：** Expectile 价值估计与优势加权行为克隆。
+**阅读提示:** Expectile 价值估计与优势加权行为克隆。；Expectile 价值学习与优势加权行为克隆；不保证最终策略绝不越出数据支持。
 
-**来源标识：** iql-paper
+**来源标识:** iql-paper, r2-iql
 
 <a id="reference-30"></a>
 <a id="source-td3bc-paper"></a>
+<a id="source-r2-td3bc"></a>
 
 ### R30 · A Minimalist Approach to Offline Reinforcement Learning
 
-**作者：** Fujimoto & Gu
+**作者:** Fujimoto & Gu；Scott Fujimoto, Shixiang Shane Gu
 
-**年份或维护状态：** 2021
+**年份或维护状态:** 2021
 
-**链接：** [查看原始资料](https://arxiv.org/abs/2106.06860)
+**链接:** [查看原始资料](https://arxiv.org/abs/2106.06860)
 
-**阅读提示：** 适合作为第一条离线 RL 基线的 TD3+BC。
+**阅读提示:** 适合作为第一条离线 RL 基线的 TD3+BC。；TD3+BC 作为应保留的简单离线比较对象，而非宣布某个复杂架构必然更好。
 
-**来源标识：** td3bc-paper
+**来源标识:** td3bc-paper, r2-td3bc
 
 <a id="reference-31"></a>
 <a id="source-mbpo-paper"></a>
+<a id="source-r2-mbpo"></a>
 
 ### R31 · When to Trust Your Model: Model-Based Policy Optimization
 
-**作者：** Janner et al.
+**作者:** Janner et al.；Michael Janner, Justin Fu, Marvin Zhang, Sergey Levine
 
-**年份或维护状态：** 2019
+**年份或维护状态:** 2019
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1906.08253)
+**链接:** [查看原始资料](https://arxiv.org/abs/1906.08253)
 
-**阅读提示：** 从真实样本分叉的短模型推演。
+**阅读提示:** 从真实样本分叉的短模型推演。；从真实状态分叉的短模型推演；模型调用不是新增现实证据。
 
-**来源标识：** mbpo-paper
+**来源标识:** mbpo-paper, r2-mbpo
 
 <a id="reference-32"></a>
 <a id="source-mopo-paper"></a>
+<a id="source-r2-mopo"></a>
 
 ### R32 · MOPO: Model-based Offline Policy Optimization
 
-**作者：** Yu et al.
+**作者:** Yu et al.；Tianhe Yu et al.
 
-**年份或维护状态：** 2020
+**年份或维护状态:** 2020
 
-**链接：** [查看原始资料](https://arxiv.org/abs/2005.13239)
+**链接:** [查看原始资料](https://arxiv.org/abs/2005.13239)
 
-**阅读提示：** 离线模型误差、不确定性惩罚及其假设。
+**阅读提示:** 离线模型误差、不确定性惩罚及其假设。；离线模型不确定性惩罚及其假设；惩罚并非硬约束认证。
 
-**来源标识：** mopo-paper
+**来源标识:** mopo-paper, r2-mopo
 
 <a id="reference-33"></a>
 <a id="source-cpo-paper"></a>
+<a id="source-r2-cpo"></a>
 
 ### R33 · Constrained Policy Optimization
 
-**作者：** Achiam et al.
+**作者:** Achiam et al.；Joshua Achiam, David Held, Aviv Tamar, Pieter Abbeel
 
-**年份或维护状态：** 2017
+**年份或维护状态:** 2017
 
-**链接：** [查看原始资料](https://arxiv.org/abs/1705.10528)
+**链接:** [查看原始资料](https://arxiv.org/abs/1705.10528)
 
-**阅读提示：** 奖励与成本分离的约束策略优化。
+**阅读提示:** 奖励与成本分离的约束策略优化。；约束策略优化与理论性能界；期望成本不是逐时刻无违规保证。
 
-**来源标识：** cpo-paper
+**来源标识:** cpo-paper, r2-cpo
 
 <a id="reference-34"></a>
 <a id="source-dpo-paper"></a>
 
 ### R34 · Direct Preference Optimization: Your Language Model is Secretly a Reward Model
 
-**作者：** Rafailov et al.
+**作者:** Rafailov et al.
 
-**年份或维护状态：** 2023
+**年份或维护状态:** 2023
 
-**链接：** [查看原始资料](https://arxiv.org/abs/2305.18290)
+**链接:** [查看原始资料](https://arxiv.org/abs/2305.18290)
 
-**阅读提示：** 选读：偏好优化与在线策略优化的区别。
+**阅读提示:** 选读：偏好优化与在线策略优化的区别。
 
-**来源标识：** dpo-paper
+**来源标识:** dpo-paper
 
 <a id="reference-35"></a>
 <a id="source-project-contract"></a>
+<a id="source-r2-project"></a>
 
 ### R35 · rl-learning 项目领域约定
 
-**作者：** bahayonghang / rl-learning
+**作者:** bahayonghang / rl-learning
 
-**年份或维护状态：** 仓库约定
+**年份或维护状态:** 仓库约定；Repository contract
 
-**链接：** [查看原始资料](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
+**链接:** [查看原始资料](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-**阅读提示：** 烧成系统案例的观测、设定值增量、阈值和五层门控约定；并非通用工程标准。
+**阅读提示:** 烧成系统案例的观测、设定值增量、阈值和五层门控约定；并非通用工程标准。；本仓库的周期、观测、CV 增量、成本和五层门控约定；不是通用工艺标准或验证报告。
 
-**来源标识：** project-contract
+**来源标识:** project-contract, r2-project
 
 <a id="reference-36"></a>
 <a id="source-research-process-review"></a>
+<a id="source-r2-process-rl"></a>
 
 ### R36 · Reinforcement Learning in Process Industries: Review and Perspective
 
-**作者：** Oguzhan Dogru, Junyao Xie, Om Prakash et al.
+**作者:** Oguzhan Dogru, Junyao Xie, Om Prakash et al.
 
-**年份或维护状态：** 2024
+**年份或维护状态:** 2024
 
-**链接：** [查看原始资料](https://doi.org/10.1109/JAS.2024.124227)
+**链接:** [查看原始资料](https://doi.org/10.1109/JAS.2024.124227)
 
-**阅读提示：** IEEE/CAA Journal of Automatica Sinica 的流程工业 RL 综述；用于定位控制层级、建模与决策问题。
+**阅读提示:** IEEE/CAA Journal of Automatica Sinica 的流程工业 RL 综述；用于定位控制层级、建模与决策问题。；流程工业 RL 综述；文献分类不替代每篇论文的部署证据核查。
 
-**来源标识：** research-process-review
+**来源标识:** research-process-review, r2-process-rl
 
 <a id="reference-37"></a>
 <a id="source-research-tcnso"></a>
+<a id="source-r2-tcnso"></a>
 
 ### R37 · A novel constrained off-policy deep reinforcement learning approach for temporal decision-making in the cement calcination system
 
-**作者：** Lei Chang, Chong Liu, Xin Shi, Mengyu Bai, Xingzhi Zheng, LiBin Wei, Yonghang Li
+**作者:** Lei Chang, Chong Liu, Xin Shi, Mengyu Bai, Xingzhi Zheng, LiBin Wei, Yonghang Li
 
-**年份或维护状态：** 2026
+**年份或维护状态:** 2026
 
-**链接：** [查看原始资料](https://doi.org/10.1088/2631-8695/ae5ed3)
+**链接:** [查看原始资料](https://doi.org/10.1088/2631-8695/ae5ed3)
 
-**阅读提示：** IOP 出版社登记元数据与摘要确认 TCNSO-MSL-TD3：TCN 滑动观测、多步学习与 TD3；原文的惩罚及约束模块不能直接等同于本项目 CMDP 与五层门控。
+**阅读提示:** IOP 出版社登记元数据与摘要确认 TCNSO-MSL-TD3：TCN 滑动观测、多步学习与 TD3；原文的惩罚及约束模块不能直接等同于本项目 CMDP 与五层门控。；出版社登记摘要确认 TCNSO-MSL-TD3 与实验表述；未取得全文，不把摘要当现场部署证明。
 
-**来源标识：** research-tcnso
+**来源标识:** research-tcnso, r2-tcnso
 
 <a id="reference-38"></a>
 <a id="source-research-oadstr"></a>
+<a id="source-r2-oadstr"></a>
 
 ### R38 · Collaborative optimization decision making of cement grinding process operational indicators considering dual dynamic problem
 
-**作者：** Yonghang Li, Tianqi Yang, Xiaochen Hao, Jieguang Yang, Quanwei Sun
+**作者:** Yonghang Li, Tianqi Yang, Xiaochen Hao, Jieguang Yang, Quanwei Sun
 
-**年份或维护状态：** 2024
+**年份或维护状态:** 2024
 
-**链接：** [查看原始资料](https://doi.org/10.1016/j.asoc.2024.111772)
+**链接:** [查看原始资料](https://doi.org/10.1016/j.asoc.2024.111772)
 
-**阅读提示：** OA-DSTR 的研究对象是水泥粉磨；动态搜索空间和滚动时间域可启发烧成研究，但物理模型与质量指标不可直接互换。
+**阅读提示:** OA-DSTR 的研究对象是水泥粉磨；动态搜索空间和滚动时间域可启发烧成研究，但物理模型与质量指标不可直接互换。；书目与出版社摘要核验；对象是粉磨，动态搜索与滚动思想可借鉴，烧成结果不可据此推定。
 
-**来源标识：** research-oadstr
+**来源标识:** research-oadstr, r2-oadstr
 
 <a id="reference-39"></a>
 <a id="source-research-predictive-monitoring"></a>
+<a id="source-r2-monitoring"></a>
 
 ### R39 · Predictive Monitoring of Industrial Processes and Quality Indices via Joint Training of Soft Sensor and Time-Series Forecasting
 
-**作者：** Yonghang Li, Xiaochen Hao, Xunian Yang, Xingzhi Zheng, Libin Wei
+**作者:** Yonghang Li, Xiaochen Hao, Xunian Yang, Xingzhi Zheng, Libin Wei
 
-**年份或维护状态：** 2026
+**年份或维护状态:** 2026
 
-**链接：** [查看原始资料](https://doi.org/10.1109/TII.2026.3664090)
+**链接:** [查看原始资料](https://doi.org/10.1109/TII.2026.3664090)
 
-**阅读提示：** IEEE 出版社登记的题名、作者与 DOI 已核验；本教程据此讨论软测量和时序预测的接口，不声称已逐项复现无法直接取得的全文结构。
+**阅读提示:** IEEE 出版社登记的题名、作者与 DOI 已核验；本教程据此讨论软测量和时序预测的接口，不声称已逐项复现无法直接取得的全文结构。；出版社登记题名和作者已核验，未取得全文；模块接口是本教程设计，不臆造论文细节。
 
-**来源标识：** research-predictive-monitoring
+**来源标识:** research-predictive-monitoring, r2-monitoring
 
 <a id="reference-40"></a>
 <a id="source-research-todcgan"></a>
+<a id="source-r2-todcgan"></a>
 
 ### R40 · TOD-CGAN: Transformer-based conditional generative adversarial network for optimising operational decisions in cement calcination systems
 
-**作者：** Xiaochen Hao, Boxun Li, Yonghang Li, Xunian Yang, Junze Jiao, Yangdong Su
+**作者:** Xiaochen Hao, Boxun Li, Yonghang Li, Xunian Yang, Junze Jiao, Yangdong Su
 
-**年份或维护状态：** 2026
+**年份或维护状态:** 2026
 
-**链接：** [查看原始资料](https://doi.org/10.1016/j.jfranklin.2026.108704)
+**链接:** [查看原始资料](https://doi.org/10.1016/j.jfranklin.2026.108704)
 
-**阅读提示：** 条件生成式烧成决策工作；可讨论候选生成或行为先验角色，不能仅因生成动作就把方法称为在线 RL。
+**阅读提示:** 条件生成式烧成决策工作；可讨论候选生成或行为先验角色，不能仅因生成动作就把方法称为在线 RL。；题名、作者与生成式决策主题已核验；条件生成不自动等同于 RL 或现场自主控制。
 
-**来源标识：** research-todcgan
+**来源标识:** research-todcgan, r2-todcgan
 
 <a id="reference-41"></a>
 <a id="source-research-conerl"></a>
+<a id="source-r2-conerl"></a>
 
 ### R41 · Co-evolutionary reinforcement learning for industrial optimization: a multi-objective optimization framework for cement rotary kilns
 
-**作者：** Gang Liu, Shangjian Xie, Xiaochen Hao, Ran Zheng, Shuaixiang Zhai, Mohan Liu
+**作者:** Gang Liu, Shangjian Xie, Xiaochen Hao, Ran Zheng, Shuaixiang Zhai, Mohan Liu
 
-**年份或维护状态：** 2026
+**年份或维护状态:** 2026
 
-**链接：** [查看原始资料](https://doi.org/10.1016/j.aei.2026.104530)
+**链接:** [查看原始资料](https://doi.org/10.1016/j.aei.2026.104530)
 
-**阅读提示：** 进化优化与 RL 结合的外部公开工作；作者列表不含 Yonghang Li，不能归作其个人成果。
+**阅读提示:** 进化优化与 RL 结合的外部公开工作；作者列表不含 Yonghang Li，不能归作其个人成果。；外部相关工作；作者列表不含 Yonghang Li。出版社记录中的仿真表述不等于现场闭环部署。
 
-**来源标识：** research-conerl
+**来源标识:** research-conerl, r2-conerl
+
+<a id="reference-42"></a>
+<a id="source-r2-skogestad"></a>
+
+### R42 · Plantwide control: the search for the self-optimizing control structure
+
+**作者:** Sigurd Skogestad
+
+**年份或维护状态:** 2000
+
+**链接:** [查看原始资料](https://doi.org/10.1016/S0959-1524(00)00023-8)
+
+**阅读提示:** 作者手稿已读：控制变量选择、分层设定值与经济损失；并非所有工况都适用的恒定设定值结论。
+
+**来源标识:** r2-skogestad
+
+<a id="reference-43"></a>
+<a id="source-r2-rto"></a>
+
+### R43 · RTO: An overview and assessment of current practice
+
+**作者:** Mark L. Darby, Michael Nikolaou, James Jones, Doug Nicholson
+
+**年份或维护状态:** 2011
+
+**链接:** [查看原始资料](https://doi.org/10.1016/j.jprocont.2011.03.009)
+
+**阅读提示:** 出版社摘要核验 RTO 与 MPC 的历史和组织实施问题；不从综述推断本项目收益。
+
+**来源标识:** r2-rto
+
+<a id="reference-44"></a>
+<a id="source-r2-engell"></a>
+
+### R44 · Feedback control for optimal process operation
+
+**作者:** Sebastian Engell
+
+**年份或维护状态:** 2007
+
+**链接:** [查看原始资料](https://doi.org/10.1016/j.jprocont.2006.10.011)
+
+**阅读提示:** 经济目标与反馈优化的综述；区分跟踪目标、稳态优化和动态经济优化。
+
+**来源标识:** r2-engell
+
+<a id="reference-45"></a>
+<a id="source-r2-empc"></a>
+
+### R45 · A tutorial review of economic model predictive control methods
+
+**作者:** Matthew Ellis, Helen Durand, Panagiotis D. Christofides
+
+**年份或维护状态:** 2014
+
+**链接:** [查看原始资料](https://doi.org/10.1016/j.jprocont.2014.03.010)
+
+**阅读提示:** 出版社摘要核验经济 MPC、稳定性与性能主题；具体教学推导另以开放 MPC 教材为依据。
+
+**来源标识:** r2-empc
+
+<a id="reference-46"></a>
+<a id="source-r2-mpcbook"></a>
+
+### R46 · Model Predictive Control: Theory, Computation, and Design
+
+**作者:** James B. Rawlings, David Q. Mayne, Moritz M. Diehl
+
+**年份或维护状态:** 2020, 2nd paperback edition; current online printing
+
+**链接:** [查看原始资料](https://sites.engineering.ucsb.edu/~jbraw/mpc/)
+
+**阅读提示:** 作者开放教材；滚动时域、终端条件、状态估计和经济 MPC 的理论入口。
+
+**来源标识:** r2-mpcbook
+
+<a id="reference-47"></a>
+<a id="source-r2-cement-bat"></a>
+
+### R47 · BAT Reference Document for the Production of Cement, Lime and Magnesium Oxide
+
+**作者:** Frauke Schorcht, Ioanna Kourti, Bianca Maria Scalet, Serge Roudier, Luis Delgado Sancho
+
+**年份或维护状态:** 2013
+
+**链接:** [查看原始资料](https://publications.jrc.ec.europa.eu/repository/handle/JRC83006)
+
+**阅读提示:** 欧盟官方工艺、能耗与排放参考。用于说明指标口径，不将其中规范自动套用于当前窑线。
+
+**来源标识:** r2-cement-bat
+
+<a id="reference-48"></a>
+<a id="source-r2-energy-guide"></a>
+
+### R48 · Energy Efficiency Improvement and Cost Saving Opportunities for Cement Making
+
+**作者:** Ernst Worrell, Katerina Kermeli, Christina Galitsky
+
+**年份或维护状态:** 2013
+
+**链接:** [查看原始资料](https://www.energystar.gov/sites/default/files/buildings/tools/ENERGY%20STAR%20Guide%20for%20the%20Cement%20Industry%2028_08_2013%20Final.pdf)
+
+**阅读提示:** EPA ENERGY STAR 开放全文；区分熟料烧成、粉磨、燃料与电力核算，不照搬历史行业平均数。
+
+**来源标识:** r2-energy-guide
+
+<a id="reference-49"></a>
+<a id="source-r2-nsga2"></a>
+
+### R49 · A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II
+
+**作者:** Kalyanmoy Deb, Amrit Pratap, Sameer Agarwal, T. Meyarivan
+
+**年份或维护状态:** 2002
+
+**链接:** [查看原始资料](https://doi.org/10.1109/4235.996017)
+
+**阅读提示:** 原论文全文核验非支配排序、拥挤距离、精英保留及约束支配；证据为测试问题。
+
+**来源标识:** r2-nsga2
+
+<a id="reference-50"></a>
+<a id="source-r2-moead"></a>
+
+### R50 · MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition
+
+**作者:** Qingfu Zhang, Hui Li
+
+**年份或维护状态:** 2007
+
+**链接:** [查看原始资料](https://doi.org/10.1109/TEVC.2007.892759)
+
+**阅读提示:** 原论文 PDF 核验分解、邻域与尺度处理；不能由算法名推断具体项目改进版。
+
+**来源标识:** r2-moead
+
+<a id="reference-51"></a>
+<a id="source-r2-feasibility"></a>
+
+### R51 · An efficient constraint handling method for genetic algorithms
+
+**作者:** Kalyanmoy Deb
+
+**年份或维护状态:** 2000
+
+**链接:** [查看原始资料](https://doi.org/10.1016/S0045-7825(99)00389-8)
+
+**阅读提示:** 可行性比较的原始方法入口；配合 NSGA-II 原文的约束支配定义阅读。
+
+**来源标识:** r2-feasibility
+
+<a id="reference-52"></a>
+<a id="source-r2-epsilon"></a>
+
+### R52 · Constrained Optimization by the ε Constrained Differential Evolution with Gradient-Based Mutation and Feasible Elites
+
+**作者:** Tetsuyuki Takahama, Setsuko Sakai
+
+**年份或维护状态:** 2006
+
+**链接:** [查看原始资料](https://doi.org/10.1109/CEC.2006.1688283)
+
+**阅读提示:** ε 水平比较与约束搜索的原始文献；搜索容忍度不等于放宽设备执行边界。
+
+**来源标识:** r2-epsilon
+
+<a id="reference-53"></a>
+<a id="source-r2-dynamic"></a>
+
+### R53 · Dynamic Multiobjective Optimization Problems: Test Cases, Approximations, and Applications
+
+**作者:** Marco Farina, Kalyanmoy Deb, Paolo Amato
+
+**年份或维护状态:** 2004
+
+**链接:** [查看原始资料](https://doi.org/10.1109/TEVC.2004.831456)
+
+**阅读提示:** 动态 Pareto 集与控制问题的原始研究；说明 EA 不限于静态单点优化。
+
+**来源标识:** r2-dynamic
+
+<a id="reference-54"></a>
+<a id="source-r2-chance"></a>
+
+### R54 · Chance-Constrained Programming
+
+**作者:** Abraham Charnes, William W. Cooper
+
+**年份或维护状态:** 1959
+
+**链接:** [查看原始资料](https://doi.org/10.1287/mnsc.6.1.73)
+
+**阅读提示:** 机会约束的原始理论入口；教程中的高斯分位数算例为独立教学推导。
+
+**来源标识:** r2-chance
+
+<a id="reference-55"></a>
+<a id="source-r2-rlbook"></a>
+
+### R55 · Reinforcement Learning: An Introduction, Second Edition
+
+**作者:** Richard S. Sutton, Andrew G. Barto
+
+**年份或维护状态:** 2018
+
+**链接:** [查看原始资料](https://incompleteideas.net/book/the-book-2nd.html)
+
+**阅读提示:** 作者教材，涵盖 MDP、Bellman、函数逼近与策略梯度；本页窑案例独立编写。
+
+**来源标识:** r2-rlbook
+
+<a id="reference-56"></a>
+<a id="source-r2-mpc-rl"></a>
+
+### R56 · Data-driven Economic NMPC using Reinforcement Learning
+
+**作者:** Sébastien Gros, Mario Zanon
+
+**年份或维护状态:** 2019 preprint / 2020 journal
+
+**链接:** [查看原始资料](https://arxiv.org/abs/1904.04152)
+
+**阅读提示:** 原文理论条件与例子支持 MPC 作为 RL 函数逼近器的联系；不声称任意错误模型都可安全使用。
+
+**来源标识:** r2-mpc-rl
+
+<a id="reference-57"></a>
+<a id="source-r2-safety-filter"></a>
+
+### R57 · A predictive safety filter for learning-based control of constrained nonlinear dynamical systems
+
+**作者:** Kim Peter Wabersich, Melanie N. Zeilinger
+
+**年份或维护状态:** 2021
+
+**链接:** [查看原始资料](https://doi.org/10.1016/j.automatica.2021.109597)
+
+**阅读提示:** 开放作者稿核验模型置信、终端安全集及可行性条件；不同于简单阈值门控。
+
+**来源标识:** r2-safety-filter
+
+<a id="reference-58"></a>
+<a id="source-r2-yokogawa"></a>
+
+### R58 · Yokogawa and JSR: 35-day autonomous chemical-plant field test
+
+**作者:** Yokogawa Electric Corporation; JSR Corporation
+
+**年份或维护状态:** 2022-03-22
+
+**链接:** [查看原始资料](https://www.yokogawa.com/news/press-releases/2022/2022-03-22/)
+
+**阅读提示:** 运营方/供应商一手报告：FKDPP、蒸馏装置、模拟训练及 2022 年 35 天现场试验。非独立随机试验，不外推到水泥。
+
+**来源标识:** r2-yokogawa
+
+<a id="reference-59"></a>
+<a id="source-r2-deepmind"></a>
+
+### R59 · Safety-first AI for autonomous data centre cooling and industrial control
+
+**作者:** Chris Gamble, Jim Gao
+
+**年份或维护状态:** 2018-08-17
+
+**链接:** [查看原始资料](https://deepmind.google/blog/safety-first-ai-for-autonomous-data-centre-cooling-and-industrial-control/)
+
+**阅读提示:** 官方运营说明：预测、候选筛选、当地复核与人工退出。本文不据此判定使用 PPO/SAC，也不搬用节能百分比。
+
+**来源标识:** r2-deepmind
 
 <a id="source-index"></a>
 
@@ -8069,13 +9291,49 @@ SP 是下层跟踪目标，PV 是实际测量结果。
 | research-predictive-monitoring | [R39](#reference-39) | [Predictive Monitoring of Industrial Processes and Quality Indices via Joint Training of Soft Sensor and Time-Series Forecasting](https://doi.org/10.1109/TII.2026.3664090) |
 | research-todcgan | [R40](#reference-40) | [TOD-CGAN: Transformer-based conditional generative adversarial network for optimising operational decisions in cement calcination systems](https://doi.org/10.1016/j.jfranklin.2026.108704) |
 | research-conerl | [R41](#reference-41) | [Co-evolutionary reinforcement learning for industrial optimization: a multi-objective optimization framework for cement rotary kilns](https://doi.org/10.1016/j.aei.2026.104530) |
+| r2-skogestad | [R42](#reference-42) | [Plantwide control: the search for the self-optimizing control structure](https://doi.org/10.1016/S0959-1524(00)00023-8) |
+| r2-rto | [R43](#reference-43) | [RTO: An overview and assessment of current practice](https://doi.org/10.1016/j.jprocont.2011.03.009) |
+| r2-engell | [R44](#reference-44) | [Feedback control for optimal process operation](https://doi.org/10.1016/j.jprocont.2006.10.011) |
+| r2-empc | [R45](#reference-45) | [A tutorial review of economic model predictive control methods](https://doi.org/10.1016/j.jprocont.2014.03.010) |
+| r2-mpcbook | [R46](#reference-46) | [Model Predictive Control: Theory, Computation, and Design](https://sites.engineering.ucsb.edu/~jbraw/mpc/) |
+| r2-cement-bat | [R47](#reference-47) | [BAT Reference Document for the Production of Cement, Lime and Magnesium Oxide](https://publications.jrc.ec.europa.eu/repository/handle/JRC83006) |
+| r2-energy-guide | [R48](#reference-48) | [Energy Efficiency Improvement and Cost Saving Opportunities for Cement Making](https://www.energystar.gov/sites/default/files/buildings/tools/ENERGY%20STAR%20Guide%20for%20the%20Cement%20Industry%2028_08_2013%20Final.pdf) |
+| r2-nsga2 | [R49](#reference-49) | [A Fast and Elitist Multiobjective Genetic Algorithm: NSGA-II](https://doi.org/10.1109/4235.996017) |
+| r2-moead | [R50](#reference-50) | [MOEA/D: A Multiobjective Evolutionary Algorithm Based on Decomposition](https://doi.org/10.1109/TEVC.2007.892759) |
+| r2-feasibility | [R51](#reference-51) | [An efficient constraint handling method for genetic algorithms](https://doi.org/10.1016/S0045-7825(99)00389-8) |
+| r2-epsilon | [R52](#reference-52) | [Constrained Optimization by the ε Constrained Differential Evolution with Gradient-Based Mutation and Feasible Elites](https://doi.org/10.1109/CEC.2006.1688283) |
+| r2-dynamic | [R53](#reference-53) | [Dynamic Multiobjective Optimization Problems: Test Cases, Approximations, and Applications](https://doi.org/10.1109/TEVC.2004.831456) |
+| r2-chance | [R54](#reference-54) | [Chance-Constrained Programming](https://doi.org/10.1287/mnsc.6.1.73) |
+| r2-rlbook | [R55](#reference-55) | [Reinforcement Learning: An Introduction, Second Edition](https://incompleteideas.net/book/the-book-2nd.html) |
+| r2-process-rl | [R36](#reference-36) | [Reinforcement Learning in Process Industries: Review and Perspective](https://doi.org/10.1109/JAS.2024.124227) |
+| r2-mpc-rl | [R56](#reference-56) | [Data-driven Economic NMPC using Reinforcement Learning](https://arxiv.org/abs/1904.04152) |
+| r2-td3 | [R24](#reference-24) | [Addressing Function Approximation Error in Actor-Critic Methods](https://arxiv.org/abs/1802.09477) |
+| r2-sac | [R21](#reference-21) | [Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor](https://arxiv.org/abs/1801.01290) |
+| r2-sac-apps | [R22](#reference-22) | [Soft Actor-Critic Algorithms and Applications](https://arxiv.org/abs/1812.05905) |
+| r2-cql | [R28](#reference-28) | [Conservative Q-Learning for Offline Reinforcement Learning](https://arxiv.org/abs/2006.04779) |
+| r2-iql | [R29](#reference-29) | [Offline Reinforcement Learning with Implicit Q-Learning](https://arxiv.org/abs/2110.06169) |
+| r2-td3bc | [R30](#reference-30) | [A Minimalist Approach to Offline Reinforcement Learning](https://arxiv.org/abs/2106.06860) |
+| r2-mbpo | [R31](#reference-31) | [When to Trust Your Model: Model-Based Policy Optimization](https://arxiv.org/abs/1906.08253) |
+| r2-mopo | [R32](#reference-32) | [MOPO: Model-based Offline Policy Optimization](https://arxiv.org/abs/2005.13239) |
+| r2-cpo | [R33](#reference-33) | [Constrained Policy Optimization](https://arxiv.org/abs/1705.10528) |
+| r2-safety-filter | [R57](#reference-57) | [A predictive safety filter for learning-based control of constrained nonlinear dynamical systems](https://doi.org/10.1016/j.automatica.2021.109597) |
+| r2-rliable | [R27](#reference-27) | [Deep Reinforcement Learning at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) |
+| r2-tcnso | [R37](#reference-37) | [A novel constrained off-policy deep reinforcement learning approach for temporal decision-making in the cement calcination system](https://doi.org/10.1088/2631-8695/ae5ed3) |
+| r2-oadstr | [R38](#reference-38) | [Collaborative optimization decision making of cement grinding process operational indicators considering dual dynamic problem](https://doi.org/10.1016/j.asoc.2024.111772) |
+| r2-monitoring | [R39](#reference-39) | [Predictive Monitoring of Industrial Processes and Quality Indices via Joint Training of Soft Sensor and Time-Series Forecasting](https://doi.org/10.1109/TII.2026.3664090) |
+| r2-todcgan | [R40](#reference-40) | [TOD-CGAN: Transformer-based conditional generative adversarial network for optimising operational decisions in cement calcination systems](https://doi.org/10.1016/j.jfranklin.2026.108704) |
+| r2-conerl | [R41](#reference-41) | [Co-evolutionary reinforcement learning for industrial optimization: a multi-objective optimization framework for cement rotary kilns](https://doi.org/10.1016/j.aei.2026.104530) |
+| r2-yokogawa | [R58](#reference-58) | [Yokogawa and JSR: 35-day autonomous chemical-plant field test](https://www.yokogawa.com/news/press-releases/2022/2022-03-22/) |
+| r2-deepmind | [R59](#reference-59) | [Safety-first AI for autonomous data centre cooling and industrial control](https://deepmind.google/blog/safety-first-ai-for-autonomous-data-centre-cooling-and-industrial-control/) |
+| r2-project | [R35](#reference-35) | [rl-learning project domain and safety contracts](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md) |
 
 ## 配套代码与复现
 
 以下代码均为教学实现。网页示例中的局部 PyTorch 更新片段需要所在章节说明的网络、优化器和数据；不要将片段误当作已经执行的完整训练。
 
-- [tabular_foundations.py](./code/tabular_foundations.py)：仅用 Python 标准库的表格动态规划与 SARSA / Q-learning 实验。
-- [advanced_math_checks.py](./code/advanced_math_checks.py)：高级章节的数学机制核验。
-- [advanced_toy_env.py](./code/advanced_toy_env.py)：归一化设定值教学环境；需要 Gymnasium 和 NumPy，非真实水泥窑模型。
+- [tabular_foundations.py](./code/tabular_foundations.py): 仅用 Python 标准库的表格动态规划与 SARSA / Q-learning 实验。
+- [advanced_math_checks.py](./code/advanced_math_checks.py): 高级章节的数学机制核验。
+- [advanced_toy_env.py](./code/advanced_toy_env.py): 归一化设定值教学环境；需要 Gymnasium 和 NumPy，非真实水泥窑模型。
+- [独立九篇研究综述](./code/research-review.md)
 
 实验结果应连同环境版本、参数、随机种子、评估协议、失败情况和约束指标一起保存。教学仿真只验证所声明的机制，不构成现场闭环收益证据。

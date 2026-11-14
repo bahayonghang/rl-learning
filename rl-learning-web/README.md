@@ -1,10 +1,14 @@
 # RL Atlas · 把强化学习放进水泥烧成系统
 
-一份面向流程工业研究者的中文强化学习教程。假设读者有基础知识，但没有系统学过 RL 和所需数学：先把概率、期望、梯度变成能手算的小例子，再通过水泥烧成系统理解 Bellman 方程、DQN、PPO、SAC、离线学习与约束决策。网页提供逐步推导、实时计算、延迟过程工作台和带解释的判断反馈。
+[English README](README.en.md) · [双语内容维护说明](docs/i18n.md)
 
-**8 个数学准备单元与计算器 · 24 章水泥案例逐步推导 · 14 个算法实验 · 1 个动态烧成工作台 · 36 个概念词条 · 3 幅原创介绍图**
+一份面向流程工业研究者的完整中英双语强化学习教程。假设读者没有系统学过 RL 和所需概率知识：先把概率、期望、梯度变成能手算的小例子，再通过水泥烧成系统理解 Bellman 方程、DQN、PPO、SAC、离线学习与约束决策。网页提供逐步推导、实时计算、延迟过程工作台和带解释的判断反馈，采用暖橙色的浅色与深色主题。中文与英文都包含完整正文、推导、练习答案和研究论述。
 
-![RL Atlas 原创课程总览插图](public/images/journey.webp)
+**7 个模块、24 章、154 步水泥案例推导 · 8 个数学准备单元与计算器 · 14 个算法实验 · 1 个动态烧成工作台 · 36 个概念词条**
+
+**9 篇研究专题 · 27 项图解（20 个 Mermaid 图 + 7 幅原创概念插图）· 59 条去重资源，保留 77 个引用 ID**
+
+![运行决策的信息、目标与控制分层概念图](public/images/operations-stack.webp)
 
 教程沿用原推文“问题 → 数学 → 算法 → 代码 → 实验”的教学思路，正文、例题、实验和介绍图均为本项目重新组织与创作。参考资料以教材、算法原论文和官方实现文档为主；原文广告、付费内容和配图未作为网站资源重新发布。
 
@@ -30,7 +34,7 @@ just dev
 ```bash
 just          # 列出可用命令
 just dev      # 准备依赖并启动开发服务
-just book     # 导出完整 Markdown 教材
+just book     # 导出中英文完整教材与研究综述
 just check    # 导出、数值/内容测试、类型检查、生产构建
 just preview  # 构建后预览生产版本
 ```
@@ -70,26 +74,29 @@ just preview  # 构建后预览生产版本
 | 06 独立建模与可信实验 | 19–21 | Gymnasium、评估协议、烧成系统设定值决策 | 环境契约、基线、门控和实验设计 |
 | 07 离线、模型与约束决策 | 22–24 | BC/TD3+BC/CQL/IQL、Dyna/MBPO/MOPO、CMDP | 一个窄问题的可复现研究方案 |
 
-### 阅读与记录功能
+### 双语阅读、研究与图解
 
-- **水泥案例推导器**：24 章各有独立情景、符号释义、逐步展开和选择反馈；整章下载会包含全部步骤。
+- **完整中英版本**：顶部语言选择器切换 `zh-CN` / `en`；数学准备、24 章正文与推导、研究专题、实验反馈、词典和工作台说明均有相应语言内容。
+- **水泥案例推导器**：24 章各有独立情景、符号释义、逐步展开和选择反馈，共 154 个推导步骤；整章下载会包含全部步骤。
 - **数学准备与计算器**：8 个单元从符号、概率到连续密度，参数变化立即重新计算。
 - **烧成决策工作台**：点击工艺部位、提出三维增量、经过五层门控，观察 5 分钟过程推进、物料时滞和延迟化验。
-- **研究衔接专题**：软测量、时序预测、多目标轨迹优化与 RL 的分工；列出假设、数据字段、基线、消融和失败判据。
+- **九篇研究专题**：从运行指标决策史、目标与约束、进化优化到序列决策、网络架构、证据边界与六个可证伪研究问题；每篇有独立地址、公式和来源。
 - **概念词典**：按概念、英文和工艺量搜索，用水泥案例解释 36 个术语与易混点。
 - **完整章节阅读器**：章节目录、前后章导航、前置知识、KaTeX 公式、代码复制、练习答案和出处链接。
-- **知识关系图**：Mermaid 渲染，支持查看图源和下载 SVG；算法与工艺流程由可编辑图源表达。
+- **图解库**：按主题、形式和关键词查看 27 项图解。20 个 Mermaid 图保留可查看图源与 SVG 下载；7 幅原创插图由 4 幅新研究概念图和 3 幅原始课程导览图组成，附解释和关联页面。
+- **资源库**：按主题、证据类型和关键词筛选 59 条资源，保留全部 77 个引用 ID 及关联章节、研究页；URL 去重不会丢失原引用关系。
 - **搜索与筛选**：全局搜索覆盖正文、推导、数学准备、研究与词典，并优先匹配标题；课程目录支持模块与学习状态筛选。
-- **学习记录**：完成状态、上次阅读章节、章节收藏与笔记保存在当前浏览器。
-- **备份与迁移**：笔记可导出 Markdown；学习数据可导出 JSON 后导入其他浏览器。导入合并完成状态和收藏；同一章已有不同笔记时保留当前浏览器版本，并提示冲突数量。
-- **阅读偏好**：浅色/深色主题、正文字号切换、桌面侧栏与手机导航。
-- **配图图册**：展示与下载三幅原创概念介绍图。
+- **学习完成状态与阅读偏好**：手动标记章节完成，切换浅色/深色主题、正文字号和界面语言；支持桌面侧栏与手机导航。
 
-学习记录使用当前站点来源下的 `localStorage`，不同域名、端口、浏览器或设备之间不会自动同步。需要迁移时使用导出/导入功能；清除站点数据会清除该浏览器的记录。应用不包含云端笔记服务。
+语言切换保留当前页面地址，并尝试恢复滚动位置；当前页面的实验、计算器和工作台会重新挂载，临时参数、运行轨迹及工作台时钟不承诺保留。需要比较同一实验时，先记录参数和种子，再切换语言重新运行。
+
+当前版本仅把**章节完成状态、主题、字号和语言**写入当前站点来源下的 `localStorage`，键为 `rl-atlas-preferences-v2`。首次读取旧版数据时只提取这些仍受支持的字段；旧键 `rl-atlas-learning-v1` 不删除，旧笔记、收藏和上次阅读字段不恢复、不展示，也不回写。笔记、收藏、继续阅读及学习数据 JSON 导入/导出入口已移除；章节、教材和路线清单下载继续提供。不同域名、端口、浏览器或设备之间不会自动同步，清除站点数据会清除该浏览器保存的偏好与完成状态。
+
+概念插图表达模块分工和直觉；其中的曲线、网络节点与工艺布局不代表测量结果、精确网络结构或工程设计图。定量关系以正文公式、数值实验和 Mermaid 图源为准。新的站点标识图标单独使用，不计入 27 项图解。
 
 ## 水泥烧成工作台怎样帮助理解 RL
 
-工作台的三个动作依次为分解炉出口温度 Tc、二次风温 T₂、窑头压力 P 的归一化设定值增量。它们按项目约定的 `[2°C, 5°C, 5Pa] / 5分钟` 速率缩放，再经过五层门控。下层控制的聚合效果用一阶动态表示；SP 可以马上改变，PV 只逐渐跟踪。
+工作台的三个动作依次为分解炉出口温度 Tc、二次风温 T₂、窑头压力 P 的归一化设定值增量。这是完整项目六个 CV 中的教学子集。它们按教学环境约定的 `[2°C, 5°C, 5Pa] / 5分钟` 速率缩放，再经过五层门控。下层控制的聚合效果用一阶动态表示；SP 可以马上改变，PV 只逐渐跟踪。
 
 推荐先完成五次有明确问题的实验：
 
@@ -99,13 +106,27 @@ just preview  # 构建后预览生产版本
 4. **奖励高就可以吗？** 观察煤耗、电耗、动作平滑项及独立的质量/氧成本；用同起点、同外部扰动比较保持、手动候选和保守规则。
 5. **窗口结束意味着什么？** 推进到 72 步。界面说明 `truncated=true, terminated=false`，联系 TD 的自举目标。
 
-工作台明确区分候选动作、实际执行动作、真实动态和当时可用的信息。质量成本用教学真值评价，但策略输入不会读取未发布化验。保守规则没有训练；动态、噪声和采样时钟是明确列出的教学假设。完整公式、输入顺序、参数与复现实例见 [工作台模型说明](docs/kiln-workbench.md)。
+工作台明确区分候选动作、实际执行动作、真实动态和当时可用的信息。质量成本用教学真值评价，但策略输入不会读取未发布化验。保守规则没有训练；动态、噪声和采样时钟是明确列出的教学假设。完整公式、输入顺序、参数与复现实例见 [中文工作台模型说明](docs/kiln-workbench.md)和 [English model specification](docs/kiln-workbench.en.md)。
 
-## 怎样连接到已有研究
+## 九篇研究专题怎样衔接已有工作
 
-“我的研究方向”页按**状态感知 → 质量软测量/时序预测 → 动态多目标优化 → 上层运行指标决策**组织。结合既有 OAM-Net、QC-MTWaveSME、NURBS 轨迹与 PG-MOEA/D-IEpsilon 的研究脉络，区分预测质量、预测动作后果、寻找候选轨迹和学习长期策略四项职责。
+研究区位于 `#/research`，每篇专题通过 `#/research/<id>` 单独访问，两种语言使用相同 ID。
 
-专题把后续课题落到可验证对象：时间可用性正确的观测构造、离线动作支持与拒绝行为、短滚动世界模型的不确定性、质量/氧约束及回退。每个方向都需要数据划分、Operator 与 PG-MOEA/D-IEpsilon 等基线、消融和失败判据；教材没有把已有模型名称当作实验证据。可核验的论文元数据与阅读边界见 [研究连接与来源记录](docs/research-connections.md)。
+| ID | 专题 | 要回答的问题 |
+|---|---|---|
+| `history` | 从全厂控制到运行指标决策 | 上层决策、优化和下层跟踪控制怎样分工？ |
+| `indicators` | 运行指标、权衡与因果混杂 | 煤耗、电耗、质量与稳定性怎样测量，相关关系为什么不足以证明动作效果？ |
+| `objectives` | 从指标到目标、Pareto 与约束 | 量纲、聚合口径、偏好和可行性怎样写进数学问题？ |
+| `evolution` | 进化优化与滚动轨迹 | 编码、Pareto 搜索、分解、约束比较和滚动执行分别做什么？ |
+| `sequential` | MDP、POMDP 与 CMDP | 何时需要长期价值，历史信息和约束成本怎样进入目标？ |
+| `architecture` | 网络与数据路径 | 编码器、策略、价值/成本网络与独立执行门控怎样连接？ |
+| `evidence` | 证据地图 | 理论、仿真、第一方运行报告与本项目提案分别能支持什么主张？ |
+| `open-problems` | 开放问题 | 模型误差、分布偏移、风险积累和统计证据有哪些尚未解决的边界？ |
+| `agenda` | 六个可证伪研究问题 | 已有模块怎样变成有数据要求、基线、消融和失败判据的实验？ |
+
+专题结合既有 OAM-Net、QC-MTWaveSME、NURBS 轨迹与 PG-MOEA/D-IEpsilon 的研究脉络，区分预测质量、预测动作后果、寻找候选轨迹和学习长期策略。候选动作与实际执行动作分别记录；离线支持、时间隔离、模型不确定性、质量/氧成本与回退都需要可核验的数据。Operator 与 PG-MOEA/D-IEpsilon 是需要接入和比较的基线，不是已完成的工业实验结果。
+
+来源强度、数学边界与修订记录见 [研究来源核验](docs/research-review-v2.md)和 [独立数学审查](docs/review-mathematics-v2.md)。早期研究连接记录保留在 [research-connections.md](docs/research-connections.md)。
 
 ## 14 个实验到底计算了什么
 
@@ -155,7 +176,7 @@ python public/code/advanced_toy_env.py
 
 教学环境没有工业单位、质量模型、能耗模型或设备连接。其推演结果不能当作水泥系统的节能证据。依赖说明与已验证版本见 [进阶研究记录](docs/advanced-research.md)。
 
-## 完整 Markdown 教程
+## 中英文完整 Markdown 教程与研究综述
 
 网页和长文共用数学单元、章节、逐步推导、研究专题与词典数据。修改内容后运行：
 
@@ -163,7 +184,17 @@ python public/code/advanced_toy_env.py
 npm run export:book
 ```
 
-导出结果为 [`docs/rl-atlas-tutorial.md`](docs/rl-atlas-tutorial.md) 和面向网站下载的 `public/rl-atlas-tutorial.md`。Markdown 保留全部推导步骤（包括网页暂时折叠的内容）、公式、判断题反馈、练习、Mermaid 图源、研究专题和完整工作台模型说明。阅读器需要支持数学与 Mermaid 渲染。导出命令不会训练模型或调用付费服务。
+一次导出生成六个文件：
+
+| 内容 | 中文 | English |
+|---|---|---|
+| 仓库内完整教材 | [docs/rl-atlas-tutorial.md](docs/rl-atlas-tutorial.md) | [docs/rl-atlas-tutorial.en.md](docs/rl-atlas-tutorial.en.md) |
+| 网站下载用完整教材 | [public/rl-atlas-tutorial.md](public/rl-atlas-tutorial.md) | [public/rl-atlas-tutorial.en.md](public/rl-atlas-tutorial.en.md) |
+| 独立研究综述 | [public/code/research-review.md](public/code/research-review.md) | [public/code/research-review.en.md](public/code/research-review.en.md) |
+
+完整教材包含 24 章正文、8 个数学单元、全部 154 步推导及判断反馈、练习答案、9 篇研究、词典与对应语言的工作台模型附录。导出保留公式、代码、Mermaid 图源、研究概念图说明和来源 ID 映射；综述单独包含完整九篇研究内容。复制到其他位置阅读时，应一并保留相对路径所引用的图片和代码文件。阅读器需要支持数学与 Mermaid 渲染。
+
+这些文件由结构化内容生成，不应直接修改。`npm run build` 只做类型检查与前端构建；`just build`、`just check` 会先更新导出。导出命令不会训练模型或调用付费服务。
 
 ## 静态托管与 GitHub Pages
 
@@ -185,7 +216,7 @@ npm run export:book
 
 1. 在仓库 **Settings → Pages** 中选择 **GitHub Actions** 作为发布来源。
 2. 使用 [GitHub Pages 官方工作流模板](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)创建工作流，并加入 Node 安装与构建步骤。
-3. 将 npm 命令的工作目录设为 `rl-learning-web`，缓存锁文件设为 `rl-learning-web/package-lock.json`；依次执行 `npm ci`、`npm test`、`npm run export:book` 和 `npm run build`。
+3. 将 npm 命令的工作目录设为 `rl-learning-web`，缓存锁文件设为 `rl-learning-web/package-lock.json`；依次执行 `npm ci`、`npm run export:book`、`npm test` 和 `npm run build`。
 4. Pages 上传步骤的路径设为 **`rl-learning-web/dist`**，再由部署步骤发布该 artifact。部署 job 需要官方文档要求的 Pages/OIDC 权限与 `github-pages` environment。
 5. 查看工作流实际返回的部署地址，并在该地址检查首页、章节刷新、图片和公式。只有部署成功后才存在可用的线上站点。
 
@@ -198,35 +229,40 @@ npm run export:book
 | `src/content/foundations.ts` | 第 01–12 章与基础来源 |
 | `src/content/advanced.ts` | 第 13–24 章与进阶来源 |
 | `src/content/*-guides.ts` | 24 章水泥情景、分步推导、数字例子和判断反馈 |
-| `src/content/primer.ts` / `glossary.ts` / `research.ts` | 数学准备、概念词典与研究专题 |
-| `src/learning.ts` / `src/learning.css` | 推导阅读器、数学单元、词典和研究页 |
+| `src/content/primer.ts` / `glossary.ts` | 中文数学准备与概念词典 |
+| `src/content/en/` | 完整英文正文、推导、数学准备、词典、模块与来源说明 |
+| `src/i18n.ts` / `src/content/localized.ts` | 语言注册、UI 文案、内容 bundle 加载与切换 |
+| `src/research/` | 九篇双语研究专题、来源、类型与页面组件 |
+| `src/figures.ts` / `src/source-catalogue.ts` / `src/catalogue.ts` | 图解数据、保留引用 ID 的资源去重、分类与搜索界面 |
+| `src/learning.ts` / `src/learning.css` | 推导阅读器、数学单元、词典和教学组件 |
 | `src/primer-math.ts` / `src/primer-calculators.ts` | 数学计算内核与交互计算器 |
 | `src/kiln/` | 烧成教学模型、工作台和响应式布局 |
 | `src/content/index.ts` | 模块、章节与来源汇总 |
 | `src/labs/` | 纯数值内核、实验界面与实验样式 |
 | `src/render.ts` | Markdown 清洗、KaTeX、Mermaid 与代码工具 |
-| `src/storage.ts` | 带版本校验的浏览器学习状态 |
-| `src/main.ts` / `src/style.css` | 页面路由、阅读体验和响应式设计 |
-| `public/images/` | 三幅本地 WebP 原创介绍图 |
-| `public/code/` | 可下载的 Python 教学脚本 |
-| `scripts/export-book.ts` | 将结构化章节导出为完整 Markdown |
+| `src/storage.ts` | 版本 2 的章节完成状态、主题、字号与语言 |
+| `src/main.ts` / `src/style.css` / `src/atlas.css` / `src/ui.ts` | 页面路由、橙色主题、界面与响应式设计 |
+| `public/images/` | 七幅本地 WebP 概念插图与独立站点标识 |
+| `public/code/` | 可下载 Python 教学脚本与中英文研究综述 |
+| `scripts/export-book.ts` | 从规范内容生成两种语言的完整教材与综述 |
 | `justfile` / `scripts/ensure-deps.mjs` | 一键启动、依赖就绪检查与常用开发命令 |
 | `tests/` | 数值行为、课程完整性、公式、Mermaid 与资源链接验证 |
 | `docs/` | 教学设计、资料核验、配图来源与完整长文 |
 
 应用使用 Vite + TypeScript，复用 Marked、DOMPurify、KaTeX、Mermaid 和 Lucide。Mermaid 使用 strict 安全模式，正文经过清洗；插图、图标、字体样式与数学资源由本地构建提供。网页没有接入第三方分析、AI 聊天接口或生产设备。
 
-修改课程时，保持章节 ID、模块映射、实验 ID 与来源 ID 一致。新增实验时先明确它实际计算的对象，再添加对应数值验证；不要用预设曲线冒充训练结果。修改公式后应检查正文渲染与完整教程导出。
+修改课程时，保持章节 ID、模块映射、实验 ID 与来源 ID 一致，并同步相应英文内容。新增实验时先明确它实际计算的对象，再添加对应数值验证；不要用预设曲线冒充训练结果。修改公式后应检查两种语言的正文渲染与完整导出。扩展语言需要补齐内容 bundle、研究正文、交互与 UI 文案，以及对应导出；仅添加语言下拉选项不会形成完整的新版本，详见 [i18n 维护说明](docs/i18n.md)。
 
 ### 验证命令
 
 ```bash
+npm run export:book
 npm run typecheck
 npm test
 npm run build
 ```
 
-浏览器交互和响应式布局另行通过实际页面验收，步骤、结果和截图见[验证记录](docs/verification.md)。`npm test` 运行数值与内容检查，不会启动浏览器；它不替代页面交互验收。
+浏览器交互和响应式布局另行通过实际页面验收，本轮步骤、结果和截图见[双语改版验证记录](docs/verification-v2.md)。`npm test` 运行数值与内容检查，不会启动浏览器；它不替代页面交互验收。
 
 ## 工业案例的边界
 
@@ -237,7 +273,8 @@ npm run build
 ## 来源与设计说明
 
 - [教程设计与推文分析](docs/tutorial-design.md)
-- [三幅原创介绍图与提示词摘要](docs/illustrations.md)
+- [研究插图与新标识的来源及完整提示词](docs/illustrations-v2.md)
+- [原始三幅课程导览图的来源与提示词摘要](docs/illustrations.md)
 - [基础资料核验](docs/foundations-research.md)
 - [进阶资料核验](docs/advanced-research.md)
 - [内容独立复核记录](docs/content-review.md)
@@ -246,6 +283,12 @@ npm run build
 - [基础推导补充记录](docs/foundations-kiln-notes.md)
 - [研究方向与论文核验](docs/research-connections.md)
 - [本次数学与推导独立审阅](docs/learning-review.md)
-- [验证结果与页面截图](docs/verification.md)
+- [九篇研究专题的来源核验](docs/research-review-v2.md)
+- [双语版本研究数学独立审查](docs/review-mathematics-v2.md)
+- [基础内容英文翻译核验](docs/translation-foundations.md)
+- [进阶内容英文翻译核验](docs/translation-advanced.md)
+- [双语架构、持久化与扩展语言](docs/i18n.md)
+- [双语改版验证结果与页面截图](docs/verification-v2.md)
+- [初版验证记录](docs/verification.md)
 
 主线教材为 [Sutton & Barto《Reinforcement Learning: An Introduction》](https://incompleteideas.net/book/the-book-2nd.html)，算法部分结合 [PPO](https://arxiv.org/abs/1707.06347)、[SAC](https://arxiv.org/abs/1801.01290)、[CQL](https://arxiv.org/abs/2006.04779)、[IQL](https://arxiv.org/abs/2110.06169)等原论文，以及 [Gymnasium](https://gymnasium.farama.org/) 和 [Stable-Baselines3](https://stable-baselines3.readthedocs.io/)官方资料。每章保留相应的具体出处。

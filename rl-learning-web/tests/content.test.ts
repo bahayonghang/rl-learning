@@ -9,21 +9,28 @@ import { chapters, modules, sources } from '../src/content/index';
 import { foundationSources } from '../src/content/foundations';
 import { advancedSources } from '../src/content/advanced';
 import { researchSources } from '../src/content/research';
-import { researchBody } from '../src/content/research';
+import { researchPages } from '../src/research/content';
+import { loadContentBundle } from '../src/content/localized';
 import { chapterGuides, guideToMarkdown } from '../src/content/guides';
 import { primerIntroduction, primerUnits } from '../src/content/primer';
 import { glossary } from '../src/content/glossary';
-import { buildBook, groupReferences, workbenchAppendix } from '../scripts/export-book';
+import { buildBook, groupReferences, workbenchAppendix, workbenchAppendixEn, buildResearchReview } from '../scripts/export-book';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicDirectory = resolve(root, 'public');
+const englishBundle = await loadContentBundle('en');
 const authoredDocuments = [
   ...chapters.map(chapter => ({ name: `chapter ${chapter.id}`, body: chapter.body })),
   ...chapterGuides.map(guide => ({ name: `guide ${guide.chapterId}`, body: guideToMarkdown(guide) })),
   { name: 'math introduction', body: primerIntroduction },
   ...primerUnits.map(unit => ({ name: `math ${unit.id}`, body: unit.body })),
-  { name: 'research', body: researchBody },
+  ...researchPages.flatMap(page=>[{name:`research ${page.id} zh`,body:page.body['zh-CN']},{name:`research ${page.id} en`,body:page.body.en}]),
+  ...englishBundle.chapters.map(chapter=>({name:`English chapter ${chapter.id}`,body:chapter.body})),
+  ...englishBundle.guides.map(guide=>({name:`English guide ${guide.chapterId}`,body:guideToMarkdown(guide,'en')})),
+  ...englishBundle.primerUnits.map(unit=>({name:`English math ${unit.id}`,body:unit.body})),
+  ...englishBundle.glossary.map(entry=>({name:`English glossary ${entry.term}`,body:[entry.symbol?`$${entry.symbol}$`:'',entry.meaning,entry.kiln,entry.caution].join('\n\n')})),
   { name: 'kiln workbench appendix', body: workbenchAppendix },
+  { name: 'English kiln workbench appendix', body: workbenchAppendixEn },
   ...glossary.map(entry => ({ name: `glossary ${entry.term}`, body: [entry.symbol ? `$${entry.symbol}$` : '', entry.meaning, entry.kiln, entry.caution].join('\n\n') })),
 ];
 
@@ -227,6 +234,10 @@ test('downloadable chapter and exported-book links resolve to actual files', t =
   for (const chapter of chapters) checked += assertLocalResources(chapter.body, publicDirectory);
   checked += assertLocalResources(buildBook('docs'), resolve(root, 'docs'));
   checked += assertLocalResources(buildBook('public'), publicDirectory);
+  checked += assertLocalResources(buildBook('docs','en'), resolve(root,'docs'));
+  checked += assertLocalResources(buildBook('public','en'), publicDirectory);
+  checked += assertLocalResources(buildResearchReview('zh-CN'),resolve(publicDirectory,'code'));
+  checked += assertLocalResources(buildResearchReview('en'),resolve(publicDirectory,'code'));
   assert.ok(checked > 0);
   t.diagnostic(`Checked ${checked} local resource references including both book locations.`);
 });
@@ -251,4 +262,22 @@ test('the complete book preserves chapters and all source mappings while dedupli
     const saved = readFileSync(resolve(root, destination, 'rl-atlas-tutorial.md'), 'utf8');
     assert.ok(saved === buildBook(destination), `${destination} textbook is stale; run npm run export:book after editing chapters`);
   }
+});
+
+
+test('English and research downloads preserve every edition and stay synchronized with authored sources',()=>{
+ const english=buildBook('public','en');
+ for(const chapter of englishBundle.chapters){
+  assert.ok(english.includes(`<a id="chapter-${chapter.id}"></a>`));
+  for(const formula of formulasIn(chapter.body))assert.ok(english.includes(formula.expression));
+  marked.walkTokens(marked.lexer(chapter.body),token=>{if(token.type==='code'&&'text' in token)assert.ok(english.includes(token.text));});
+ }
+ for(const guide of englishBundle.guides){for(const step of guide.steps){assert.ok(english.includes(step.title));if(step.formula)assert.ok(english.includes(step.formula));}for(const feedback of guide.checkpoint.feedback)assert.ok(english.includes(feedback));}
+ for(const locale of ['zh-CN','en'] as const){
+  const review=buildResearchReview(locale);
+  for(const page of researchPages){assert.ok(review.includes(page.title[locale]));for(const formula of formulasIn(page.body[locale]))assert.ok(review.includes(formula.expression));}
+  const suffix=locale==='en'?'.en':'';
+  for(const destination of ['docs','public'] as const)assert.ok(readFileSync(resolve(root,destination,`rl-atlas-tutorial${suffix}.md`),'utf8')===buildBook(destination,locale),`${destination}/${locale} textbook is stale; regenerate exports`);
+  assert.ok(readFileSync(resolve(publicDirectory,'code',`research-review${suffix}.md`),'utf8')===review,`${locale} research review is stale; regenerate exports`);
+ }
 });

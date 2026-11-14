@@ -1,0 +1,10 @@
+import type { CourseModule } from '../../types';
+export const modulesEn: CourseModule[] = [
+  {id:1,title:'Interaction, returns and exploration',english:'THE FIRST PRINCIPLES',description:'Start with a choice, then understand delayed returns and the value of exploration.',color:'sage',icon:'Compass',outcome:'Describe a real decision problem and calculate its return.'},
+  {id:2,title:'MDPs, values and tabular control',english:'THE MATHEMATICAL FOUNDATION',description:'Use the Bellman equation to bring future consequences into the present.',color:'blue',icon:'Network',outcome:'Calculate value updates and implement a tabular controller.'},
+  {id:3,title:'From Q tables to deep value learning',english:'LEARNING WITH NEURAL NETWORKS',description:'Understand the DQN training loop and why it can become unstable.',color:'ochre',icon:'BrainCircuit',outcome:'Explain replay, target networks and Double DQN.'},
+  {id:4,title:'Policy gradients, advantages and PPO',english:'OPTIMIZING THE POLICY',description:'Derive REINFORCE, then unpack each term in the PPO objective.',color:'purple',icon:'Route',outcome:'Explain likelihood ratios, GAE and clipping for both advantage signs.'},
+  {id:5,title:'Continuous actions and SAC',english:'DECISIONS IN CONTINUOUS SPACE',description:'Connect Gaussian policies, action transformations and maximum entropy.',color:'coral',icon:'Waves',outcome:'Calculate transformed densities and choose algorithms for the task.'},
+  {id:6,title:'Independent modelling and credible experiments',english:'FROM ALGORITHM TO EVIDENCE',description:'Define the environment and baselines so every conclusion has supporting evidence.',color:'sage',icon:'FlaskConical',outcome:'Design a reproducible process-industry simulation study.'},
+  {id:7,title:'Offline, model-based and constrained decisions',english:'BEYOND THE ONLINE SETTING',description:'Learn from historical data and models while recognizing uncertainty and limits.',color:'blue',icon:'Telescope',outcome:'Formulate a focused offline, model-based or constrained RL research question.'},
+];

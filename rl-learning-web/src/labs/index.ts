@@ -1,4 +1,5 @@
 import type { LabDefinition } from '../types';
+import { getLocale } from '../i18n';
 import { renderReturn, renderBandit, renderBellman, renderGridworld, renderTD, renderCliff } from './foundations';
 import { renderReplay, renderOverestimation, renderPolicyGradient, renderGAE, renderPPO, renderGaussian } from './deep';
 import { renderSeeds, renderSafety } from './applied';
@@ -21,7 +22,28 @@ export const labs: LabDefinition[] = [
   { id: 'safety', number: 14, title: '工业安全门推演', subtitle: '候选增量、约束成本与回退', chapter: '21', icon: 'ShieldCheck', render: renderSafety },
 ];
 
+/** Stable IDs and numerical renderers; metadata is selected at render time. */
+const englishMetadata: Readonly<Record<string, readonly [string, string]>> = {
+  return: ['Return and Probability', 'Calculate discounting and expectations'],
+  bandit: ['Multi-Armed Bandits', 'Exploration, exploitation, and cumulative pseudo-regret'],
+  bellman: ['Bellman Backups', 'Propagate future value into the present'],
+  gridworld: ['Gridworld', 'Watch values propagate through value iteration'],
+  td: ['MC, TD, and n-Step Returns', 'Different targets from the same trajectory'],
+  cliff: ['SARSA and Q-Learning', 'Train two cliff-walking policies'],
+  replay: ['Replay and Target Networks', 'Separate sample reuse from delayed targets'],
+  overestimation: ['Maximization Bias', 'Test double estimation with Monte Carlo samples'],
+  'policy-gradient': ['Policy Gradients', 'How rewards change action probabilities'],
+  gae: ['Generalized Advantage Estimation', 'Expand gamma, lambda, and boundary masks'],
+  ppo: ['PPO-Clip Workbench', 'Clipped objectives for signed advantages'],
+  gaussian: ['Continuous Policies and Entropy', 'Gaussians, tanh, and correct log densities'],
+  seeds: ['Multiple-Seed Experiments', 'Distinguish attractive curves from credible evidence'],
+  safety: ['Industrial Gate Simulation', 'Candidate increments, constraint costs, and fallback'],
+};
+export function getLabs(): LabDefinition[] {
+  return getLocale() === 'en' ? labs.map(lab => ({ ...lab, title: englishMetadata[lab.id]![0], subtitle: englishMetadata[lab.id]![1] })) : labs;
+}
+
 export const labAliases: Readonly<Record<string, string>> = { expectation: 'return', sac: 'gaussian' };
 export function findLab(id: string): LabDefinition | undefined {
-  return labs.find(lab => lab.id === (labAliases[id] ?? id));
+  return getLabs().find(lab => lab.id === (labAliases[id] ?? id));
 }

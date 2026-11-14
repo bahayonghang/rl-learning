@@ -1,6 +1,7 @@
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
+import { text as t } from './i18n';
 import 'katex/dist/katex.min.css';
 
 export const escapeHtml = (value: unknown): string => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
@@ -12,8 +13,9 @@ export async function renderDiagrams(root: HTMLElement): Promise<void> {
   const codeBlocks = Array.from(root.querySelectorAll<HTMLElement>('pre code.language-mermaid'));
   if (!codeBlocks.length) return;
   const { default: mermaid } = await import('mermaid');
-  const dark = document.documentElement.dataset.theme === 'dark';
-  mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'base', fontFamily: 'system-ui, sans-serif', themeVariables: { primaryColor: dark ? '#254c40' : '#e7efe8', primaryTextColor: dark ? '#eef4ef' : '#24463a', primaryBorderColor: '#648c76', lineColor: '#788e85', secondaryColor: dark ? '#514432' : '#fbf0df', tertiaryColor: dark ? '#273f49' : '#eaf0f4', background: dark ? '#1d2925' : '#ffffff' }, flowchart: { htmlLabels: false, curve: 'basis', useMaxWidth: true } });
+  // Diagrams use a consistent warm paper surface in both UI themes. Theme switches
+  // therefore do not invalidate SVG contrast or reset a reader's experiment.
+  mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'base', fontFamily: 'system-ui, sans-serif', themeVariables: { primaryColor: '#f3dfd1', primaryTextColor: '#3e2c23', primaryBorderColor: '#ba7052', lineColor: '#80685b', secondaryColor: '#f8eddc', tertiaryColor: '#e8e6e2', background: '#fffaf2', edgeLabelBackground: '#fffaf2' }, flowchart: { htmlLabels: false, curve: 'basis', useMaxWidth: true } });
   for (const block of codeBlocks) {
     if (!block.isConnected) continue;
     const source = block.textContent || '';
@@ -23,11 +25,11 @@ export async function renderDiagrams(root: HTMLElement): Promise<void> {
     try {
       const { svg } = await mermaid.render(`atlas-diagram-${++diagramNumber}`, source);
       if (!pre.isConnected) continue;
-      figure.innerHTML = `<div class="diagram-viewport">${svg}</div><figcaption>知识关系图 · Mermaid <button class="text-button diagram-source" type="button">查看图源</button><button class="text-button diagram-download" type="button">下载 SVG</button></figcaption><pre class="diagram-code" hidden>${escapeHtml(source)}</pre>`;
+      figure.innerHTML = `<div class="diagram-viewport">${svg}</div><figcaption>${t('知识关系图','Concept diagram')} · Mermaid <button class="text-button diagram-source" type="button">${t('查看图源','View source')}</button><button class="text-button diagram-download" type="button">${t('下载 SVG','Download SVG')}</button></figcaption><pre class="diagram-code" hidden>${escapeHtml(source)}</pre>`;
       figure.querySelector('.diagram-source')?.addEventListener('click', (e) => {
         const code = figure.querySelector<HTMLElement>('.diagram-code')!;
         code.hidden = !code.hidden;
-        (e.currentTarget as HTMLElement).textContent = code.hidden ? '查看图源' : '收起图源';
+        (e.currentTarget as HTMLElement).textContent = code.hidden ? t('查看图源','View source') : t('收起图源','Hide source');
       });
       figure.querySelector('.diagram-download')?.addEventListener('click', () => downloadFile('rl-atlas-diagram.svg', svg, 'image/svg+xml'));
       pre.replaceWith(figure);
@@ -35,7 +37,7 @@ export async function renderDiagrams(root: HTMLElement): Promise<void> {
       console.error('Mermaid rendering failed', error);
       const message = document.createElement('p');
       message.className = 'render-warning';
-      message.textContent = '流程图暂时无法渲染，以下保留完整图源。';
+      message.textContent = t('流程图暂时无法渲染，以下保留完整图源。','The diagram could not be rendered. Its complete source is preserved below.');
       pre.before(message);
     }
   }
@@ -82,11 +84,11 @@ export async function renderMarkdown(host: HTMLElement, markdown: string): Promi
     const language = code.className.replace('language-', '') || 'code';
     const toolbar = document.createElement('div');
     toolbar.className = 'code-toolbar';
-    toolbar.innerHTML = `<span>${escapeHtml(language)}</span><button type="button">复制代码</button>`;
+    toolbar.innerHTML = `<span>${escapeHtml(language)}</span><button type="button">${t('复制代码','Copy code')}</button>`;
     toolbar.querySelector('button')!.addEventListener('click', async (event) => {
       const button = event.currentTarget as HTMLButtonElement;
-      try { await navigator.clipboard.writeText(code.textContent ?? ''); button.textContent = '已复制'; }
-      catch { button.textContent = '请选择代码复制'; }
+      try { await navigator.clipboard.writeText(code.textContent ?? ''); button.textContent = t('已复制','Copied'); }
+      catch { button.textContent = t('请选择代码复制','Select the code to copy'); }
     });
     pre.before(wrapper); wrapper.append(toolbar, pre);
   });
