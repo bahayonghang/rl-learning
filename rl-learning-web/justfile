@@ -1,0 +1,38 @@
+# 本目录的开发入口。Windows 使用 cmd 调用 npm.cmd；Unix 使用默认 shell。
+set windows-shell := ["cmd.exe", "/d", "/c"]
+
+# 查看可用命令
+default:
+    @just --list
+
+# 按锁文件准备依赖；已就绪时不重复安装
+setup:
+    node scripts/ensure-deps.mjs
+
+# 一键启动：自动准备依赖，再启动 Vite
+dev: setup
+    npm run dev
+
+# 重新导出包含数学准备、逐步推导和研究专题的完整教程
+book: setup
+    npm run export:book
+
+# 执行数值与内容检查
+test: setup
+    npm test
+
+# 导出教程并构建静态网站
+build: setup
+    npm run export:book
+    npm run build
+
+# 完整检查：教程导出、测试、严格类型检查和生产构建
+check: setup
+    npm run export:book
+    npm test
+    npm run build
+
+# 构建后预览生产版本
+preview: build
+    npm run preview
+

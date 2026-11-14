@@ -1,6 +1,7 @@
 import type { CourseModule } from '../types';
 import { foundationChapters, foundationSources } from './foundations';
 import { advancedChapters, advancedSources } from './advanced';
+import { researchSources } from './research';
 
 export const modules: CourseModule[] = [
   { id: 1, title: '交互、回报与探索', english: 'THE FIRST PRINCIPLES', description: '从一个选择开始，理解长期回报与探索的价值。', color: 'sage', icon: 'Compass', outcome: '把一个真实问题说清楚，并写出回报。' },
@@ -13,7 +14,7 @@ export const modules: CourseModule[] = [
 ];
 
 export const chapters = [...foundationChapters, ...advancedChapters].sort((a, b) => a.number - b.number);
-export const sources = [...new Map([...foundationSources, ...advancedSources].map(s => [s.id, s])).values()];
+export const sources = [...new Map([...foundationSources, ...advancedSources, ...researchSources].map(s => [s.id, s])).values()];
 export const getChapter = (id: string) => chapters.find(c => c.id === id);
 export const getModule = (id: number) => modules.find(m => m.id === id)!;
 export const moduleChapters = (id: number) => chapters.filter(c => c.module === id);

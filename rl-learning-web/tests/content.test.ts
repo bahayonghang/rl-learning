@@ -9,10 +9,24 @@ import ts from 'typescript';
 import { chapters, modules, sources } from '../src/content/index';
 import { foundationSources } from '../src/content/foundations';
 import { advancedSources } from '../src/content/advanced';
-import { buildBook, groupReferences } from '../scripts/export-book';
+import { researchSources } from '../src/content/research';
+import { researchBody } from '../src/content/research';
+import { chapterGuides, guideToMarkdown } from '../src/content/guides';
+import { primerIntroduction, primerUnits } from '../src/content/primer';
+import { glossary } from '../src/content/glossary';
+import { buildBook, groupReferences, workbenchAppendix } from '../scripts/export-book';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicDirectory = resolve(root, 'public');
+const authoredDocuments = [
+  ...chapters.map(chapter => ({ name: `chapter ${chapter.id}`, body: chapter.body })),
+  ...chapterGuides.map(guide => ({ name: `guide ${guide.chapterId}`, body: guideToMarkdown(guide) })),
+  { name: 'math introduction', body: primerIntroduction },
+  ...primerUnits.map(unit => ({ name: `math ${unit.id}`, body: unit.body })),
+  { name: 'research', body: researchBody },
+  { name: 'kiln workbench appendix', body: workbenchAppendix },
+  ...glossary.map(entry => ({ name: `glossary ${entry.term}`, body: [entry.symbol ? `$${entry.symbol}$` : '', entry.meaning, entry.kiln, entry.caution].join('\n\n') })),
+];
 
 /** Read the canonical metadata without importing its browser-only CSS dependency. */
 function labRecords(): { id: string; chapter: string }[] {
@@ -128,7 +142,7 @@ test('chapter references and the 14 canonical laboratory entries resolve', t => 
   assert.equal(labIds.size, labs.length);
   for (const lab of labs) assert.ok(chapterIds.has(lab.chapter), `lab ${lab.id} links to a missing chapter`);
   for (const chapter of chapters) if (chapter.lab) assert.ok(labIds.has(chapter.lab), `chapter ${chapter.id} links to unknown lab ${chapter.lab}`);
-  const allRecords = [...foundationSources, ...advancedSources];
+  const allRecords = [...foundationSources, ...advancedSources, ...researchSources];
   assert.equal(new Set(allRecords.map(source => source.id)).size, allRecords.length, 'duplicate source IDs must not be silently discarded');
   assert.equal(sources.length, allRecords.length);
   const sourceIds = new Set(sources.map(source => source.id));
@@ -164,17 +178,17 @@ test('math extraction excludes both kinds of fenced code and inline code', () =>
 
 test('all authored mathematical expressions render with strict KaTeX errors', t => {
   let count = 0;
-  for (const chapter of chapters) {
-    const formulas = formulasIn(chapter.body);
+  for (const document of authoredDocuments) {
+    const formulas = formulasIn(document.body);
     for (const formula of formulas) {
       assert.doesNotThrow(() => katex.renderToString(formula.expression.trim(), {
         displayMode: formula.display, throwOnError: true, strict: 'ignore', trust: false,
-      }), `KaTeX error in chapter ${chapter.id}: ${formula.expression}`);
+      }), `KaTeX error in ${document.name}: ${formula.expression}`);
       count++;
     }
   }
   assert.ok(count > 0);
-  t.diagnostic(`Rendered ${count} formulas across all ${chapters.length} chapters.`);
+  t.diagnostic(`Rendered ${count} formulas across ${authoredDocuments.length} authored documents, including all guides and mathematics units.`);
 });
 
 test('every Mermaid source parses with a real DOM and strict security', async t => {
@@ -200,7 +214,13 @@ test('every Mermaid source parses with a real DOM and strict security', async t 
       }
     }
     for (const module of modules) assert.ok(representedModules.has(module.id), `module ${module.id} needs a Mermaid diagram`);
-    t.diagnostic(`Parsed ${count} Mermaid diagrams covering all ${modules.length} modules.`);
+    for (const document of authoredDocuments.slice(chapters.length)) {
+      for (const diagram of diagramsIn(document.body)) {
+        assert.ok(await mermaid.parse(diagram), `invalid Mermaid in ${document.name}`);
+        count++;
+      }
+    }
+    t.diagnostic(`Parsed ${count} Mermaid diagrams covering all ${modules.length} modules and the new learning material.`);
   } finally {
     for (const [key, descriptor] of previous) {
       if (descriptor) Object.defineProperty(globalThis, key, descriptor);

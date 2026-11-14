@@ -6,6 +6,7 @@ import 'katex/dist/katex.min.css';
 export const escapeHtml = (value: unknown): string => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
 let diagramNumber = 0;
+let markdownNumber = 0;
 
 export async function renderDiagrams(root: HTMLElement): Promise<void> {
   const codeBlocks = Array.from(root.querySelectorAll<HTMLElement>('pre code.language-mermaid'));
@@ -56,7 +57,8 @@ export async function renderMarkdown(host: HTMLElement, markdown: string): Promi
     if (!formula) return;
     katex.render(formula.expression.trim(), node, { displayMode: formula.display, throwOnError: false, trust: false, strict: 'ignore', output: 'htmlAndMathml' });
   });
-  host.querySelectorAll('h2, h3').forEach((node, index) => { node.id = `section-${index}`; });
+  const headingPrefix = host.id || `markdown-${++markdownNumber}`;
+  host.querySelectorAll('h2, h3').forEach((node, index) => { node.id = `${headingPrefix}-section-${index}`; });
   host.querySelectorAll<HTMLAnchorElement>('a').forEach(a => {
     const originalHref = a.getAttribute('href') ?? '';
     if (/^(\.\/)?code\//.test(originalHref)) {

@@ -11,6 +11,16 @@
 - Numerical demonstrations must calculate their displayed values. Fixed seeds should reproduce results. Describe simplified models explicitly.
 - Keep project-specific quality and safety thresholds separate from universal scientific claims. PPO clipping and bounded actions are not safety guarantees.
 - After changing content, run `npm run export:book`. The two complete Markdown books are generated from the same canonical chapters.
+- Chapter guides live separately from the original chapters and keep the same `01`–`24` IDs. Each step needs an explanation, a worked example and a reason; every checkpoint option needs feedback. Answering a checkpoint must not mark a chapter complete.
+- Export all guide steps and feedback, including collapsed content, plus the mathematical primer, research, glossary and full kiln model appendix. In Markdown symbol tables, convert TeX norm/absolute-value pipes to named `\Vert` / `\vert` delimiters before table escaping; check the resulting parsed table columns.
+- Distinguish a reward received at step H (`gamma^(H-1)` under the first-reward convention) from the tail value after H steps (`gamma^H`). Display approximations honestly and avoid substituting rounded intermediate numbers into an apparent exact equality.
+
+## Cement teaching workbench
+
+- Keep the 13-dimensional teaching observation, normalized three-dimensional action, 5-minute cycle, physical RATE, project bounds and five-gate order aligned with the environment contracts. Its explicit teaching dynamics are not a trained industrial policy.
+- Track assay sample time and release time independently. Policies may read only released assays and their sample age; hidden current quality and future assays are evaluation-only. Mark the teaching true-quality overlay as privileged information.
+- Keep requested and executed actions separate. Physical SP updates and smoothness terms use executed increments. Rejection holds SP but still advances time, dynamics and measurements; it does not freeze the process.
+- Compare branches from the same snapshot with paired exogenous noise without advancing the main simulation. Continuing-task horizon exhaustion is truncation with bootstrap retained, never a physical terminal state.
 
 ## Rendering and interaction
 
@@ -20,9 +30,16 @@
 - `saveState` can fail. Never overwrite failure feedback with a success message; keep unsaved note text available for copying/export.
 - Search results must reflect the visible query when a dialog reopens. Import limits must admit the application's maximum valid export, including UTF-8 size and JSON escaping.
 - Learning state stays in the current browser. Do not imply cross-device sync or cloud storage.
+- When a stepper replaces the active control, restore keyboard context by focusing the newly rendered step heading after the render completes. Give fragments unique heading IDs so multiple Markdown sections do not collide.
+- Narrow layouts must account for margins in percentage widths. Long formulas/tables may scroll inside their own containers; they must not expand page width. Verify the workbench clock, expanded symbol tables and long derivations at 375 CSS px content width.
+
+## Local startup
+
+- `just dev` is the supported one-command entry from `rl-learning-web/`. Its setup recipe checks Node >= 22.12 and prepares dependencies from the lock file; repeated runs reuse a matching installation.
+- Keep the setup script cross-platform and independent of Python, Bash or service credentials. The justfile uses `cmd.exe` on Windows. Do not imply Windows runtime verification when only Linux execution and static recipe review were performed.
 
 ## Quality checks
 
-From `rl-learning-web/`, run `npm run export:book`, `npm test`, and `npm run build`. Tests cover curriculum integrity, all authored formulas and diagrams, local resource links and actual numerical behavior. Use a supported browser preview for interaction/layout checks; unit checks alone do not establish browser compatibility.
+From `rl-learning-web/`, run `just check` (export, tests, strict type check and production build), or the equivalent `npm run export:book`, `npm test`, and `npm run build`. Tests cover curriculum/guide integrity, all authored formulas and diagrams, parsed export tables, local resource links and actual numerical behavior. Use a supported browser preview for interaction/layout checks; unit checks alone do not establish browser compatibility.
 
 Read `rl-learning-web/docs/verification.md` for the recorded acceptance scope and `docs/labs.md` for experiment limitations. Preserve original illustration provenance in `docs/illustrations.md`. Do not commit `node_modules/`, `dist/`, temporary QA fixtures or generated caches.

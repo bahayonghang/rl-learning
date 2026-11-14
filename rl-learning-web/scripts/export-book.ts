@@ -1,9 +1,20 @@
 /** Export the complete authored curriculum, not a navigation-only outline. */
 import { mkdir, writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chapters, modules, sources } from '../src/content/index';
 import type { Source } from '../src/types';
+import { getChapterGuide, guideToMarkdown, chapterGuides } from '../src/content/guides';
+import { primerUnits, primerIntroduction } from '../src/content/primer';
+import { glossary } from '../src/content/glossary';
+import { researchBody } from '../src/content/research';
+
+/** Preserve the simulator's full mathematical contract in the downloadable book. */
+export const workbenchAppendix = readFileSync(new URL('../docs/kiln-workbench.md', import.meta.url), 'utf8')
+  .replace(/^# [^\n]+\n/, '')
+  .replace(/^\\\[$|^\\\]$/gm, '$$$$')
+  .replace(/\]\(\.\.\/\.\.\/([^\s)]+)\)/g, ']\u0028https://github.com/bahayonghang/rl-learning/blob/main/$1)');
 
 export type BookDestination = 'docs' | 'public';
 
@@ -40,6 +51,12 @@ function formatBody(markdown: string, destination: BookDestination): string {
     let formatted = line.replace(/^(#{1,4}) /, (_, hashes: string) => `${'#'.repeat(Math.min(hashes.length + 2, 6))} `);
     formatted = formatted.replace(/\]\((?:\.\/|\/)?code\/([^\s)]+)\)/g, (_, filename: string) =>
       `](${destination === 'docs' ? '../public/' : './'}code/${filename})`);
+    formatted = formatted.replace(/\]\(#\/chapter\/(\d\d)\)/g, '](#chapter-$1)')
+      .replace(/\]\(#\/primer\/([a-z-]+)\)/g, '](#math-$1)')
+      .replace(/\]\(#\/research\)/g, '](#research)')
+      .replace(/\]\(#\/kiln\)/g, '](#kiln-workbench)')
+      .replace(/\]\(#\/primer\)/g, '](#math-primer)')
+      .replace(/\]\(#\/glossary\)/g, '](#glossary)');
     return formatted;
   }).join('\n');
 }
@@ -53,7 +70,7 @@ export function buildBook(destination: BookDestination): string {
   const parts: string[] = [
     '# RL Atlas｜强化学习：从直觉到决策',
     '',
-    '> 完整中文教程 · 7 个模块 · 24 章 · 含公式、Mermaid 流程图、代码、练习解答与原始资料索引。',
+    '> 完整中文教程 · 8 个数学准备单元 · 24 组水泥案例逐步推导 · 7 个模块 / 24 章 · 研究专题、概念词典、公式、Mermaid、代码与练习解答。',
     '',
     '本教程沿着“问题 → 数学 → 算法 → 代码 → 实验 → 可信结论”的路径组织。先学会解释一个决策问题，再理解每一种算法为什么出现、解决什么问题、还留下哪些限制。',
     '',
@@ -73,6 +90,7 @@ export function buildBook(destination: BookDestination): string {
     '',
     '## 目录',
     '',
+    '- [数学准备：从符号到可计算的例子](#math-primer)',
   ];
   for (const module of modules) {
     parts.push(`- [模块 ${module.id} · ${module.title}](#module-${module.id})`);
@@ -80,7 +98,12 @@ export function buildBook(destination: BookDestination): string {
       parts.push(`  - [${chapter.id} · ${chapter.title}](#chapter-${chapter.id})`);
     }
   }
-  parts.push('- [完整参考资料](#references)', '- [来源标识索引](#source-index)', '', '---', '');
+  parts.push('- [水泥工作台：模型、时间与实验](#kiln-workbench)', '- [衔接已有研究：流程工业强化学习](#research)', '- [概念与符号词典](#glossary)', '- [完整参考资料](#references)', '- [来源标识索引](#source-index)', '', '---', '');
+
+  parts.push('<a id="math-primer"></a>', '', '## 数学准备：从符号到可计算的例子', '', primerIntroduction, '');
+  for (const unit of primerUnits) {
+    parts.push(`<a id="math-${unit.id}"></a>`, '', `### 数学 ${unit.number} · ${unit.title}`, '', unit.summary, '', formatBody(unit.body,destination), '', `**应用到章节：** ${unit.chapters.map(id=>`[第 ${id} 章](#chapter-${id})`).join('；')}`, '', '**网页动手部分：** 对应数学准备单元提供同题参数计算器。纸面推导与初始数字均保留在本节中。', '', '---', '');
+  }
 
   for (const module of modules) {
     parts.push(`<a id="module-${module.id}"></a>`, '', `## 模块 ${module.id} · ${module.title}`, '', module.description, '', `**完成本模块后：** ${module.outcome}`, '');
@@ -91,6 +114,8 @@ export function buildBook(destination: BookDestination): string {
       }
       parts.push('**学习目标**', '', ...chapter.objectives.map(objective => `- ${objective}`), '');
       if (chapter.lab) parts.push(`**配套网页实验：** ${chapter.lab}（在网页“交互实验室”打开）`, '');
+      const guide = getChapterGuide(chapter.id);
+      if (guide) parts.push(formatBody(guideToMarkdown(guide),destination), '', '#### 从案例走向系统正文', '');
       parts.push(formatBody(chapter.body, destination), '', '#### 本章参考资料', '');
       for (const id of chapter.sources) {
         const reference = sourceReferences.get(id);
@@ -102,6 +127,10 @@ export function buildBook(destination: BookDestination): string {
     }
   }
 
+  parts.push('<a id="kiln-workbench"></a>', '', '## 水泥工作台：模型、时间与实验', '', formatBody(workbenchAppendix,destination), '', '<a id="research"></a>', '', '## 衔接已有研究：流程工业强化学习', '', formatBody(researchBody,destination), '', '<a id="glossary"></a>', '', '## 概念与符号词典', '');
+  for (const entry of glossary) {
+    parts.push(`### ${entry.term} · ${entry.english}`, '', entry.symbol ? `**符号：** $${entry.symbol}$` : '', '', entry.meaning, '', `**在烧成系统中：** ${entry.kiln}`, '', `**容易混淆：** ${entry.caution}`, '', `**继续阅读：** [第 ${entry.chapter} 章](#chapter-${entry.chapter})`, '');
+  }
   parts.push('<a id="references"></a>', '', '## 完整参考资料', '', `以下按网址去重，共 ${references.length} 条资料；保留全部 ${sources.length} 个来源标识，便于与网页章节对应。相同网址的不同来源记录合并展示，未丢弃原有映射。`, '');
   for (const reference of references) {
     const first = reference.sources[0];
@@ -131,7 +160,7 @@ export async function exportBook(): Promise<void> {
     await writeFile(output.path, content, 'utf8');
     results.push({ file: output.path.slice(root.length + 1), characters: Array.from(content).length, bytes: Buffer.byteLength(content, 'utf8') });
   }
-  console.log(JSON.stringify({ chapters: chapters.length, modules: modules.length, sourceIds: sources.length, uniqueReferenceUrls: groupReferences(sources).length, chapterBodyCharacters: chapters.reduce((sum, chapter) => sum + Array.from(chapter.body).length, 0), outputs: results }, null, 2));
+  console.log(JSON.stringify({ chapters: chapters.length, modules: modules.length, mathUnits: primerUnits.length, guides: chapterGuides.length, derivationSteps: chapterGuides.reduce((sum,guide)=>sum+guide.steps.length,0), glossaryTerms: glossary.length, sourceIds: sources.length, uniqueReferenceUrls: groupReferences(sources).length, chapterBodyCharacters: chapters.reduce((sum, chapter) => sum + Array.from(chapter.body).length, 0), outputs: results }, null, 2));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
