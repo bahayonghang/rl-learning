@@ -43,3 +43,41 @@ Delivered the original Chinese RL web tutorial in rl-learning-web, with reviewed
 ### Next Steps
 
 - Optional: enable a static hosting service using the README deployment instructions.
+
+
+## Session 2: Deepen the cement-kiln RL tutorial
+<!-- trellis-session: v=2 fp=930627d1ef939746 -->
+
+**Date**: 2026-11-13
+**Task**: Deepen the cement-kiln RL tutorial
+**Branch**: `feat/rl-learning-kiln`
+
+### Summary
+
+Expanded the Chinese RL website with beginner mathematical reasoning, cement process interaction, research hypotheses and one-command startup.
+
+### Main Changes
+
+- Added 24 cement guides with 154 steps, eight mathematics units/calculators, a 36-entry glossary and complete textbook export.
+- Added a reproducible 13-observation kiln workbench with delayed assays, five gates, paired comparisons and correct continuing-task truncation.
+- Connected soft sensing, temporal models and multiobjective trajectories to six testable RL research hypotheses; added just dev and responsive accessible interactions.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `e1669c74cac18edd6ca80fc828ff5d4b65798e0f` | feat(web): deepen interactive cement-kiln RL tutorial |
+
+### Testing
+
+- [OK] [OK] Final just check passed all 36 tests, strict TypeScript and production build; rendered 868 formulas and parsed 12 content diagrams.
+- [OK] [OK] Actual just dev startup and dependency reuse verified; all 24 guides, eight calculators, kiln transitions/gates/horizon and narrow layouts operated in Chrome.
+- [OK] [OK] Independent mathematical/integration review fixes and verification screenshots are documented; no real industrial training or field-performance claim.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Use just dev in rl-learning-web; follow the mathematics primer, kiln workbench and staged research protocol.

@@ -8,7 +8,7 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 1
+- **Total Sessions**: 2
 - **Last Active**: 2026-11-13
 <!-- @@@/auto:current-status -->
 
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~45 | Active |
+| `journal-1.md` | ~83 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 2 | 2026-11-13 | Deepen the cement-kiln RL tutorial | `e1669c74cac18edd6ca80fc828ff5d4b65798e0f` | `feat/rl-learning-kiln` |
 | 1 | 2026-11-13 | Build RL Atlas interactive tutorial | `2cefb4b` | `feat/rl-learning-web` |
 <!-- @@@/auto:session-history -->
 
