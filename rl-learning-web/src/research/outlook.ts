@@ -16,17 +16,7 @@ export const outlookPages: ResearchPage[] = [
 
 以下层级不是论文价值排名，而是回答不同问题的证据类型。理论证明回答“在这些假设下是否成立”；数值基准回答“在规定的仿真问题上表现怎样”；生产数据预测回答“在日志分布上能否预测”；基于生产数据训练的模拟闭环回答“在该代理模型内选择动作会怎样”；现场建议模式回答“人如何采用建议”；实际执行试验回答“设备是否按照该策略改变了动作”。**有生产数据，仍可能完全没有进行现场控制。** [流程工业 RL 综述](https://doi.org/10.1109/JAS.2024.124227)是文献地图，不能替代每篇工作的实验核查。
 
-~~~mermaid
-flowchart TD
-  C["待核验的具体结论"] --> A["原论文或官方运营材料"]
-  A --> T["理论与仿真证据"]
-  A --> D["生产日志或代理模型证据"]
-  A --> F["现场执行证据"]
-  T --> L["记录假设、对照与适用边界"]
-  D --> L
-  F --> L
-  L --> R["允许的表述与未回答问题"]
-~~~
+![证据地图：从具体主张到允许的结论](./images/diagrams/research-evidence-diagram-1.webp)
 
 ## 2. 方法论文的证据不能直接兑换为烧成收益
 
@@ -81,17 +71,7 @@ This review was verified on **2026-11-14**. Evidence is recorded according to th
 
 The following categories are not a ranking of scientific merit. They answer different questions. A theorem asks whether a result holds under assumptions. A benchmark asks how an algorithm performs in a specified simulation. Plant-data prediction asks whether logged outcomes can be predicted. Closed-loop simulation using a plant-trained surrogate asks what actions do inside that model. Advisory operation asks how people use recommendations. An execution trial asks whether equipment actually followed policy-generated decisions. **Using production data can involve no plant control at all.** The [process-industry RL review](https://doi.org/10.1109/JAS.2024.124227) is a literature map, not a replacement for checking individual experiments.
 
-~~~mermaid
-flowchart TD
-  C["Specific claim to verify"] --> A["Original or official primary material"]
-  A --> T["Theory and simulation evidence"]
-  A --> D["Plant logs or surrogate evidence"]
-  A --> F["Physical execution evidence"]
-  T --> L["Record assumptions, controls and scope"]
-  D --> L
-  F --> L
-  L --> R["Supported wording and open questions"]
-~~~
+![Evidence mapping: from a claim to supported conclusions](./images/diagrams/research-evidence-diagram-1.webp)
 
 ## 2. Method papers do not directly establish kiln savings
 
@@ -179,17 +159,7 @@ $$e_H\le\varepsilon\sum_{i=0}^{H-1}L^i=\begin{cases}\varepsilon\dfrac{L^H-1}{L-1
 
 取归一化误差 $\varepsilon=0.02,L=1.2$，三步上界为 $0.02(1+1.2+1.44)=0.0728$，十步约为 $0.5192$。这不是实际窑误差，而是解释长推演为何可能放大偏差。短分叉、模型集合、保守惩罚和停止规则可以作为控制模型利用风险的设计；它们仍需在行动后分布上校准。[MBPO](https://arxiv.org/abs/1906.08253)；[MOPO](https://arxiv.org/abs/2005.13239)
 
-~~~mermaid
-flowchart TD
-  D["按时间隔离的真实日志"] --> M["动作条件模型集合"]
-  M --> U["误差与不确定性校准"]
-  U --> S["受限短分叉推演"]
-  S --> P["候选策略学习"]
-  P --> E["独立工况与故障评价"]
-  E --> F["失败机制与停止规则"]
-  F --> U
-  D --> E
-~~~
+![闭环模型研究：校准、短推演与失败反馈](./images/diagrams/research-open-problems-diagram-1.webp)
 
 ## 4. 不确定性要在真正关心的条件下校准
 
@@ -247,17 +217,7 @@ For a common action sequence, $L$ may bound dynamics sensitivity to state. If th
 
 With normalized $\varepsilon=0.02,L=1.2$, the three-step bound is $0.02(1+1.2+1.44)=0.0728$; the ten-step bound is approximately $0.5192$. These are not measured kiln errors. They explain why longer rollouts can amplify model mismatch. Short branches, ensembles, conservative penalties and stopping rules are candidate designs for limiting exploitation, but require calibration on distributions induced by actions. [MBPO](https://arxiv.org/abs/1906.08253); [MOPO](https://arxiv.org/abs/2005.13239)
 
-~~~mermaid
-flowchart TD
-  D["Temporally separated real logs"] --> M["Action-conditioned model ensemble"]
-  M --> U["Error and uncertainty calibration"]
-  U --> S["Restricted short branched rollouts"]
-  S --> P["Candidate policy learning"]
-  P --> E["Independent regime and fault evaluation"]
-  E --> F["Failure mechanisms and stopping rules"]
-  F --> U
-  D --> E
-~~~
+![Closed-loop model research: calibration and failure feedback](./images/diagrams/research-open-problems-diagram-1.webp)
 
 ## 4. Calibrate uncertainty under the conditions that matter
 
@@ -305,20 +265,7 @@ Repeated runs should estimate sensitivity to training and operating conditions, 
 
 OAM-Net 的可靠性门控与多速率融合、化验缺失时回退到在线信息；QC-MTWaveSME 的质量与预测接口；MC3/OOD 的监测与域外诊断；PG-MOEA/D-IEpsilon 的多目标候选；NURBS 的轨迹表示，均在此作为**已知项目背景接口**讨论。具体层数、参数、训练配方和成绩没有在本次工作中重建。相关公开书目为[联合软测量与预测](https://doi.org/10.1109/TII.2026.3664090)、[OA-DSTR](https://doi.org/10.1016/j.asoc.2024.111772)、[TCNSO-MSL-TD3 相关工作](https://doi.org/10.1088/2631-8695/ae5ed3)与 [TOD-CGAN](https://doi.org/10.1016/j.jfranklin.2026.108704)；本综述对其访问范围见证据页，下面是待检验的新连接，而不是这些论文已经证明的结论。
 
-~~~mermaid
-flowchart TD
-  D["按可用时间重建的数据"] --> S["状态、质量与可靠性接口"]
-  S --> E["多目标优化与轨迹候选"]
-  S --> R["离线策略与成本价值学习"]
-  E --> R
-  E --> G["统一五层门控"]
-  R --> G
-  G --> V["配对仿真与独立工况评价"]
-  V --> H["六项假设的支持或失败证据"]
-  H --> S
-  H --> E
-  H --> R
-~~~
+![研究议程：统一接口、两类候选与可证伪评价](./images/diagrams/research-agenda-diagram-1.webp)
 
 ## 2. 先固定数据契约，避免不同模块看到不同的过去
 
@@ -411,20 +358,7 @@ Organize the project around state awareness → quality soft sensing and forecas
 
 OAM-Net's reliability-gated multirate fusion and online-information fallback when assays are absent; QC-MTWaveSME's quality/forecasting interface; MC3/OOD monitoring and domain diagnostics; PG-MOEA/D-IEpsilon candidates; and NURBS trajectory representation are treated here as **known project-interface background**. Exact layers, parameters, training recipes and results were not reconstructed. Related public records include [joint soft sensing and forecasting](https://doi.org/10.1109/TII.2026.3664090), [OA-DSTR](https://doi.org/10.1016/j.asoc.2024.111772), [TCNSO-MSL-TD3-related work](https://doi.org/10.1088/2631-8695/ae5ed3) and [TOD-CGAN](https://doi.org/10.1016/j.jfranklin.2026.108704), with access limits documented on the evidence page. The following connections are hypotheses, not claims already established by those publications.
 
-~~~mermaid
-flowchart TD
-  D["Data rebuilt by availability time"] --> S["State, quality and reliability interfaces"]
-  S --> E["Multiobjective trajectory candidates"]
-  S --> R["Offline policy and cost-value learning"]
-  E --> R
-  E --> G["Common five-layer gate"]
-  R --> G
-  G --> V["Paired simulation and held-out regimes"]
-  V --> H["Evidence supporting or refuting hypotheses"]
-  H --> S
-  H --> E
-  H --> R
-~~~
+![Research agenda: common interfaces and falsifiable tests](./images/diagrams/research-agenda-diagram-1.webp)
 
 ## 2. Freeze a data contract before comparing modules
 

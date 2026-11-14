@@ -2,46 +2,12 @@ import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import katex from 'katex';
 import { text as t } from './i18n';
-import 'katex/dist/katex.min.css';
 
-export const escapeHtml = (value: unknown): string => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+export { escapeHtml } from './html';
+import { escapeHtml } from './html';
+import { decorateConceptPlates } from './figure-view';
 
-let diagramNumber = 0;
 let markdownNumber = 0;
-
-export async function renderDiagrams(root: HTMLElement): Promise<void> {
-  const codeBlocks = Array.from(root.querySelectorAll<HTMLElement>('pre code.language-mermaid'));
-  if (!codeBlocks.length) return;
-  const { default: mermaid } = await import('mermaid');
-  // Diagrams use a consistent warm paper surface in both UI themes. Theme switches
-  // therefore do not invalidate SVG contrast or reset a reader's experiment.
-  mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', theme: 'base', fontFamily: 'system-ui, sans-serif', themeVariables: { primaryColor: '#f3dfd1', primaryTextColor: '#3e2c23', primaryBorderColor: '#ba7052', lineColor: '#80685b', secondaryColor: '#f8eddc', tertiaryColor: '#e8e6e2', background: '#fffaf2', edgeLabelBackground: '#fffaf2' }, flowchart: { htmlLabels: false, curve: 'basis', useMaxWidth: true } });
-  for (const block of codeBlocks) {
-    if (!block.isConnected) continue;
-    const source = block.textContent || '';
-    const pre = block.parentElement!;
-    const figure = document.createElement('figure');
-    figure.className = 'mermaid-figure';
-    try {
-      const { svg } = await mermaid.render(`atlas-diagram-${++diagramNumber}`, source);
-      if (!pre.isConnected) continue;
-      figure.innerHTML = `<div class="diagram-viewport">${svg}</div><figcaption>${t('知识关系图','Concept diagram')} · Mermaid <button class="text-button diagram-source" type="button">${t('查看图源','View source')}</button><button class="text-button diagram-download" type="button">${t('下载 SVG','Download SVG')}</button></figcaption><pre class="diagram-code" hidden>${escapeHtml(source)}</pre>`;
-      figure.querySelector('.diagram-source')?.addEventListener('click', (e) => {
-        const code = figure.querySelector<HTMLElement>('.diagram-code')!;
-        code.hidden = !code.hidden;
-        (e.currentTarget as HTMLElement).textContent = code.hidden ? t('查看图源','View source') : t('收起图源','Hide source');
-      });
-      figure.querySelector('.diagram-download')?.addEventListener('click', () => downloadFile('rl-atlas-diagram.svg', svg, 'image/svg+xml'));
-      pre.replaceWith(figure);
-    } catch (error) {
-      console.error('Mermaid rendering failed', error);
-      const message = document.createElement('p');
-      message.className = 'render-warning';
-      message.textContent = t('流程图暂时无法渲染，以下保留完整图源。','The diagram could not be rendered. Its complete source is preserved below.');
-      pre.before(message);
-    }
-  }
-}
 
 export async function renderMarkdown(host: HTMLElement, markdown: string): Promise<void> {
   const formulas: { expression: string; display: boolean }[] = [];
@@ -63,12 +29,14 @@ export async function renderMarkdown(host: HTMLElement, markdown: string): Promi
   host.querySelectorAll('h2, h3').forEach((node, index) => { node.id = `${headingPrefix}-section-${index}`; });
   host.querySelectorAll<HTMLAnchorElement>('a').forEach(a => {
     const originalHref = a.getAttribute('href') ?? '';
-    if (/^(\.\/)?code\//.test(originalHref)) {
+    if (/^(?:\.\/|\/)?code\//.test(originalHref)) {
+      if (originalHref.startsWith('/')) a.setAttribute('href', `.${originalHref}`);
       a.setAttribute('download', '');
+      a.removeAttribute('target');
       return;
     }
-    if (a.href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
-    if (a.getAttribute('href')?.startsWith('/code/')) a.href = `.${a.getAttribute('href')}`;
+    if (originalHref.startsWith('#')) { a.removeAttribute('target'); return; }
+    if (/^https?:\/\//i.test(originalHref)) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
   });
   host.querySelectorAll('table').forEach(table => {
     const wrapper = document.createElement('div');
@@ -76,7 +44,6 @@ export async function renderMarkdown(host: HTMLElement, markdown: string): Promi
     table.before(wrapper); wrapper.append(table);
   });
   host.querySelectorAll<HTMLElement>('pre').forEach(pre => {
-    if (pre.querySelector('.language-mermaid')) return;
     const code = pre.querySelector('code');
     if (!code) return;
     const wrapper = document.createElement('div');
@@ -92,7 +59,7 @@ export async function renderMarkdown(host: HTMLElement, markdown: string): Promi
     });
     pre.before(wrapper); wrapper.append(toolbar, pre);
   });
-  await renderDiagrams(host);
+  decorateConceptPlates(host);
 }
 
 export function downloadFile(filename: string, content: string, type = 'text/plain;charset=utf-8'): void {

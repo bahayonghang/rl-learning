@@ -42,16 +42,7 @@ export const foundationChapters: Chapter[] = [
 
 本教程统一使用轨迹 $S_t,A_t,R_{t+1},S_{t+1}$：先看到 $S_t$，选择 $A_t$，环境再返回 $R_{t+1}$ 与 $S_{t+1}$。某些论文把同一个奖励记为 $r_t$，只是下标约定不同，移植公式时要整套对齐。
 
-${FENCE}mermaid
-flowchart TD
-    S["读取观测与当前状态"] --> P["策略选择动作"]
-    P --> E["环境演化一个时间步"]
-    E --> R["收到奖励与新观测"]
-    R --> D{"任务真正结束了吗"}
-    D -- "否" --> S
-    D -- "是" --> U["记录轨迹并更新策略"]
-    U --> S
-${FENCE}
+![交互闭环：从行动到反馈](./images/diagrams/chapter-01-diagram-1.webp)
 
 这里的“更新策略”可以每一步发生，也可以收集一批数据后发生。交互与学习是两个不同的时钟；环境采样一次，不意味着神经网络只能更新一次。
 
@@ -313,17 +304,7 @@ $$P(S_{t+1}\mid S_0,A_0,\ldots,S_t,A_t)=P(S_{t+1}\mid S_t,A_t).$$
 
 本仓库的工业观测合同保留 120 分钟历史、当前设定值、软测量、最近一次化验与化验年龄、原料模数。化验在时刻 $t$ 还未发布时，不能为了让预测更准，使用事后回填的最新化验值。这会产生时间泄漏，训练表现再好也无法在线复现。
 
-${FENCE}mermaid
-flowchart TD
-    Q["定义业务问题与决策周期"] --> O["列出当时真正可获得的信息"]
-    O --> M{"当前观测能充分描述过程吗"}
-    M -- "近似可以" --> S["构造状态表示"]
-    M -- "存在延迟或隐变量" --> H["加入历史与状态估计"]
-    H --> S
-    S --> A["定义动作边界和奖励成本"]
-    A --> T["定义终止与截断语义"]
-    T --> C["先用随机策略检查环境"]
-${FENCE}
+![MDP 与 POMDP：信息先于状态建模](./images/diagrams/chapter-04-diagram-1.webp)
 
 ## 一个完整的小型建模例子
 
@@ -764,17 +745,7 @@ $$y_t=R_{t+1}+\gamma(1-d_t)\max_{a'}Q_{\bar\theta}(S_{t+1},a').$$
 
 当参数改变时，目标会改变；当策略改变时，采样分布也会改变。数据分布、预测值和训练目标彼此影响，形成反馈系统。把一个监督学习网络直接塞进 Q-learning 循环，可能得到一条越来越小的局部损失，却没有得到越来越好的策略。
 
-${FENCE}mermaid
-flowchart TD
-    F["函数逼近共享参数"] --> C["一次更新影响多个状态"]
-    B["自举目标依赖已有预测"] --> C
-    O["离策略数据与目标策略不同"] --> C
-    C --> U["可能形成不稳定的误差反馈"]
-    U --> R["经验回放改善样本利用"]
-    U --> T["目标网络减缓目标变化"]
-    R --> V["检查价值尺度与独立评估"]
-    T --> V
-${FENCE}
+![价值学习的不稳定因素与缓解机制](./images/diagrams/chapter-09-diagram-1.webp)
 
 函数逼近、自举与离策略学习同时出现，被称为 **deadly triad（致命三角）**。它表示存在不稳定性风险，并非三个条件满足就必然发散。[Jiang 等人的研究](https://proceedings.mlr.press/v139/jiang21j.html)与[目标网络理论分析](https://proceedings.mlr.press/v202/fellows23a.html)提供了更严谨的讨论。
 
@@ -1031,16 +1002,7 @@ $$\nabla_\theta J=\mathbb E\left[\sum_t\gamma^t\nabla_\theta\log\pi_\theta(A_t\m
 
 它不改变期望梯度的关键在于 $\sum_a\pi(a\mid s)\nabla\log\pi(a\mid s)=\nabla\sum_a\pi(a\mid s)=0$。baseline 可以降低方差，但不是任意选择都必然最优；若它偷偷依赖动作，或者让错误的梯度通过权重流回 Actor，推导条件就被破坏。
 
-${FENCE}mermaid
-flowchart TD
-    P["策略分布采样动作"] --> T["收集完整任务轨迹"]
-    T --> G["计算每步 reward-to-go"]
-    G --> B["减去状态 baseline"]
-    B --> L["回报权重乘动作 log 概率"]
-    L --> U["更新策略参数"]
-    U --> P
-    B --> C["下一章用 Critic 学习 baseline"]
-${FENCE}
+![REINFORCE：用回报与基线形成更新信号](./images/diagrams/chapter-12-diagram-1.webp)
 
 ## 一次更新到底让哪个概率变大？
 

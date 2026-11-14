@@ -1,5 +1,7 @@
 # Bilingual offline exports — v2
 
+> 后续图解更新：本站已将 Mermaid 展示替换为 21 张生成式学术概念图，保留这份历史设计/生成/验证记录。当前接口、双语读图说明和导出规则见 [concept-plates.md](concept-plates.md)。下文的历史图源或解析记录不代表当前页面仍运行绘图引擎。
+
 ## Generated deliverables
 
 `npm run export:book` now writes six files from the current authored content:

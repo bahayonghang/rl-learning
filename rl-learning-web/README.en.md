@@ -8,7 +8,7 @@ Both editions contain the complete chapters, derivations, code explanations, exe
 
 **7 modules · 24 chapters · 154 derivation steps · 8 mathematical primer units · 14 experiments · 1 kiln workbench · 36 glossary entries**
 
-**9 research articles · 27 figures: 20 Mermaid diagrams and 7 original concept illustrations · 59 deduplicated resources retaining 77 citation IDs**
+**9 research articles · 28 figures: 21 academic concept plates and 7 preserved original illustrations · 59 deduplicated resources retaining 77 citation IDs**
 
 ![Conceptual hierarchy of information, operational decisions, regulatory control and the kiln process](public/images/operations-stack.webp)
 
@@ -77,7 +77,7 @@ The research section has nine independently addressable articles under `#/resear
 
 The articles connect OAM-Net, QC-MTWaveSME, NURBS trajectories and PG-MOEA/D-IEpsilon with explicit assumptions, required logs, baselines, ablations and failure criteria. They do not present a proposed combination as a demonstrated industrial result. See the [source review](docs/research-review-v2.md) and [independent mathematics review](docs/review-mathematics-v2.md).
 
-The figure library at `#/gallery` provides topic, format and keyword filters. Its 20 Mermaid diagrams retain editable source and SVG downloads. Seven image-generated illustrations comprise four research concepts and three original course guides. The separate identity icon is not counted among these 27 entries. Illustrative curves, network nodes and process layouts are not measured performance, exact network architecture or engineering drawings; accompanying equations, text and diagrams carry the precise claims. See [new illustration and identity provenance](docs/illustrations-v2.md) for the complete generation prompts; the [original three illustrations' provenance](docs/illustrations.md) remains available.
+The figure library at `#/gallery` provides topic, format and keyword filters for 28 images: 21 compact academic concept plates and seven preserved scene/teaching illustrations. Every preview displays the image directly. Native dialogs support enlargement, actual size, Escape and focus restoration; full-size WebP files can also be opened or downloaded. Short English image labels are shared across locales, while complete titles, alt text, panel guides and exact relationships are available as selectable Chinese or English text. Curves, network nodes and layouts are conceptual, not measured performance or engineering specifications. The separate identity icon is not a gallery entry. See the [concept-plate contract](docs/concept-plates.md), [previous illustration provenance](docs/illustrations-v2.md) and [original course artwork](docs/illustrations.md).
 
 The resource catalogue at `#/references` supports topic, evidence-type and keyword filters. Resources are merged by URL while retaining all 77 citation IDs and links to relevant chapters and research articles. Global search covers the current edition's chapters, derivations, primer, research and glossary; resource and figure filters have their own indexes.
 
@@ -130,7 +130,7 @@ Run `just book` or `npm run export:book`. One invocation generates six files:
 | Site-download textbook | [public/rl-atlas-tutorial.md](public/rl-atlas-tutorial.md) | [public/rl-atlas-tutorial.en.md](public/rl-atlas-tutorial.en.md) |
 | Standalone research review | [public/code/research-review.md](public/code/research-review.md) | [public/code/research-review.en.md](public/code/research-review.en.md) |
 
-Each textbook includes all chapters, primer units, derivation steps, checkpoint feedback, exercise answers, research articles, glossary entries and the corresponding workbench appendix. Equations, code, Mermaid source, concept-figure explanations and source-ID mappings are retained. The review contains all nine research articles. Keep referenced image/code directories when relocating the files, and use a Markdown reader with mathematics and Mermaid support.
+Each textbook includes all chapters, primer units, derivation steps, checkpoint feedback, exercise answers, research articles, glossary entries and the corresponding workbench appendix. Equations, code, WebP concept plates, complete panel/relationship guides and source-ID mappings are retained. The review contains all nine research articles. Keep referenced image/code directories, including `images/diagrams/`, when relocating the files. A reader needs mathematics and ordinary image support; no diagram runtime is required. Individual chapter downloads use canonical repository asset URLs and require network access to the synchronized main branch for images and code. Textbook/review Markdown downloads reference companion image files; complete offline use requires retaining the corresponding repository folders.
 
 Edit the canonical content, not these generated files. `npm run build` only checks types and bundles the application; `just build` and `just check` refresh exports first.
 
@@ -144,13 +144,14 @@ Edit the canonical content, not these generated files. `npm run build` only chec
 | `src/figures.ts`, `src/source-catalogue.ts`, `src/catalogue.ts` | Figure/resource records, classifications and search views |
 | `src/learning.ts`, `src/primer-calculators.ts` | Derivation readers and primer interactions |
 | `src/labs/`, `src/kiln/` | Numerical experiments and the teaching workbench |
-| `src/render.ts` | Sanitized Markdown, KaTeX, Mermaid and code tools |
+| `src/render.ts`, `src/figure-view.ts` | Sanitized Markdown, KaTeX, reading guides, native image viewer and code tools |
+| `src/concept-plates.ts`, `src/content-download.ts` | Stable concept-plate registry, bilingual semantics and portable chapter downloads |
 | `src/storage.ts` | Versioned local preferences and completion |
 | `src/main.ts`, `src/style.css`, `src/atlas.css` | Routing, shell, themes and responsive layout |
 | `scripts/export-book.ts` | Complete bilingual exports |
 | `justfile`, `scripts/ensure-deps.mjs` | Cross-platform startup and dependency preparation |
 
-The site uses Vite, TypeScript, Marked, DOMPurify, KaTeX, Mermaid and Lucide. Mathematical and illustration assets are provided locally by the build. Keep chapter, lab, research and source IDs stable. Changes to meaning, numbers or exercises must be reflected in both editions.
+The site uses Vite, TypeScript, Marked, DOMPurify, KaTeX and Lucide. Mathematical and illustration assets are provided locally by the build. Only registered local images receive trusted reading-guide and viewer controls. Mermaid is no longer imported or run; the existing dependency versions are retained. Keep chapter, lab, research and source IDs stable. Changes to meaning, numbers or exercises must be reflected in both editions.
 
 `just check` refreshes exports, runs numerical/content checks and builds with strict type checking. Tests do not launch a browser. Use a real browser to verify locale switching, feedback, cleanup, search, diagrams, narrow layouts and both themes; consult [v2 verification records](docs/verification-v2.md) for their recorded scope. Translation records cover [foundations](docs/translation-foundations.md) and [advanced material](docs/translation-advanced.md).
 

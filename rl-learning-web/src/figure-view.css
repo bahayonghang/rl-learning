@@ -1,0 +1,50 @@
+/* Generated concept plates keep their compact composition in every view. */
+.figure-image-button{position:relative;display:block;width:100%;min-width:0;padding:0;border:0;border-radius:0;background:#fffaf2;color:#3e2c23;cursor:zoom-in;text-align:left;overflow:hidden}
+.figure-image-button>img{display:block;width:100%;height:auto;max-width:100%;object-fit:contain;margin:0}
+.figure-image-button:focus-visible{outline:3px solid var(--brand,var(--accent));outline-offset:-4px}
+.figure-image-hint{position:absolute;right:12px;bottom:10px;background:#fffaf2ed;color:#654b3d;border:1px solid #dacfc3;border-radius:5px;padding:5px 9px;font-size:10px;line-height:1.5;pointer-events:none}
+.figure-actions{display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;min-width:0}
+.figure-actions :is(a,button){display:inline-flex;align-items:center;min-height:40px;font-size:11px;line-height:1.6;color:var(--brand,var(--accent));text-decoration:none;overflow-wrap:anywhere}
+.figure-actions :is(a,button):hover{text-decoration:underline;text-underline-offset:4px}
+.figure-preview{height:auto!important;aspect-ratio:3/2;overflow:hidden}
+.figure-preview>.figure-image-button{height:100%}
+.figure-preview>.figure-image-button>img{width:100%;height:100%;object-fit:contain}
+.figure-preview .figure-image-hint{font-size:9px;bottom:8px;right:8px}
+.figure-detail-art>.figure-image-button>img{max-height:760px;object-fit:contain}
+.figure-detail-caption>.figure-actions{margin-left:auto}
+.concept-regions .figure-region-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.concept-regions .figure-region-grid article{display:block;padding:21px}
+.concept-regions .figure-region-grid article>span{display:block;font-family:inherit;font-size:14px;font-weight:600;line-height:1.6;margin-bottom:10px}
+.concept-plate{display:block;max-width:100%;margin:28px 0;border:1px solid var(--line);border-radius:var(--radius,12px);overflow:hidden;background:var(--surface);color:var(--ink);break-inside:avoid}
+.concept-plate figcaption{padding:18px 21px 16px;font-size:12px;line-height:1.85}
+.concept-plate-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 16px;margin-bottom:8px;font-size:10px;line-height:1.6}
+.concept-plate-label{color:var(--brand,var(--accent));letter-spacing:.5px;font-weight:600}
+.concept-plate-title{display:block;font-size:15px;line-height:1.7;font-weight:600}
+.prose .concept-plate figcaption p,.concept-plate figcaption p{margin:8px 0 0;font-size:12px;line-height:1.9;color:var(--muted)}
+.concept-plate .figure-actions{margin:8px 0}
+.concept-plate-guide{margin:7px 0 0;border-top:1px solid var(--line);padding-top:9px}
+.concept-plate-guide summary{cursor:pointer;color:var(--brand,var(--accent));font-size:12px;font-weight:600;line-height:1.8;padding:6px 0;min-height:36px}
+.concept-plate-guide dl{margin:10px 0 0;display:grid;grid-template-columns:1fr;gap:11px}
+.concept-plate-guide dl>div{padding-left:13px;border-left:2px solid var(--line)}
+.concept-plate-guide dt{font-size:12px;font-weight:600;color:var(--ink);line-height:1.8}
+.concept-plate-guide dd{margin:3px 0 0;font-size:12px;line-height:1.9;color:var(--muted)}
+.concept-plate-relationship>b{display:block;margin:15px 0 5px;color:var(--ink)}
+.concept-plate .concept-plate-notice{font-size:10px!important;border-top:1px solid var(--line);padding-top:10px;margin-top:14px!important}
+.roadmap-map .concept-plate{margin:0;border:0;background:transparent}
+.roadmap-map .concept-plate figcaption{padding:17px 0 0}
+.roadmap-map .concept-plate .figure-image-button{border:1px solid var(--line);border-radius:8px}
+.figure-viewer{width:min(1280px,calc(100vw - 36px));max-width:none;max-height:calc(100dvh - 36px);margin:auto;padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);box-shadow:0 16px 70px #0003;overflow:auto}
+.figure-viewer::backdrop{background:#17120db8;backdrop-filter:blur(3px)}
+.figure-viewer-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px}
+.figure-viewer-header h2{font-size:18px;font-weight:600;line-height:1.6;max-width:75%;overflow-wrap:anywhere}
+.figure-viewer-header .button{flex-shrink:0;min-height:40px;font-size:12px;gap:8px}
+.figure-viewer-tools{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;font-size:12px;line-height:1.7}
+.figure-viewer-tools .button{min-height:38px;font-size:11px}
+.figure-viewer-tools a{color:var(--brand,var(--accent));min-height:38px;display:flex;align-items:center}
+.figure-viewer-help{font-size:11px;line-height:1.7;color:var(--muted);margin:8px 0 13px}
+.figure-viewer-canvas{max-height:calc(100dvh - 215px);max-width:100%;overflow:auto;background:#fffaf2;border:1px solid var(--line);border-radius:7px;overscroll-behavior:contain}
+.figure-viewer-canvas>img{display:block;width:auto;height:auto;max-width:100%;max-height:calc(100dvh - 215px);object-fit:contain;margin:0 auto}
+.figure-viewer.is-original .figure-viewer-canvas>img{width:auto;max-width:none;max-height:none;height:auto;margin:0}
+@media(max-width:1050px){.concept-regions .figure-region-grid{grid-template-columns:1fr}.concept-regions .figure-region-grid article{padding:19px}}
+@media(max-width:760px){.concept-plate figcaption{padding:16px}.concept-plate-title{font-size:14px}.figure-detail-caption>.figure-actions{margin-left:0;width:100%}.figure-actions{gap:4px 16px}.figure-actions :is(a,button){min-height:44px}.figure-image-hint{font-size:9px;right:8px;bottom:8px}.figure-viewer{width:calc(100vw - 18px);max-height:calc(100dvh - 18px);padding:13px;border-radius:10px}.figure-viewer-header{gap:9px}.figure-viewer-header h2{font-size:14px;max-width:72%}.figure-viewer-tools{font-size:11px;gap:6px 13px}.figure-viewer-help{font-size:10px}.figure-viewer-canvas{max-height:calc(100dvh - 230px)}.figure-viewer:not(.is-original) .figure-viewer-canvas>img{max-height:calc(100dvh - 230px)}}
+@media print{.figure-image-hint,.figure-actions,.concept-plate-heading>a,.figure-viewer{display:none!important}.concept-plate-guide>summary{display:none}.concept-plate-guide>*{display:block}.concept-plate{break-inside:avoid}.figure-image-button{background:white}.concept-plate figcaption{padding:10px}}

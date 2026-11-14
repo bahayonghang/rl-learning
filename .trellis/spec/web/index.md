@@ -2,7 +2,7 @@
 
 ## Scope and boundaries
 
-`rl-learning-web/` is the standalone Chinese/English educational website. Each registered locale must provide complete learning, research and interactive content. It uses Vite, strict TypeScript, semantic HTML/CSS, local numerical experiments, KaTeX and Mermaid. It is not the production kiln environment or a training backend. Follow the existing algorithm, environment and experiment contracts when discussing the industrial case; never invent data, baseline outcomes or field performance.
+`rl-learning-web/` is the standalone Chinese/English educational website. Each registered locale must provide complete learning, research and interactive content. It uses Vite, strict TypeScript, semantic HTML/CSS, local numerical experiments, KaTeX and original generated WebP concept plates. It is not the production kiln environment or a training backend. Follow the existing algorithm, environment and experiment contracts when discussing the industrial case; never invent data, baseline outcomes or field performance.
 
 ## Content contracts
 
@@ -15,7 +15,7 @@
 - Export all guide steps and feedback, including collapsed content, plus the mathematical primer, research, glossary and full kiln model appendix. In Markdown symbol tables, convert TeX norm/absolute-value pipes to named `\Vert` / `\vert` delimiters before table escaping; check the resulting parsed table columns.
 - Distinguish a reward received at step H (`gamma^(H-1)` under the first-reward convention) from the tail value after H steps (`gamma^H`). Display approximations honestly and avoid substituting rounded intermediate numbers into an apparent exact equality.
 - Research articles live in `src/research/` with full bilingual bodies and stable IDs. Separate primary theory, simulation, first-party operational reports and proposed research; names of existing models do not establish the performance of a new combination.
-- Figure records combine diagrams extracted from the active chapter/research edition with original concept illustrations. Translate titles, explanations and regions. Do not interpret illustrated curves or node counts as measured performance or exact architecture; preserve original illustration provenance.
+- Figure records use the typed `src/concept-plates.ts` registry for 21 generated academic plates, plus seven preserved original illustrations. Keep stable IDs and standard authored Markdown image references. Translate titles, alt text, panel explanations and exact relationship guides; shared raster labels are short English terms. Do not interpret illustrative curves or node counts as measured performance or exact architecture. The original Mermaid inventory is provenance only, never live content or a download control.
 - Resource URLs may be deduplicated, but every source ID and its chapter/research relationships must survive. Translate explanatory notes while retaining searchable bibliographic identities.
 
 ## Locales and persistence
@@ -35,9 +35,9 @@
 
 ## Rendering and interaction
 
-- Protect both backtick and tilde code fences before processing math. Sanitize authored Markdown HTML; keep KaTeX `trust: false` and Mermaid strict security.
+- Protect both backtick and tilde code fences before processing math. Sanitize authored Markdown HTML; keep KaTeX `trust: false`. Decorate only exact registered local image paths after sanitization; never import a diagram runtime or interpret authored code as a drawing.
 - Use relative assets and hash routes so static subpath hosting works. Downloadable examples must exist in `public/code/`.
-- Keep mobile sidebar links inert while hidden. Preserve visible focus, dialog labels, reduced-motion behavior and readable narrow layouts.
+- Keep mobile sidebar links inert while hidden. Preserve visible focus, dialog labels, reduced-motion behavior and readable narrow layouts. Image dialogs must close with Escape, restore focus, clean up on route changes and constrain actual-size scrolling inside the dialog. Keep intrinsic image dimensions and compact aspect ratios to avoid layout shifts or long narrow diagrams.
 - `saveState` can fail. Never overwrite failure feedback with a success message or imply that a current-session preference has been durably saved.
 - Search results must reflect the visible query when a dialog reopens and the active content edition. Resource and figure filtering must preserve meaningful classifications and source-page links.
 - Learning state stays in the current browser. Do not imply cross-device sync or cloud storage.
@@ -51,6 +51,6 @@
 
 ## Quality checks
 
-From `rl-learning-web/`, run `just check` (export, tests, strict type check and production build), or the equivalent `npm run export:book`, `npm test`, and `npm run build`. Tests cover curriculum/guide integrity in both locales, authored formulas and diagrams, parsed export tables, source-ID relationships, local resource links and actual numerical behavior. Use a supported browser preview for interaction/layout checks, including language switches, both themes, research navigation and catalogue filters; unit checks alone do not establish browser compatibility.
+From `rl-learning-web/`, run `just check` (export, tests, strict type check and production build), or the equivalent `npm run export:book`, `npm test`, and `npm run build`. Tests cover curriculum/guide integrity in both locales, authored formulas, every original figure occurrence, bilingual reading guides, actual WebP dimensions, parsed export tables, source-ID relationships, local resource links and actual numerical behavior. Figure replacements must preserve the non-figure prose/equations/code and numerical kernels; update the baseline only for a separately justified content change. Use a supported browser preview for interaction/layout checks, including language switches, both themes, research navigation and catalogue filters; unit checks alone do not establish browser compatibility.
 
 Read `rl-learning-web/docs/verification-v2.md` for the current acceptance scope (the original run remains in `docs/verification.md`) and `docs/labs.md` for experiment limitations. Preserve illustration provenance in `docs/illustrations.md` and `docs/illustrations-v2.md`. Do not commit `node_modules/`, `dist/`, temporary QA fixtures or generated caches.

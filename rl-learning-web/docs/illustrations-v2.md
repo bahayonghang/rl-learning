@@ -1,5 +1,7 @@
 # Research illustrations and identity — November 2026
 
+> 后续图解更新：本站已将 Mermaid 展示替换为 21 张生成式学术概念图，保留这份历史设计/生成/验证记录。当前接口、双语读图说明和导出规则见 [concept-plates.md](concept-plates.md)。下文的历史图源或解析记录不代表当前页面仍运行绘图引擎。
+
 These five original raster assets were generated with the session's built-in image generation tool on 2026-11-14. The assets use a warm paper, charcoal and terracotta palette. They are conceptual teaching illustrations, not measured plots, precise network specifications, industrial evidence or an Anthropic/Claude identity.
 
 The existing three course-orientation images and their original provenance remain documented in [illustrations.md](illustrations.md). The site identity is not counted among the 27 figures in the visual library.

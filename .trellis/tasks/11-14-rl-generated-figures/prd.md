@@ -1,0 +1,5 @@
+# Generated academic figures
+
+Replace every active Mermaid figure with an original imagegen-created academic concept image: 11 course diagrams, 9 research diagrams and 1 learning roadmap. Keep the existing bilingual course, numeric experiments and scholarly content. Images must use compact landscape or near-square compositions, legible short labels, consistent warm academic styling and clear visual groups, avoiding elongated chains. Exact relationships, mathematical definitions and assumptions remain available as selectable bilingual text beside images. No invented measurements or production-performance claims.
+
+Acceptance: all 21 assets generated individually, inspected and saved in public/images/diagrams; all 42 locale occurrences plus the retired research-body occurrence replaced; no live Mermaid rendering; updated figure search/detail/download behavior; matching six book/review exports; image load and 375px layout checks; just check passes; latest repository synchronized without disturbing user changes.

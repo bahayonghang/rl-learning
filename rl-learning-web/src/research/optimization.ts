@@ -17,18 +17,7 @@ export const optimizationPages: ResearchPage[] = [
 
 这四部分可以独立改进：动作表示决定维数与光滑性，评价模型决定预测偏差，约束比较决定候选存活规则，搜索器决定有限预算如何分配。把失败统一归因于“进化算法不懂时序”会掩盖真正的瓶颈。[MPC 原理](https://sites.engineering.ucsb.edu/~jbraw/mpc/)并不要求求解器一定是梯度算法；[动态多目标优化原始研究](https://doi.org/10.1109/TEVC.2004.831456)也早已讨论变化的 Pareto 集与控制问题。
 
-~~~mermaid
-flowchart TD
-  O["最新观测与历史"] --> P["候选点或轨迹种群"]
-  P --> M["动力学与指标评价"]
-  M --> C["可行性与约束违反量"]
-  C --> S["非支配排序或分解比较"]
-  S --> V["选择、交叉与变异"]
-  V --> P
-  S --> B["偏好选取与第一步候选"]
-  B --> G["五层门控与内层控制"]
-  G --> O
-~~~
+![进化优化：搜索循环与滚动执行](./images/diagrams/research-evolution-diagram-1.webp)
 
 ## 2. NSGA-II：先比较等级，再保留分布
 
@@ -95,18 +84,7 @@ In kiln optimization, a population member may encode the next increments of six 
 
 Representation, evaluation, feasibility comparison and search are distinct design choices. They determine dimension and smoothness, predictive bias, survival rules and allocation of a finite computational budget. Attributing every failure to “evolutionary algorithms cannot handle time” hides these differences. [MPC theory](https://sites.engineering.ucsb.edu/~jbraw/mpc/) does not require a gradient-based optimizer, and [original dynamic multiobjective research](https://doi.org/10.1109/TEVC.2004.831456) already considered moving Pareto sets and control applications.
 
-~~~mermaid
-flowchart TD
-  O["Latest observations and history"] --> P["Point or trajectory population"]
-  P --> M["Dynamics and metric evaluation"]
-  M --> C["Feasibility and violation"]
-  C --> S["Ranking or decomposition"]
-  S --> V["Selection and variation"]
-  V --> P
-  S --> B["Preference and first proposal"]
-  B --> G["Five gates and inner control"]
-  G --> O
-~~~
+![Evolutionary optimization: search and rolling execution](./images/diagrams/research-evolution-diagram-1.webp)
 
 ## 2. NSGA-II: compare rank, then preserve spread
 

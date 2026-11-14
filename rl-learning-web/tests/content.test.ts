@@ -87,14 +87,6 @@ function formulasIn(markdown: string): { expression: string; display: boolean }[
   return formulas;
 }
 
-function diagramsIn(markdown: string): string[] {
-  const diagrams: string[] = [];
-  marked.walkTokens(marked.lexer(markdown), token => {
-    if (token.type === 'code' && 'lang' in token && token.lang?.split(/\s+/)[0] === 'mermaid' && 'text' in token) diagrams.push(token.text);
-  });
-  return diagrams;
-}
-
 function assertLocalResources(markdown: string, relativeTo: string): number {
   let checked = 0;
   marked.walkTokens(marked.lexer(markdown), token => {
@@ -170,7 +162,7 @@ test('every chapter contains substantive exercise answers, not empty details', (
 });
 
 test('math extraction excludes both kinds of fenced code and inline code', () => {
-  const fixture = ['~~~python', 'price = "$unclosed"', '~~~', '```mermaid', 'A["$not math$"] --> B', '```', '`$also code$`', '', '$x+1$', '', '$$y^2$$'].join('\n');
+  const fixture = ['~~~python', 'price = "$unclosed"', '~~~', '```text', 'literal = "$not math$"', '```', '`$also code$`', '', '$x+1$', '', '$$y^2$$'].join('\n');
   assert.deepEqual(formulasIn(fixture), [{ expression: 'x+1', display: false }, { expression: 'y^2', display: true }]);
   assert.throws(() => formulasIn('A broken formula: $x + 1'), /unclosed/);
 });
@@ -190,43 +182,16 @@ test('all authored mathematical expressions render with strict KaTeX errors', t 
   t.diagnostic(`Rendered ${count} formulas across ${authoredDocuments.length} authored documents, including all guides and mathematics units.`);
 });
 
-test('every Mermaid source parses with a real DOM and strict security', async t => {
-  const { JSDOM } = await import('jsdom');
-  const dom = new JSDOM('<!doctype html><html><body></body></html>');
-  const previous = new Map<string, PropertyDescriptor | undefined>();
-  for (const [key, value] of Object.entries({ window: dom.window, document: dom.window.document })) {
-    previous.set(key, Object.getOwnPropertyDescriptor(globalThis, key));
-    Object.defineProperty(globalThis, key, { configurable: true, writable: true, value });
+test('authored documents use images without live diagram-source fences', t => {
+  let count = 0;
+  for (const document of authoredDocuments) {
+    marked.walkTokens(marked.lexer(document.body), token => {
+      if (token.type === 'code' && 'lang' in token) assert.notEqual(token.lang?.trim(), 'mermaid', document.name);
+      if (token.type === 'image' && 'href' in token && String(token.href).startsWith('./images/diagrams/')) count++;
+    });
   }
-  try {
-    // DOMPurify obtains window during import, so Mermaid must load after JSDOM setup.
-    const { default: mermaid } = await import('mermaid');
-    mermaid.initialize({ startOnLoad: false, securityLevel: 'strict', flowchart: { htmlLabels: false } });
-    const representedModules = new Set<number>();
-    let count = 0;
-    for (const chapter of chapters) {
-      for (const diagram of diagramsIn(chapter.body)) {
-        const parsed = await mermaid.parse(diagram);
-        assert.ok(parsed, `invalid Mermaid in chapter ${chapter.id}`);
-        representedModules.add(chapter.module);
-        count++;
-      }
-    }
-    for (const module of modules) assert.ok(representedModules.has(module.id), `module ${module.id} needs a Mermaid diagram`);
-    for (const document of authoredDocuments.slice(chapters.length)) {
-      for (const diagram of diagramsIn(document.body)) {
-        assert.ok(await mermaid.parse(diagram), `invalid Mermaid in ${document.name}`);
-        count++;
-      }
-    }
-    t.diagnostic(`Parsed ${count} Mermaid diagrams covering all ${modules.length} modules and the new learning material.`);
-  } finally {
-    for (const [key, descriptor] of previous) {
-      if (descriptor) Object.defineProperty(globalThis, key, descriptor);
-      else Reflect.deleteProperty(globalThis, key);
-    }
-    dom.window.close();
-  }
+  assert.equal(count, 40);
+  t.diagnostic(`Checked ${count} localized authored concept images; both roadmap editions use the shared registered roadmap plate.`);
 });
 
 test('downloadable chapter and exported-book links resolve to actual files', t => {

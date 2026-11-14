@@ -1,0 +1,5 @@
+# Design
+
+Use generated raster concept plates for visual explanation, with concise English academic labels shared across languages and complete localized titles, alt text, panel legends and relationship descriptions in HTML/Markdown. These concept illustrations do not specify exact tensors, wiring or numerical values; exact semantics live in the accompanying text and existing equations. Preserve stable gallery IDs, add roadmap-learning as the 21st replacement, retain the seven existing original illustrations.
+
+A typed plate registry maps stable IDs to ./images/diagrams/ID.webp and localized reading guides. Authored bodies reference plates explicitly instead of Mermaid code; the renderer decorates images with accessible captions, detail links and download/open-original controls. Gallery filters distinguish academic concept plates from scene illustrations. No browser-time diagram generation or dependency additions. Export rewriting resolves all image paths from docs, public books and public/code reviews. Keep generation prompts and provenance, including scientific checks, with the task documentation.

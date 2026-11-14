@@ -35,7 +35,7 @@ test('nine research studies have complete bilingual bodies and all citation IDs 
  for(const [index,page] of researchPages.entries()){
   assert.equal(page.order,index+1);assert.ok(page.sources.length>=3);
   for(const id of page.sources)assert.ok(sources.has(id),`${page.id}: unknown ${id}`);
-  for(const locale of ['zh-CN','en'] as const){const body=page.body[locale];assert.ok(body.length>2000,`${page.id}/${locale}: outline instead of full text`);assert.ok((body.match(/^## /gm)??[]).length>=4);assert.match(body,/(?:```|~~~)mermaid/);if(page.group!=='outlook')assert.match(body,/\$/);}
+  for(const locale of ['zh-CN','en'] as const){const body=page.body[locale];assert.ok(body.length>2000,`${page.id}/${locale}: outline instead of full text`);assert.ok((body.match(/^## /gm)??[]).length>=4);assert.match(body,/!\[[^\n]+\]\(\.\/images\/diagrams\/research-[a-z-]+-diagram-1\.webp\)/);if(page.group!=='outlook')assert.match(body,/\$/);}
   assert.doesNotMatch(page.body.en,/[\u3400-\u9fff]/u,`untranslated research ${page.id}`);
  }
 });
@@ -54,11 +54,11 @@ test('source catalogue deduplicates links without losing IDs and supports compou
  await edition('zh-CN');
 });
 
-test('visual library includes real chapter/research diagrams with stable bilingual identities and existing assets',async()=>{
+test('visual library includes all generated plates with stable bilingual identities and existing assets',async()=>{
  await edition('zh-CN');const chinese=getFigures();await edition('en');const english=getFigures();
  assert.deepEqual(english.map(x=>x.id),chinese.map(x=>x.id));assert.equal(new Set(english.map(x=>x.id)).size,english.length);
- assert.ok(english.filter(x=>x.kind==='diagram').length>=20);assert.equal(english.filter(x=>x.topic==='orientation').length,3);
- for(const figure of english){assert.ok(figure.explanation.length>50);assert.match(figure.href,/^#\//);if(figure.image)assert.ok(statSync(resolve('public',figure.image)).isFile());if(figure.diagram)assert.match(figure.diagram,/^(flowchart|graph|sequenceDiagram|stateDiagram)/);}
+ assert.equal(english.length,28);assert.equal(english.filter(x=>x.kind==='concept').length,21);assert.equal(english.filter(x=>x.kind==='illustration').length,7);assert.equal(english.filter(x=>x.topic==='orientation').length,4);
+ for(const figure of english){assert.ok(figure.explanation.length>50);assert.match(figure.href,/^#\//);assert.ok(statSync(resolve('public',figure.image)).isFile());assert.ok(figure.alt.length>40);}
  for(const id of ['operations-stack','evolution-search','safe-agent','world-model'])assert.equal(english.find(x=>x.id===id)?.regions?.length,4);
  await edition('zh-CN');
 });

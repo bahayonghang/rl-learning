@@ -1,0 +1,169 @@
+[
+  {
+    "id": "research-evolution-diagram-1",
+    "prompt": "Use case: scientific-educational. Asset type: a compact academic concept plate in a bilingual reinforcement-learning textbook for cement process operations. Create an information-rich, elegant, high-resolution landscape 3:2 raster illustration. Clean flat two-dimensional editorial scientific graphics with precise-looking typography, restrained warm white #FFFAF2 paper, terracotta #B56746, warm charcoal, pale taupe and muted slate. Generous margins, aligned modules, large legible short English labels, consistent thin strokes, very subtle depth at most. This is a conceptual illustration, not exact mathematical or engineering wiring: detailed relationships and formulas are typeset in the accompanying text. Use no equations, tensor dimensions, quantitative plots, numeric axes, fabricated measurements or performance values. Do not draw a tall poster or long single-row chain. Do not invent unlabeled cross-connections. No people, robots, plants, logos, watermark or cover-art slogans. Title exactly \"Evolutionary search in a rolling decision\". Compact two-zone composition. Left two thirds: a well-balanced circular search workspace of four clearly numbered modules, reading clockwise: \"01 Candidates\" with a small fan of smooth setpoint trajectory cards; \"02 Model evaluation\" with a restrained kiln-model block and fuel/quality icon pair; \"03 Feasibility & ranking\" with a sieve and ranked candidate cards; \"04 Selection & variation\" with two parent cards yielding a new candidate card. Use four short broad curved arrows around the search workspace, no inner tangled arrows. Right third: a separate execution column with a chosen trajectory card labeled \"Preference\", a small first-segment highlight labeled \"First proposal\", and a kiln control console labeled \"Gates & control\". A slim bottom information strip labeled \"New observations\" visually returns toward the search workspace. The search circle must not imply candidate evaluations are real plant trials. All trajectory marks are tiny conceptual textures without axes or data. Keep the composition compact and analytically readable.",
+    "target": "public/images/diagrams/research-evolution-diagram-1.webp",
+    "status": "accepted",
+    "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-f169528f-8240-4a7c-8cf0-2f121336c402.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "review": "Inspected generated output: compact search cycle and separate rolling-execution column; legible labels, four ordered search regions, preference and first-step selection visible. Curves/ranks are conceptual, not measured Pareto results.",
+    "initialSource": "/workspace/scratch/f3c5a68994fd/generated_images/exec-f169528f-8240-4a7c-8cf0-2f121336c402.png",
+    "edits": [],
+    "format": "WebP",
+    "compression": {
+      "quality": 88,
+      "method": 6
+    },
+    "bytes": 127912
+  },
+  {
+    "id": "research-sequential-diagram-1",
+    "prompt": "Use case: scientific-educational. Asset type: a compact academic concept plate in a bilingual reinforcement-learning textbook for cement process operations. Create an information-rich, elegant, high-resolution landscape 3:2 raster illustration. Clean flat two-dimensional editorial scientific graphics with precise-looking typography, restrained warm white #FFFAF2 paper, terracotta #B56746, warm charcoal, pale taupe and muted slate. Generous margins, aligned modules, large legible short English labels, consistent thin strokes, very subtle depth at most. This is a conceptual illustration, not exact mathematical or engineering wiring: detailed relationships and formulas are typeset in the accompanying text. Use no equations, tensor dimensions, quantitative plots, numeric axes, fabricated measurements or performance values. Do not draw a tall poster or long single-row chain. Do not invent unlabeled cross-connections. No people, robots, plants, logos, watermark or cover-art slogans. Title exactly \"Two ways to propose the next setpoint\". A balanced symmetric two-lane comparative schematic inside a landscape page. Top shared observation tray, timestamped signal cards and one lab vial with a clock, labeled \"Available history\". Middle left warm-terracotta module labeled \"Learned policy\" with a small abstract neural motif and a bounded increment card; middle right muted-slate module labeled \"Model planner\" with a compact model block and three alternative short trajectory cards. A small centered word \"OR\" makes clear these are alternative proposal mechanisms. Below both a shared screening frame labeled \"Execution gate\", below that a small control console and kiln labeled \"Control & process\". Two bottom feedback cards labeled \"Reward\" and \"Separate costs\". A sparse broad outside feedback loop returns newly observed information to the top. Add a tiny learning/calibration notebook at the side labeled \"Update from experience\". Do not directly connect a neural policy to coal valves or depict safety as guaranteed. Three compact horizontal bands, no long chain, no exact network wiring.",
+    "target": "public/images/diagrams/research-sequential-diagram-1.webp",
+    "status": "accepted",
+    "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-ecde0b3d-2616-4087-baa8-3f9475e8b81b.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "review": "Inspected corrected full image. Reward states energy use/action smoothness; separate constraint costs state quality/combustion oxygen. Policy/planner alternative, gated execution and feedback are visually clear. No quantitative performance claims.",
+    "initialSource": "/workspace/scratch/f3c5a68994fd/generated_images/exec-7060bf26-5758-446e-b2ca-dbc10fbc1d52.png",
+    "edits": [
+      {
+        "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-7060bf26-5758-446e-b2ca-dbc10fbc1d52.png",
+        "prompt": "Use case: precise-object-edit. Edit this existing academic concept illustration. Preserve the title, layout, colors, all upper modules and all other text exactly. Change ONLY the bottom two outcome cards, which currently confuse reward and constraint costs. Left bottom card: heading exactly \"Reward\"; description exactly \"Energy use and action smoothness\". Remove every mention of high-quality from the reward card. Right bottom card: heading exactly \"Constraint costs\"; description exactly \"Quality and combustion oxygen\". Remove the existing text about individual operating costs, energy, material and emissions from that right card. These are independent quality/oxygen constraint costs, not economic operating costs. Keep text clear and legible, same compact landscape composition, no other content changes.",
+        "reason": "First draft added incorrect reward/constraint examples; replace them with project-aligned energy/smoothness reward and quality/oxygen costs."
+      }
+    ],
+    "format": "WebP",
+    "compression": {
+      "quality": 88,
+      "method": 6
+    },
+    "bytes": 135096
+  },
+  {
+    "id": "research-architecture-diagram-1",
+    "prompt": "Use case: scientific-educational. Asset type: a compact academic concept plate in a bilingual reinforcement-learning textbook for cement process operations. Create an information-rich, elegant, high-resolution landscape 3:2 raster illustration. Clean flat two-dimensional editorial scientific graphics with precise-looking typography, restrained warm white #FFFAF2 paper, terracotta #B56746, warm charcoal, pale taupe and muted slate. Generous margins, aligned modules, large legible short English labels, consistent thin strokes, very subtle depth at most. This is a conceptual illustration, not exact mathematical or engineering wiring: detailed relationships and formulas are typeset in the accompanying text. Use no equations, tensor dimensions, quantitative plots, numeric axes, fabricated measurements or performance values. Do not draw a tall poster or long single-row chain. Do not invent unlabeled cross-connections. No people, robots, plants, logos, watermark or cover-art slogans. Title exactly \"Supervisory learning architecture\". Use a compact architectural concept plate with three columns and two rows of modules, clear numbered regions, no crossing wires. Top-left \"01 Available inputs\": short history strips, missing-data mask tiles and an assay vial beside a clock. Top-middle \"02 Representation\": two modest abstract modules labeled \"History encoder\" and \"Soft sensor\". Top-right \"03 Proposal\": a small network motif and bounded slider card labeled \"Actor request\". Lower-left \"04 Evaluation\": visually distinct twin terracotta evaluation blocks labeled \"Reward critics\" and one muted-slate stack labeled \"Cost critics\", clearly conceptual not a network count specification. Lower-middle \"05 Execution\": a compact five-part screening object labeled \"Gates\", then a physical setpoint card labeled \"Executed increment\". Lower-right \"06 Feedback\": miniature kiln control console, sensor report and logbook labeled \"Process & log\". Sparse short directional visual cues may suggest information, evaluation and return feedback, but no detailed computation arrows or tensor shapes. Requested and executed cards must look different; execution approval does not imply a universal safety guarantee. No math, no fake data plot.",
+    "target": "public/images/diagrams/research-architecture-diagram-1.webp",
+    "status": "accepted",
+    "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-5720f489-ca8e-4cd4-859c-2fa9b057d448.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "review": "Inspected corrected image. All six erroneous inter-panel arrows removed; image is now an explicitly numbered module overview with no implied execution bypass. Input/history/soft sensor/requested action/critics/gates/executed increment/process log labels legible. Exact paths supplied in bilingual text.",
+    "initialSource": "/workspace/scratch/f3c5a68994fd/generated_images/exec-7ecc11d0-1dbc-4e8c-b1a1-c914f3c047bc.png",
+    "edits": [
+      {
+        "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-7ecc11d0-1dbc-4e8c-b1a1-c914f3c047bc.png",
+        "prompt": "Use case: precise-object-edit. This academic illustration is a numbered MODULE OVERVIEW, not a sequential computation flow. Preserve the existing title, six panel positions, panel numbers, labels, all internal objects, colors and typography. Remove EVERY dark arrow connecting one numbered panel to another across the gutters. Specifically remove the arrows 01-to-02, 02-to-03, 03-to-06, 06-to-05, 05-to-04 and 04-to-01. Leave those gutters clean warm-white. Do not add any new arrow, line, label or connector. Keep internal small neural links within panel 03 only, because those are a conceptual texture. No other change. The exact scientific relationships will be described outside the raster in selectable text; an erroneous circular flow must not appear here.",
+        "reason": "Generated external ring incorrectly placed process feedback before execution gate. Remove all inter-panel arrows; retain a compact numbered module overview with exact dependencies in text."
+      }
+    ],
+    "format": "WebP",
+    "compression": {
+      "quality": 88,
+      "method": 6
+    },
+    "bytes": 129312
+  },
+  {
+    "id": "research-evidence-diagram-1",
+    "prompt": "Use case: scientific-educational. Asset type: a compact academic concept plate in a bilingual reinforcement-learning textbook for cement process operations. Create an information-rich, elegant, high-resolution landscape 3:2 raster illustration. Clean flat two-dimensional editorial scientific graphics with precise-looking typography, restrained warm white #FFFAF2 paper, terracotta #B56746, warm charcoal, pale taupe and muted slate. Generous margins, aligned modules, large legible short English labels, consistent thin strokes, very subtle depth at most. This is a conceptual illustration, not exact mathematical or engineering wiring: detailed relationships and formulas are typeset in the accompanying text. Use no equations, tensor dimensions, quantitative plots, numeric axes, fabricated measurements or performance values. Do not draw a tall poster or long single-row chain. Do not invent unlabeled cross-connections. No people, robots, plants, logos, watermark or cover-art slogans. Title exactly \"What does the evidence support?\". Academic evidence-map illustration with a short centered top strip \"Claim + primary source\", then three equal-width evidence columns; no ranking pyramid. Left column labeled \"Theory & simulation\": theorem manuscript and a simulated miniature kiln inside a bounded screen. Middle column labeled \"Plant data & models\": timestamped logs, data table cards and a small surrogate model block. Right column labeled \"Physical operation\": real opaque kiln silhouette with a signed action log and an operator control-console icon, no person. All three columns meet a broad bottom review panel labeled \"Assumptions · Controls · Scope\", holding three small check cards and one question card. Beneath that two separated small outcomes labeled \"Supported claim\" and \"Open questions\". Use short converging strokes into the review panel; no arrows implying theory automatically becomes deployment. This should look like a restrained journal review framework, beautifully aligned, legible and comfortably spaced. No performance statistics or invented experimental plots.",
+    "target": "public/images/diagrams/research-evidence-diagram-1.webp",
+    "status": "accepted",
+    "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-b69c2dbd-af87-444b-961a-ad4a6cf1b91b.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "review": "Inspected full image. Three equal evidence categories, shared assumptions/controls/scope review and supported/open outcome split. Legible labels and no simulated-to-deployment implication; figures represent evidence types, not project field results.",
+    "initialSource": "/workspace/scratch/f3c5a68994fd/generated_images/exec-b69c2dbd-af87-444b-961a-ad4a6cf1b91b.png",
+    "edits": [],
+    "format": "WebP",
+    "compression": {
+      "quality": 88,
+      "method": 6
+    },
+    "bytes": 161746
+  },
+  {
+    "id": "research-open-problems-diagram-1",
+    "prompt": "Use case: scientific-educational. Asset type: a compact academic concept plate in a bilingual reinforcement-learning textbook for cement process operations. Create an information-rich, elegant, high-resolution landscape 3:2 raster illustration. Clean flat two-dimensional editorial scientific graphics with precise-looking typography, restrained warm white #FFFAF2 paper, terracotta #B56746, warm charcoal, pale taupe and muted slate. Generous margins, aligned modules, large legible short English labels, consistent thin strokes, very subtle depth at most. This is a conceptual illustration, not exact mathematical or engineering wiring: detailed relationships and formulas are typeset in the accompanying text. Use no equations, tensor dimensions, quantitative plots, numeric axes, fabricated measurements or performance values. Do not draw a tall poster or long single-row chain. Do not invent unlabeled cross-connections. No people, robots, plants, logos, watermark or cover-art slogans. Title exactly \"Model-based decisions need independent checks\". Landscape academic concept illustration organized as a compact learning loop and a separate evaluation lane. Upper-left a real-data archive labeled \"Time-separated logs\". Upper-middle a group of three small model boxes labeled \"Model ensemble\". Upper-right calibrated uncertainty cards labeled \"Calibration\". Center: only three short alternative imagined paths of small translucent process-state cards, no axes, labeled \"Short rollouts\". Lower-middle a policy candidate block labeled \"Candidate policy\". Along the bottom a clearly separate validation bench with unseen regime cards and a fault warning icon labeled \"Held-out evaluation\". Lower-left a notebook labeled \"Failure & stop rules\", with a single restrained return arrow to calibration. The real-data archive also has a visibly separate thin path to the held-out evaluation lane; never suggest training and test logs are the same split. Fading of imagined states is purely qualitative. Group modules in a compact 2-by-3 arrangement, avoiding a long snake, big empty gaps and intersecting arrows.",
+    "target": "public/images/diagrams/research-open-problems-diagram-1.webp",
+    "status": "accepted",
+    "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-28718850-2d48-4bbf-a3ce-ee65c9d754f2.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "review": "Inspected edited full image: time-separated training/calibration/final-test splits, bounded CV setpoint increments, supervisory suggestions only, check-calibration wording, final test locked. The development feedback interpretation is clarified by accompanying bilingual text. No direct MV action recommendation.",
+    "initialSource": "/workspace/scratch/f3c5a68994fd/generated_images/exec-ee58215f-fddb-45c0-8da7-8e80dc9fba7c.png",
+    "edits": [
+      {
+        "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-ee58215f-fddb-45c0-8da7-8e80dc9fba7c.png",
+        "prompt": "Use case: precise-object-edit. Make only these scientific wording corrections in this existing illustration, preserving all shapes, layout, colors, arrows and unaffected text. In the Candidate policy panel replace both lines below the heading (including the parenthetical examples about fuel, feed and air settings) with exactly \"Bounded CV setpoint increments\" and on a second line \"Supervisory suggestions only\". Do not mention fuel/feed/air manipulation anywhere in that panel. In the Model ensemble panel replace \"Multiple process models to capture modeling uncertainty\" with \"Compare model predictions and disagreement\". In the rightmost small Calibration tile replace \"Calibrated\" with \"Check calibration\". In the Time-separated logs panel replace its explanatory paragraph with \"Separate training, calibration and final test splits\". In the Held-out evaluation panel replace \"Independent validation on later, unseen operating regimes\" with \"Evaluate unseen regimes; keep the final test locked\". No other changes, no new words or formulas."
+      }
+    ],
+    "format": "WebP",
+    "compression": {
+      "quality": 88,
+      "method": 6
+    },
+    "bytes": 138970
+  },
+  {
+    "id": "research-agenda-diagram-1",
+    "prompt": "Use case: scientific-educational. Asset type: a compact academic concept plate in a bilingual reinforcement-learning textbook for cement process operations. Create an information-rich, elegant, high-resolution landscape 3:2 raster illustration. Clean flat two-dimensional editorial scientific graphics with precise-looking typography, restrained warm white #FFFAF2 paper, terracotta #B56746, warm charcoal, pale taupe and muted slate. Generous margins, aligned modules, large legible short English labels, consistent thin strokes, very subtle depth at most. This is a conceptual illustration, not exact mathematical or engineering wiring: detailed relationships and formulas are typeset in the accompanying text. Use no equations, tensor dimensions, quantitative plots, numeric axes, fabricated measurements or performance values. Do not draw a tall poster or long single-row chain. Do not invent unlabeled cross-connections. No people, robots, plants, logos, watermark or cover-art slogans. Title exactly \"From research modules to falsifiable hypotheses\". A compact scientific research design board, landscape 3:2, balanced typography. Top shared input panel \"Data available at decision time\" with timestamp and sensor cards. Below a shared representation panel labeled \"State · Quality · Reliability\", with three small distinct submodules. Middle row has two equal candidate columns: left \"Evolutionary teacher\" with smooth candidate trajectory cards, right \"Offline policy\" with actor and value-learning motifs. One subtle short dashed bridge from teacher to policy labeled \"Candidate guidance\"; this must indicate a proposed research interface, not established improvement. Bottom shared bench labeled \"Common gates & paired evaluation\" with a five-part gate symbol and two comparable simulated kiln cards. At bottom-right a report card labeled \"Support or refute\", with check and cross symbols, and a broad outside review loop toward the representation and candidate modules. No actual reward plots, no efficacy claim, no production deployment. Favor grouped bands, not a tall flowchart.",
+    "target": "public/images/diagrams/research-agenda-diagram-1.webp",
+    "status": "accepted",
+    "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-aee553f4-d3e1-4322-b3c6-d4b832a31684.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "review": "Inspected edited full image: five gates explicitly Data, State, Model/OOD, Rate/curvature, Bounds/authority; teacher searches CV setpoint trajectories and value learning estimates return/constraint costs. Two simulation candidates and support/refute outcomes make this a proposed evaluation design, not demonstrated performance.",
+    "initialSource": "/workspace/scratch/f3c5a68994fd/generated_images/exec-52f7a2cc-c54a-4293-8c2b-b33ec01f80ef.png",
+    "edits": [
+      {
+        "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-52f7a2cc-c54a-4293-8c2b-b33ec01f80ef.png",
+        "prompt": "Use case: precise-object-edit. Edit ONLY the following incorrect text in this existing academic research illustration; preserve all layout, colors, objects and other wording. In the five-gate row, keep \"Gate 1\", \"Gate 2\", \"Gate 3\", \"Gate 4\", \"Gate 5\". Their labels must be, in that order: \"Data\"; \"State\"; \"Model / OOD\"; \"Rate / curvature\"; \"Bounds / authority\". Use two lines for a label if needed and keep it readable. This replaces the incorrect Quality, Reliability, Safety gate labels. In Evolutionary teacher, replace \"Search candidate operating trajectories in process state space\" with exactly \"Search candidate CV setpoint trajectories\". In Value learning replace \"Learn a state value to evaluate decisions\" with exactly \"Estimate return and constraint costs\". Do not add any other text, equation, wire or plot. Preserve the original compact landscape composition."
+      }
+    ],
+    "format": "WebP",
+    "compression": {
+      "quality": 88,
+      "method": 6
+    },
+    "bytes": 171374
+  },
+  {
+    "id": "roadmap-learning",
+    "prompt": "Use case: scientific-educational. Asset type: a compact academic concept plate in a bilingual reinforcement-learning textbook for cement process operations. Create an information-rich, elegant, high-resolution landscape 3:2 raster illustration. Clean flat two-dimensional editorial scientific graphics with precise-looking typography, restrained warm white #FFFAF2 paper, terracotta #B56746, warm charcoal, pale taupe and muted slate. Generous margins, aligned modules, large legible short English labels, consistent thin strokes, very subtle depth at most. This is a conceptual illustration, not exact mathematical or engineering wiring: detailed relationships and formulas are typeset in the accompanying text. Use no equations, tensor dimensions, quantitative plots, numeric axes, fabricated measurements or performance values. Do not draw a tall poster or long single-row chain. Do not invent unlabeled cross-connections. No people, robots, plants, logos, watermark or cover-art slogans. Title exactly \"A connected route through reinforcement learning\". Create an academic learning map, not a marketing cover or long timeline. Four clearly numbered zones on a spacious two-by-two grid. Top-left \"01 Foundations\": small probability tokens, a state-action-reward loop and a simple notebook; short sublabels \"Probability\" and \"MDP\". Top-right \"02 Value & policy\": two parallel tracks labeled \"Bellman / DQN\" and \"Policy gradients\", represented by a value table and a policy network icon. Bottom-right \"03 Algorithms & experiments\": two compact modules labeled \"PPO / SAC\" and \"Independent evaluation\", with a policy comparison bench. Bottom-left \"04 Industrial research\": three aligned cards labeled \"Offline learning\", \"World models\", and \"Constraints\", ending in a modest research-proposal notebook. Four restrained clockwise linking arrows show progression between the four zones without suggesting the topics form one exclusive prerequisite chain. Keep all four zones equal visual weight. Use meaningful educational objects, ample whitespace, no decorative robot, no long single-row sequence, no formulas or fake charts.",
+    "target": "public/images/diagrams/roadmap-learning.webp",
+    "status": "accepted",
+    "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-7498fba6-5728-4f00-b97a-2e3c64b2c4ee.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "review": "Inspected edited full image: compact four-zone learning map; State/Action/Next state + reward cards avoid false MDP timing. Independent evaluation is an empty protocol checklist (same data, same budget, held-out regimes), not fabricated policy scores.",
+    "initialSource": "/workspace/scratch/f3c5a68994fd/generated_images/exec-77f09fbc-5af1-461d-9d2d-2ea0f4f2cd07.png",
+    "edits": [
+      {
+        "source": "/workspace/scratch/f3c5a68994fd/generated_images/exec-77f09fbc-5af1-461d-9d2d-2ea0f4f2cd07.png",
+        "prompt": "Use case: precise-object-edit. Preserve the four-zone learning map layout, title, colors, short labels and all unaffected objects. Make exactly two corrections. First, inside Foundations replace the small three-oval state/action/reward cycle and its arrows with a compact stack of three clean cards, labeled exactly \"State\", \"Action\", and \"Next state + reward\"; no arrows inside this small concept icon. Keep the label \"MDP\" below it. Second, in the bottom-right Independent evaluation subpanel remove the three colored horizontal performance bars and the Policy A / Policy B / Policy C rows entirely. Replace that little table with a neutral checklist titled exactly \"Evaluation protocol\" and three equally styled rows labeled exactly \"Same data\", \"Same budget\", \"Held-out regimes\". All three rows have empty square boxes, not success ticks or measured scores. No bars, no quantitative rankings or fake comparison results. Do not change any other region."
+      }
+    ],
+    "format": "WebP",
+    "compression": {
+      "quality": 88,
+      "method": 6
+    },
+    "bytes": 129900
+  }
+]

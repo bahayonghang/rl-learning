@@ -16,20 +16,7 @@ export const reinforcementPages: ResearchPage[] = [
 
 对于烧成，上层动作始终是 CV 设定值增量；动态评价中应包含内层 DCS/APC 的响应。学到一个保持设定值的动作，并不意味着过程停止变化：原料、传热、反应、冷却及扰动仍然继续。把“当前煤耗最低”直接当作长期最优，或者把“拒绝动作”实现成冻结仿真，都改变了原来要研究的过程。[项目契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-  D["已到达的信号与化验"] --> H["历史或信念状态"]
-  H --> P["策略产生候选增量"]
-  H --> O["模型规划产生候选增量"]
-  P --> G["门控得到执行增量"]
-  O --> G
-  G --> K["内层控制与过程推进"]
-  K --> R["能耗回报与独立约束成本"]
-  K --> D
-  R --> L["价值学习或模型校准"]
-  L --> P
-  L --> O
-~~~
+![序列决策：历史、候选与延迟反馈](./images/diagrams/research-sequential-diagram-1.webp)
 
 ## 2. MDP 是条件独立假设，不是把一行数据命名为 state
 
@@ -93,20 +80,7 @@ Let $h_t$ denote the information currently available. A one-step optimizer choos
 
 In this kiln problem, supervisory actions remain CV setpoint increments, and dynamic evaluation includes the response of the inner DCS/APC loops. A hold-setpoint action does not stop the process: feed, heat transfer, reactions, cooling and disturbances continue. Equating lowest present fuel use with long-run optimality, or implementing rejected actions by freezing the simulator, changes the problem. [Project contract](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-  D["Arrived signals and assays"] --> H["History or belief state"]
-  H --> P["Policy proposes increments"]
-  H --> O["Model planner proposes increments"]
-  P --> G["Gate determines execution"]
-  O --> G
-  G --> K["Inner control and process advance"]
-  K --> R["Energy rewards and separate costs"]
-  K --> D
-  R --> L["Value learning or model calibration"]
-  L --> P
-  L --> O
-~~~
+![Sequential decisions: history, proposals and delayed feedback](./images/diagrams/research-sequential-diagram-1.webp)
 
 ## 2. An MDP is a conditional-independence assumption
 
@@ -180,18 +154,7 @@ First fix the available information, action interface, preferences, constraints 
 
 设计从数据路径开始，而不是从“堆更多模块”开始。快速 DCS 信号、当前 CV 设定值、原料率值、缺失掩码、已发布化验及其年龄进入时序编码器；软测量输出质量估计与经验证的不确定性描述。Actor 读取当时可用的表示，产生归一化候选增量，五层门控决定真正执行什么。奖励、成本和下一时刻观测形成训练记录。隐藏的当前真实质量只属于仿真评价或后来取得的监督标签，不得偷偷进入历史决策输入。[项目契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-  D["已到达信号、掩码与化验年龄"] --> E["历史编码与质量软测量"]
-  E --> A["有界 Actor：候选增量"]
-  E --> Q["双奖励 Critic 与成本 Critic"]
-  A --> G["五层门控：执行增量"]
-  G --> P["CV 设定值与内层控制"]
-  P --> R["下一观测、奖励、成本与日志"]
-  R --> D
-  R --> Q
-  Q --> A
-~~~
+![可审计的策略系统：信息权限与执行路径](./images/diagrams/research-architecture-diagram-1.webp)
 
 这是建议的研究接口，不是已经训练和部署的工业网络。模块名称 OAM-Net、QC-MTWaveSME、MC3/OOD 在后续研究页中作为可接入接口讨论；此图不推断这些已有模块的层数、参数量、损失配方或未公开实验成绩。
 
@@ -270,18 +233,7 @@ MBPO 从真实状态分叉较短模型推演来减轻长序列模型误差，原
 
 Begin with data paths, not with a list of fashionable modules. Fast DCS signals, current CV setpoints, raw-meal features, missingness masks, released assays and their ages enter a temporal encoder. A soft sensor supplies a quality estimate and a separately validated uncertainty description. The actor uses information available at decision time to propose normalized increments. Five gates determine execution. Rewards, costs and the next observation form training records. Hidden current quality belongs to simulator evaluation or subsequently obtained supervision; it must not leak into reconstructed historical policy inputs. [Project contract](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-  D["Arrived signals, masks and assay age"] --> E["History encoder and soft sensor"]
-  E --> A["Bounded actor: requested increment"]
-  E --> Q["Twin reward critics and cost critics"]
-  A --> G["Five gates: executed increment"]
-  G --> P["CV setpoints and inner control"]
-  P --> R["Next observation, reward, costs and log"]
-  R --> D
-  R --> Q
-  Q --> A
-~~~
+![An auditable agent: information rights and execution paths](./images/diagrams/research-architecture-diagram-1.webp)
 
 This is a proposed research interface, not a trained or deployed industrial network. OAM-Net, QC-MTWaveSME and MC3/OOD are discussed later as possible interfaces. This diagram does not reconstruct their layer counts, parameter counts, loss recipes or unpublished experimental results.
 

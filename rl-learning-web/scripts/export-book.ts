@@ -17,6 +17,7 @@ import { modulesEn } from '../src/content/en/modules';
 import { researchSourcesEn } from '../src/content/en/research-sources';
 import { researchPages, reviewSources } from '../src/research/content';
 import { illustratedFigure } from '../src/figures';
+import { conceptPlates, conceptPlateReference, expandConceptPlateReferences } from '../src/concept-plates';
 import { getLocale, setLocale, type Locale } from '../src/i18n';
 import type { ContentBundle } from '../src/content/localized';
 import type { ResearchPage } from '../src/research/types';
@@ -76,7 +77,7 @@ const bookAnchor = (id: string, destination: OfflineDestination, locale: Locale)
 /** Rewrite authored links and heading depth, while preserving both fenced-code syntaxes verbatim. */
 export function formatBody(markdown: string, destination: OfflineDestination, locale: Locale = 'zh-CN', headingShift = 2): string {
   let fence: { marker: string; length: number } | undefined;
-  return markdown.trim().split('\n').map(line => {
+  return expandConceptPlateReferences(markdown, locale).trim().split('\n').map(line => {
     const delimiter = /^ {0,3}(`{3,}|~{3,})(.*)$/.exec(line);
     if (delimiter) {
       const marker = delimiter[1][0];
@@ -117,7 +118,7 @@ function conceptFigure(page: ResearchPage, destination: OfflineDestination, loca
     `**${figure.title}**`, '', figure.explanation, '',
     `**${t('逐区读图', 'Read the regions')}**`, '',
     ...(figure.regions ?? []).map(region => `- **${region.label}** · ${region.description}`), '',
-    t('这些是原创概念插图，不是实测曲线、辨识模型或工程施工图；精确关系以本篇公式和 Mermaid 为准。', 'These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and Mermaid diagrams specify the exact relationships.'), '',
+    t('这些是原创概念插图，不是实测曲线、辨识模型或工程施工图；精确关系以本篇公式和可选择的双语读图说明为准。', 'These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and selectable bilingual reading guides specify the exact relationships.'), '',
   ].join('\n');
 }
 
@@ -181,7 +182,7 @@ export function buildBook(destination: BookDestination, locale: Locale = 'zh-CN'
   const guideById = new Map(edition.guides.map(guide => [guide.chapterId, guide]));
   const parts: string[] = [
     t('# RL Atlas｜强化学习：从直觉到决策', '# RL Atlas | Reinforcement Learning: From Intuition to Decisions'), '',
-    t('> 完整中文教程 · 8 个数学准备单元 · 24 组水泥案例逐步推导 · 7 个模块 / 24 章 · 9 篇完整研究专题 · 概念词典、工作台模型、公式、Mermaid、代码与练习解答。', '> Complete English edition · 8 mathematics units · 24 guided cement-case derivations · 7 modules / 24 chapters · 9 complete research studies · Glossary, workbench model, equations, Mermaid, code, exercises, and answers.'), '',
+    t('> 完整中文教程 · 8 个数学准备单元 · 24 组水泥案例逐步推导 · 7 个模块 / 24 章 · 9 篇完整研究专题 · 概念词典、工作台模型、公式、学术概念图解、代码与练习解答。', '> Complete English edition · 8 mathematics units · 24 guided cement-case derivations · 7 modules / 24 chapters · 9 complete research studies · Glossary, workbench model, equations, academic concept plates, code, exercises, and answers.'), '',
     t('本教程沿着“问题 → 数学 → 算法 → 代码 → 实验 → 可信结论”的路径组织。先学会解释一个决策问题，再理解每一种算法为什么出现、解决什么问题、还留下哪些限制。', 'The learning path is problem → mathematics → algorithm → code → experiment → credible conclusion. First explain the decision problem, then understand why each algorithm exists, what it addresses, and which limitations remain.'), '',
     t('教程结构受到用户提供的公开推文[《强化学习难点，90% 初学者都搞错了！！》](https://mp.weixin.qq.com/s/x3Jb7imrQtbavvU1vH8Tww)启发；正文、数值例题、练习与代码为独立编写，参考资料列在各章及文末。此文件包含完整教材正文，不依赖购买原推文中的课程。', 'The structure was inspired by the user-provided public article [“Reinforcement-learning pitfalls that 90% of beginners misunderstand”](https://mp.weixin.qq.com/s/x3Jb7imrQtbavvU1vH8Tww). The text, worked examples, exercises, and code were independently authored, with references in each chapter and at the end. This file contains the complete textbook and requires no purchase of the article’s advertised course.'), '',
     `## ${t('如何使用这本教程', 'How to use this tutorial')}`, '',
@@ -191,8 +192,8 @@ export function buildBook(destination: BookDestination, locale: Locale = 'zh-CN'
     t('- **保留单位与时间。** 工业案例使用运行指标设定值增量，保留下层控制与安全门控，不连接真实设备。', '- **Preserve units and timing.** Industrial examples use operational setpoint increments, retain inner control and execution gates, and have no connection to real equipment.'),
     t('- **检查原始资料。** 数学与接口来源均可追溯；阅读时保留定理假设和实验边界。', '- **Inspect primary sources.** Mathematical and interface references are traceable; retain theorem assumptions and experimental limits.'), '',
     t('建议按个人时间在六至八周内完成一轮：第一至二周处理交互、概率和表格方法；第三周理解 DQN；第四至五周学习 Actor-Critic、PPO 与 SAC；第六周完成环境和评估设计；最后一至二周将离线、模型与约束方法连接到自己的课题。该安排是学习建议，不是学习效果或课时保证。', 'A suggested first pass takes six to eight weeks, adjusted to your schedule: interaction, probability, and tabular methods in weeks one and two; DQN in week three; actor–critic, PPO, and SAC in weeks four and five; environment and evaluation design in week six; then one or two weeks connecting offline, model-based, and constrained methods to your research. This is a planning suggestion, not a learning-outcome or completion-time guarantee.'), '',
-    t('数学保留为 LaTeX，流程图保留为 Mermaid 图源。支持这些格式的 Markdown 阅读器可直接渲染。插图使用相对路径，移动文件时请保留配套 images 与 code 目录结构；正文与全部推导不依赖在线翻译。', 'Mathematics remains in LaTeX and flowcharts in Mermaid source for compatible Markdown readers. Illustrations use relative paths: preserve the accompanying images and code directory structure when moving files. The complete text and derivations require no online translation.'), '',
-    `## ${t('目录', 'Contents')}`, '', `- [${t('数学准备：从符号到可计算的例子', 'Mathematics: from symbols to calculable examples')}](#math-primer)`,
+    t('数学保留为 LaTeX，概念图解以 WebP 图片配合完整双语读图说明呈现。图片使用相对路径，移动文件时请保留配套 images（包括 diagrams 子目录）与 code 目录结构。图片中的英文短标签由可选择的正文解释；全部推导不依赖在线翻译。', 'Mathematics remains in LaTeX; concept plates use WebP images with complete bilingual reading guides. Preserve the relative images directory (including diagrams) and code directory when moving files. Selectable text explains the short English labels in the images; all derivations are available without online translation.'), '',
+    `## ${t('目录', 'Contents')}`, '', `- [${t('课程学习路线', 'Course learning roadmap')}](#roadmap)`, `- [${t('数学准备：从符号到可计算的例子', 'Mathematics: from symbols to calculable examples')}](#math-primer)`,
   ];
   for (const module of edition.modules) {
     parts.push(`- [${t('模块', 'Module')} ${module.id} · ${module.title}](#module-${module.id})`);
@@ -201,6 +202,8 @@ export function buildBook(destination: BookDestination, locale: Locale = 'zh-CN'
   parts.push(`- [${t('水泥工作台：模型、时间与实验', 'Cement workbench: model, timing, and experiments')}](#kiln-workbench)`, `- [${t('运行指标决策研究', 'Operational decision research')}](#research)`);
   for (const page of researchPages) parts.push(`  - [${String(page.order).padStart(2, '0')} · ${page.title[locale]}](#research-${page.id})`);
   parts.push(`- [${t('概念与符号词典', 'Concept and symbol glossary')}](#glossary)`, `- [${t('完整参考资料', 'Complete references')}](#references)`, `- [${t('来源标识索引', 'Source-ID index')}](#source-index)`, '', '---', '');
+
+  parts.push('<a id="roadmap"></a>', '', `## ${t('课程学习路线', 'Course learning roadmap')}`, '', formatBody(conceptPlateReference('roadmap-learning', locale), destination, locale), '', '---', '');
 
   parts.push('<a id="math-primer"></a>', '', `## ${t('数学准备：从符号到可计算的例子', 'Mathematics: from symbols to calculable examples')}`, '', edition.primerIntroduction, '');
   for (const unit of edition.primerUnits) {
@@ -249,7 +252,7 @@ export function buildBook(destination: BookDestination, locale: Locale = 'zh-CN'
 export function buildResearchReview(locale: Locale = 'zh-CN'): string {
   const t = label(locale), records = localizedReviewSources(locale), references = groupReferences(records);
   const parts = [t('# 运行指标决策研究：从目标、进化优化到强化学习', '# Operational Decision Research: From Objectives and Evolutionary Optimization to Reinforcement Learning'), '',
-    t('> 九篇完整双语专题的中文版本。原理、算例、公式、Mermaid、四幅概念插图及分区说明、原始资料与研究议程全部保留。', '> English edition of nine complete bilingual studies. Includes reasoning, worked examples, equations, Mermaid, four concept illustrations with region explanations, primary references, and a research agenda.'), '',
+    t('> 九篇完整双语专题的中文版本。原理、算例、公式、九张学术概念图解、四幅既有研究插画及完整读图说明、原始资料与研究议程全部保留。', '> English edition of nine complete bilingual studies. Includes reasoning, worked examples, equations, nine academic concept plates, four existing research illustrations with complete reading guides, primary references, and a research agenda.'), '',
     t('本文件可以独立阅读。章节、数学与工作台链接指向同目录树中的完整教材；插图位于上一级 images 目录。复制离线资料时请保留这些相对位置。', 'This review can be read independently. Chapter, mathematics, and workbench links lead to the complete textbook in the same directory tree; illustrations are in the parent images directory. Preserve these relative locations when copying the offline materials.'), '',
     `- [${t('完整强化学习教材', 'Complete reinforcement-learning textbook')}](../rl-atlas-tutorial${suffix(locale)}.md)`,
     `- [${t('完整烧成工作台模型', 'Complete kiln workbench model')}](${bookAnchor('kiln-workbench', 'code', locale)})`, '',
@@ -280,7 +283,7 @@ export async function exportBook(): Promise<void> {
   const allSources = [...sources, ...localizedReviewSources('zh-CN')];
   console.log(JSON.stringify({ locales: ['zh-CN', 'en'], chapters: chapters.length, modules: modules.length, mathUnits: primerUnits.length,
     guides: chapterGuides.length, derivationSteps: chapterGuides.reduce((sum, guide) => sum + guide.steps.length, 0), glossaryTerms: glossary.length,
-    researchStudies: researchPages.length, conceptIllustrations: researchPages.filter(page => page.figure).length,
+    researchStudies: researchPages.length, academicConceptPlates: conceptPlates.length, conceptIllustrations: researchPages.filter(page => page.figure).length,
     sourceIds: allSources.length, uniqueReferenceUrls: groupReferences(allSources).length, reviewSourceIds: reviewSources.length, outputs: results }, null, 2));
 }
 

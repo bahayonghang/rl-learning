@@ -13,18 +13,7 @@ export const formulationPages: ResearchPage[] = [
 
 本项目研究的接口位于上层运行决策：每五分钟提出有界 CV 设定值增量。它沿用内层调节、权限和安全门，不直接输出给煤量或风机开度。比较一个直接操纵执行器的 RL 与一个只修改设定值的优化器，无法把结果差异全部归因于学习算法，因为控制权限、动态响应和约束已经不同。[项目契约](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-    P["生产计划与产品要求"] --> O["经济目标与操作边界"]
-    O --> S["上层设定值决策"]
-    M["状态估计与质量信息"] --> S
-    S --> G["门控与执行授权"]
-    G --> C["DCS 与 PID 或 APC"]
-    C --> K["烧成物理过程"]
-    K --> M
-    K --> A["指标核算与审计"]
-    A --> O
-~~~
+![运行决策分层：信息、目标与执行权限](./images/diagrams/research-history-diagram-1.webp)
 
 ## 2. 稳态 RTO 将经济要求变成操作点
 
@@ -86,18 +75,7 @@ A cement control system is not one black box connecting sensors directly to actu
 
 This repository places RL at the supervisory layer: every five minutes it proposes bounded CV setpoint increments, retaining the inner control loops, authorization and safety checks. It does not directly command coal feeders or fan openings. Comparing direct-actuator RL with an optimizer restricted to setpoints changes both the algorithm and the available control authority. A resulting performance difference cannot be attributed to learning alone. [Project contract](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-    P["Production and product requirements"] --> O["Economic objectives and boundaries"]
-    O --> S["Supervisory setpoint decision"]
-    M["State and quality information"] --> S
-    S --> G["Gate and authorization"]
-    G --> C["DCS and PID or APC"]
-    C --> K["Physical kiln process"]
-    K --> M
-    K --> A["Indicator accounting and audit"]
-    A --> O
-~~~
+![Operational hierarchy: information, targets and authority](./images/diagrams/research-history-diagram-1.webp)
 
 ## 2. Steady-state RTO converts economics into an operating point
 
@@ -207,15 +185,7 @@ f-CaO 提供熟料质量相关信息，但不代表所有产品性质都由一�
 
 操作员可能在原料变难烧、质量已有恶化迹象时提高温度设定值。历史上“高设定值与高 f-CaO 同时出现”，可以是补救动作和困难工况共同造成，不能直接断言提高设定值使质量变差。下图表达这个假设结构；它是诊断思路，不是已识别的工艺因果图。
 
-~~~mermaid
-flowchart TD
-    D["原料与负荷变化"] --> A["操作员设定值建议"]
-    D --> Q["后续质量与能耗"]
-    H["既有历史与隐含判断"] --> A
-    H --> Q
-    A --> X["内层控制后的过程状态"]
-    X --> Q
-~~~
+![因果混杂：为什么日志相关性不是动作效果](./images/diagrams/research-indicators-diagram-1.webp)
 
 应先检查时间先后、测量来源、操作员当时可见的信息和联合动作覆盖，再决定能做哪类比较。匹配工况、分层分析或因果模型可以减少部分偏差，却不能证明已经控制全部隐藏因素。世界模型拟合误差很低，也可能只是复现历史操作规律，并未识别改变策略后的后果。
 
@@ -282,15 +252,7 @@ Keep sample time $\tau$, result-availability time $v$ and decision time $t$. Onl
 
 An operator may raise a temperature setpoint because feed has become harder to burn or because deterioration is already suspected. A historical association between high setpoints and high free lime can reflect corrective action under difficult conditions. It does not establish that raising the setpoint caused poorer quality. The following is a hypothesized diagnostic structure, not an identified causal model of the plant.
 
-~~~mermaid
-flowchart TD
-    D["Feed and load changes"] --> A["Operator setpoint proposal"]
-    D --> Q["Later quality and energy"]
-    H["History and hidden judgment"] --> A
-    H --> Q
-    A --> X["Process after inner control"]
-    X --> Q
-~~~
+![Confounding: why logged association is not an action effect](./images/diagrams/research-indicators-diagram-1.webp)
 
 Check temporal order, measurement provenance, information available to the operator and joint action coverage before deciding which comparisons are identifiable. Matching, stratification and causal models can address some biases without proving that all hidden confounding has disappeared. A world model can fit historical data closely while mainly reproducing the old operating policy, rather than identifying the consequences of changing it.
 
@@ -363,16 +325,7 @@ $$\min_u F(u)\quad\text{subject to}\quad E(u)\le\varepsilon_E,\quad g(u)\le0.$$
 
 进化约束处理中的 epsilon-level，通常是搜索时比较违反程度的容忍水平。它可能暂时让近可行解参与搜索，以免种群过早丢失通向可行区的路径；这不是批准工厂执行同样超限动作。数学搜索中的松弛、产品指标预算和设备硬边界是三个不同概念。
 
-~~~mermaid
-flowchart TD
-    A["候选点或轨迹"] --> F["量纲与时间核算"]
-    F --> C["可行性检查"]
-    C -->|"不可行"| R["拒绝或继续搜索"]
-    C -->|"可行"| P["Pareto 比较"]
-    P --> W["偏好或预算选择"]
-    W --> G["独立执行审核"]
-    R --> A
-~~~
+![从指标核算到可行性与 Pareto 选择](./images/diagrams/research-objectives-diagram-1.webp)
 
 ## 5. 硬、软、机会和期望约束各控制什么
 
@@ -439,16 +392,7 @@ An electricity budget of 100 excludes A. B then has lower fuel use than C, so B 
 
 An epsilon-level in evolutionary constraint handling instead concerns how violation is compared during search. It can temporarily retain nearly feasible candidates to preserve routes into the feasible region. That does not authorize an equally violating action on equipment. Search tolerance, product-budget preference and hard operational boundaries are different concepts.
 
-~~~mermaid
-flowchart TD
-    A["Candidate point or trajectory"] --> F["Units and time accounting"]
-    F --> C["Feasibility check"]
-    C -->|"Infeasible"| R["Reject or continue search"]
-    C -->|"Feasible"| P["Pareto comparison"]
-    P --> W["Preference or budget selection"]
-    W --> G["Independent execution review"]
-    R --> A
-~~~
+![From metric accounting to feasibility and Pareto choice](./images/diagrams/research-objectives-diagram-1.webp)
 
 ## 5. Hard, soft, chance and expected constraints differ
 

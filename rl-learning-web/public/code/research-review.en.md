@@ -1,6 +1,6 @@
 # Operational Decision Research: From Objectives and Evolutionary Optimization to Reinforcement Learning
 
-> English edition of nine complete bilingual studies. Includes reasoning, worked examples, equations, Mermaid, four concept illustrations with region explanations, primary references, and a research agenda.
+> English edition of nine complete bilingual studies. Includes reasoning, worked examples, equations, nine academic concept plates, four existing research illustrations with complete reading guides, primary references, and a research agenda.
 
 This review can be read independently. Chapter, mathematics, and workbench links lead to the complete textbook in the same directory tree; illustrations are in the parent images directory. Preserve these relative locations when copying the offline materials.
 
@@ -52,7 +52,7 @@ Separate measurement, supervisory setpoint decisions, regulatory tracking and th
 - **03** · Decision layer: objectives, constraints and predictions inform temperature or pressure setpoint suggestions.
 - **04** · Information layer: online signals and delayed assays have different timestamps. Use only information available at the decision time.
 
-These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and Mermaid diagrams specify the exact relationships.
+These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and selectable bilingual reading guides specify the exact relationships.
 
 ### 1. Identify the decision before choosing an algorithm
 
@@ -60,18 +60,26 @@ A cement control system is not one black box connecting sensors directly to actu
 
 This repository places RL at the supervisory layer: every five minutes it proposes bounded CV setpoint increments, retaining the inner control loops, authorization and safety checks. It does not directly command coal feeders or fan openings. Comparing direct-actuator RL with an optimizer restricted to setpoints changes both the algorithm and the available control authority. A resulting performance difference cannot be attributed to learning alone. [Project contract](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-    P["Production and product requirements"] --> O["Economic objectives and boundaries"]
-    O --> S["Supervisory setpoint decision"]
-    M["State and quality information"] --> S
-    S --> G["Gate and authorization"]
-    G --> C["DCS and PID or APC"]
-    C --> K["Physical kiln process"]
-    K --> M
-    K --> A["Indicator accounting and audit"]
-    A --> O
-~~~
+<a id="figure-research-history-diagram-1"></a>
+
+![A hierarchy links production requirements, economic targets, supervisory setpoints, gates, inner control and the process, with state information and indicator audits feeding back.](../images/diagrams/research-history-diagram-1.webp)
+
+**Operational hierarchy: information, targets and authority**
+
+Locate the decision layer before comparing RTO, tracking MPC, economic MPC and learned policies.
+
+**Reading guide**
+
+- **Objectives and supervision** · Production requirements define objectives and boundaries; state and quality information support supervisory SP proposals.
+- **Authorization and control** · Proposals pass authorization before DCS and PID/APC track setpoints; the supervisory learner does not directly command actuators.
+- **Two feedback paths** · Process measurements update state information; indicator accounting with explicit units, time and denominators audits operational objectives.
+
+**Exact relationships and boundaries**
+
+Requirements → objectives → SP decision → gate → inner control → process. The process feeds both state/quality information and indicator audits, with audits informing objectives. Distinguish RTO, tracking MPC, economic MPC and learned policies by decision layer and objective.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 ### 2. Steady-state RTO converts economics into an operating point
 
@@ -206,15 +214,26 @@ Keep sample time $\tau$, result-availability time $v$ and decision time $t$. Onl
 
 An operator may raise a temperature setpoint because feed has become harder to burn or because deterioration is already suspected. A historical association between high setpoints and high free lime can reflect corrective action under difficult conditions. It does not establish that raising the setpoint caused poorer quality. The following is a hypothesized diagnostic structure, not an identified causal model of the plant.
 
-~~~mermaid
-flowchart TD
-    D["Feed and load changes"] --> A["Operator setpoint proposal"]
-    D --> Q["Later quality and energy"]
-    H["History and hidden judgment"] --> A
-    H --> Q
-    A --> X["Process after inner control"]
-    X --> Q
-~~~
+<a id="figure-research-indicators-diagram-1"></a>
+
+![A confounding structure shows feed/load and historical judgment affecting both proposals and later outcomes, while proposals act through the regulated process.](../images/diagrams/research-indicators-diagram-1.webp)
+
+**Confounding: why logged association is not an action effect**
+
+Put fuel, electricity, quality, throughput, emissions and stability back into units, boundaries and time before comparing policies.
+
+**Reading guide**
+
+- **Common causes** · Feed, load, history and unrecorded operator judgment can affect both setpoint choice and subsequent quality or energy.
+- **The action pathway** · A proposal passes gates and inner control before process changes can affect later indicators.
+- **Indicator definitions** · Fuel, electricity, quality, throughput, emissions and stability require explicit units, accounting windows and denominators.
+
+**Exact relationships and boundaries**
+
+Feed/load → proposal and → later outcome; history/judgment also affects both. A separate proposal → regulated process → outcome path represents action effects. These shared causes prevent conditional association from automatically identifying intervention effects; a temporal test split alone does not remove confounding.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 Check temporal order, measurement provenance, information available to the operator and joint action coverage before deciding which comparisons are identifiable. Matching, stratification and causal models can address some biases without proving that all hidden confounding has disappeared. A world model can fit historical data closely while mainly reproducing the old operating policy, rather than identifying the consequences of changing it.
 
@@ -306,16 +325,26 @@ An electricity budget of 100 excludes A. B then has lower fuel use than C, so B 
 
 An epsilon-level in evolutionary constraint handling instead concerns how violation is compared during search. It can temporarily retain nearly feasible candidates to preserve routes into the feasible region. That does not authorize an equally violating action on equipment. Search tolerance, product-budget preference and hard operational boundaries are different concepts.
 
-~~~mermaid
-flowchart TD
-    A["Candidate point or trajectory"] --> F["Units and time accounting"]
-    F --> C["Feasibility check"]
-    C -->|"Infeasible"| R["Reject or continue search"]
-    C -->|"Feasible"| P["Pareto comparison"]
-    P --> W["Preference or budget selection"]
-    W --> G["Independent execution review"]
-    R --> A
-~~~
+<a id="figure-research-objectives-diagram-1"></a>
+
+![Candidates pass units/time accounting and feasibility; infeasible proposals return to search, while feasible ones undergo Pareto comparison, preference selection and execution review.](../images/diagrams/research-objectives-diagram-1.webp)
+
+**From metric accounting to feasibility and Pareto choice**
+
+Worked examples separate scaling, preferences, feasibility, chance constraints and soft constraints.
+
+**Reading guide**
+
+- **Scale and feasibility** · Check units, time windows and normalization before determining feasibility under explicit constraints.
+- **Pareto order and preference** · Compare dominance among feasible candidates. A Pareto set usually needs a preference or budget to choose one candidate.
+- **Independent execution review** · A selected candidate still passes execution review. Search tolerances do not themselves authorize an action.
+
+**Exact relationships and boundaries**
+
+Candidate → accounting → feasibility. Reject or continue searching when infeasible; otherwise compare Pareto order, choose a preference and independently review execution. An epsilon-constraint budget differs from epsilon tolerance during evolutionary search. Soft penalties, chance constraints and per-step hard boundaries are distinct.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 ### 5. Hard, soft, chance and expected constraints differ
 
@@ -385,7 +414,7 @@ Evolutionary optimization encodes candidates, evaluates surrogate predictions, c
 - **03** · Comparison: retain feasible candidates with different trade-offs. The curves are not measured Pareto fronts or performance evidence.
 - **04** · Execution: choose with an explicit preference, pass an independent gate, and execute only the current step of the rolling decision.
 
-These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and Mermaid diagrams specify the exact relationships.
+These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and selectable bilingual reading guides specify the exact relationships.
 
 ### 1. Ask what an individual represents before choosing the algorithm
 
@@ -393,18 +422,26 @@ In kiln optimization, a population member may encode the next increments of six 
 
 Representation, evaluation, feasibility comparison and search are distinct design choices. They determine dimension and smoothness, predictive bias, survival rules and allocation of a finite computational budget. Attributing every failure to “evolutionary algorithms cannot handle time” hides these differences. [MPC theory](https://sites.engineering.ucsb.edu/~jbraw/mpc/) does not require a gradient-based optimizer, and [original dynamic multiobjective research](https://doi.org/10.1109/TEVC.2004.831456) already considered moving Pareto sets and control applications.
 
-~~~mermaid
-flowchart TD
-  O["Latest observations and history"] --> P["Point or trajectory population"]
-  P --> M["Dynamics and metric evaluation"]
-  M --> C["Feasibility and violation"]
-  C --> S["Ranking or decomposition"]
-  S --> V["Selection and variation"]
-  V --> P
-  S --> B["Preference and first proposal"]
-  B --> G["Five gates and inner control"]
-  G --> O
-~~~
+<a id="figure-research-evolution-diagram-1"></a>
+
+![Two compact cycles show a population, model evaluation, constraints/ranking and variation; preference selection proposes only the current step before gating and new observations.](../images/diagrams/research-evolution-diagram-1.webp)
+
+**Evolutionary optimization: search and rolling execution**
+
+Separate representation, evaluation, feasibility and search. Derive NSGA-II and MOEA/D, then connect dynamic optimization with MPC and RL.
+
+**Reading guide**
+
+- **Representation and evaluation** · An individual can represent a present point or future trajectory. Dynamics and metric models estimate objectives and violations.
+- **The search loop** · NSGA-II ranking and MOEA/D decomposition are different comparison mechanisms; selection, crossover and mutation create new candidates.
+- **The rolling execution loop** · Choose a preference, submit only the current step to shared gates and inner control, and optimize again with new information.
+
+**Exact relationships and boundaries**
+
+Observation/history → population → model and constraint evaluation → ranking or decomposition → variation → population. The selected branch → first-step proposal → gates/inner control → new observation. Evolutionary search can optimize dynamic trajectories; results depend on the model, budget and fair rolling evaluation.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 ### 2. NSGA-II: compare rank, then preserve spread
 
@@ -510,20 +547,26 @@ Let $h_t$ denote the information currently available. A one-step optimizer choos
 
 In this kiln problem, supervisory actions remain CV setpoint increments, and dynamic evaluation includes the response of the inner DCS/APC loops. A hold-setpoint action does not stop the process: feed, heat transfer, reactions, cooling and disturbances continue. Equating lowest present fuel use with long-run optimality, or implementing rejected actions by freezing the simulator, changes the problem. [Project contract](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-  D["Arrived signals and assays"] --> H["History or belief state"]
-  H --> P["Policy proposes increments"]
-  H --> O["Model planner proposes increments"]
-  P --> G["Gate determines execution"]
-  O --> G
-  G --> K["Inner control and process advance"]
-  K --> R["Energy rewards and separate costs"]
-  K --> D
-  R --> L["Value learning or model calibration"]
-  L --> P
-  L --> O
-~~~
+<a id="figure-research-sequential-diagram-1"></a>
+
+![Arrived information forms history or belief; policy and model-planning alternatives propose actions through shared gates and process, returning separate energy rewards and quality/oxygen costs.](../images/diagrams/research-sequential-diagram-1.webp)
+
+**Sequential decisions: history, proposals and delayed feedback**
+
+Move from a present candidate to a trajectory and a feedback policy, connecting history, assay availability, occupancy, delayed returns and separate constraints.
+
+**Reading guide**
+
+- **Information and proposals** · Use only arrived signals and assays in history/belief. A learned policy and a model planner are alternative proposal generators.
+- **Execution and consequences** · Gate requested increments before changing CV setpoints; inner control and material/thermal inertia determine future response.
+- **Reward and separate costs** · Reward combines normalized fuel/electricity and smoothness; quality and oxygen constraints are recorded as separate costs.
+
+**Exact relationships and boundaries**
+
+Arrived information → history/belief → policy or planner → gated execution → process → next information and separate reward/cost signals. Feedback supports value learning or model calibration. The alternatives need not execute together; expected-cost constraints do not guarantee every step is safe.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 ### 2. An MDP is a conditional-independence assumption
 
@@ -622,33 +665,41 @@ Explain what the history encoder, soft sensor, tanh actor, twin critics, tempera
 
 **History encoder, policy, critics and execution gates**
 
-Encode the available history, generate an increment suggestion, and evaluate it with value/cost critics. The three sliders represent a teaching subset; the full project has six CVs, as specified in the accompanying text. Independent gates determine execution. Node counts are illustrative; the accompanying equations and Mermaid diagrams specify tensors and losses.
+Encode the available history, generate an increment suggestion, and evaluate it with value/cost critics. The three sliders represent a teaching subset; the full project has six CVs, as specified in the accompanying text. Independent gates determine execution. Node counts are illustrative; the accompanying equations and reading guides specify tensors and losses.
 
 **Read the regions**
 
 - **01** · Inputs: historical signals, actions and assay age. A result released in the future cannot be included in the current observation.
 - **02** · Encoder: a temporal network compresses history. A learned representation does not automatically become Markov or causally sufficient.
 - **03** · Policy and evaluation: three sliders represent bounded requested increments for the teaching subset; the full project is not limited to three CVs. The adjacent networks illustrate evaluation modules, not a complete prescription of network count or algorithm.
-- **04** · Gates and process: the five layers check data validity, current state (including quality and oxygen), model confidence/OOD, rate/curvature, and absolute bounds/authorization. A reward penalty does not replace this path.
+- **04** · Gates and process: the five layers check data validity, current state (core CV/PV ranges and oxygen limits), model confidence/OOD, rate/curvature, and absolute bounds/authorization. A reward penalty does not replace this path.
 
-These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and Mermaid diagrams specify the exact relationships.
+These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and selectable bilingual reading guides specify the exact relationships.
 
 ### 1. An architecture diagram is also an information-permission diagram
 
 Begin with data paths, not with a list of fashionable modules. Fast DCS signals, current CV setpoints, raw-meal features, missingness masks, released assays and their ages enter a temporal encoder. A soft sensor supplies a quality estimate and a separately validated uncertainty description. The actor uses information available at decision time to propose normalized increments. Five gates determine execution. Rewards, costs and the next observation form training records. Hidden current quality belongs to simulator evaluation or subsequently obtained supervision; it must not leak into reconstructed historical policy inputs. [Project contract](https://github.com/bahayonghang/rl-learning/blob/main/AGENTS.md)
 
-~~~mermaid
-flowchart TD
-  D["Arrived signals, masks and assay age"] --> E["History encoder and soft sensor"]
-  E --> A["Bounded actor: requested increment"]
-  E --> Q["Twin reward critics and cost critics"]
-  A --> G["Five gates: executed increment"]
-  G --> P["CV setpoints and inner control"]
-  P --> R["Next observation, reward, costs and log"]
-  R --> D
-  R --> Q
-  Q --> A
-~~~
+<a id="figure-research-architecture-diagram-1"></a>
+
+![Arrived signals, masks and assay age feed history encoding/soft sensing and then actor/critics; requested increments pass five gates before execution and logged feedback.](../images/diagrams/research-architecture-diagram-1.webp)
+
+**An auditable agent: information rights and execution paths**
+
+Explain what the history encoder, soft sensor, tanh actor, twin critics, temperature, costs, offline support and world model each learn—and what gating changes.
+
+**Reading guide**
+
+- **Permitted information** · History encoding and soft sensing read only decision-time information; future assays, hidden truth and test targets must not enter the policy.
+- **Policy and critics** · A bounded actor proposes requested increments. Twin reward critics and cost critics learn distinct objectives; illustrated nodes do not prescribe dimensions.
+- **Execution and logging** · Five gates determine executed increments; inner control tracks CV SPs. Logs retain requested/executed actions and separate rewards/costs.
+
+**Exact relationships and boundaries**
+
+Permitted history → encoder/soft sensor → actor and critics. Actor request → five gates → CV SP/inner control → next observation and logs. Logs support critic updates; critics supply actor learning signals, not device commands. Action semantics after gating must remain consistent with value functions and offline data.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 This is a proposed research interface, not a trained or deployed industrial network. OAM-Net, QC-MTWaveSME and MC3/OOD are discussed later as possible interfaces. This diagram does not reconstruct their layer counts, parameter counts, loss recipes or unpublished experimental results.
 
@@ -774,17 +825,26 @@ This review was verified on **2026-11-14**. Evidence is recorded according to th
 
 The following categories are not a ranking of scientific merit. They answer different questions. A theorem asks whether a result holds under assumptions. A benchmark asks how an algorithm performs in a specified simulation. Plant-data prediction asks whether logged outcomes can be predicted. Closed-loop simulation using a plant-trained surrogate asks what actions do inside that model. Advisory operation asks how people use recommendations. An execution trial asks whether equipment actually followed policy-generated decisions. **Using production data can involve no plant control at all.** The [process-industry RL review](https://doi.org/10.1109/JAS.2024.124227) is a literature map, not a replacement for checking individual experiments.
 
-~~~mermaid
-flowchart TD
-  C["Specific claim to verify"] --> A["Original or official primary material"]
-  A --> T["Theory and simulation evidence"]
-  A --> D["Plant logs or surrogate evidence"]
-  A --> F["Physical execution evidence"]
-  T --> L["Record assumptions, controls and scope"]
-  D --> L
-  F --> L
-  L --> R["Supported wording and open questions"]
-~~~
+<a id="figure-research-evidence-diagram-1"></a>
+
+![A concrete claim leads to primary sources and distinct theory/simulation, plant-log/surrogate and physical-execution evidence, all checked for assumptions, controls and scope.](../images/diagrams/research-evidence-diagram-1.webp)
+
+**Evidence mapping: from a claim to supported conclusions**
+
+An evidence matrix based on accessible primary material, separating plant data, model loops, field trials and operational accounts while checking attribution and scope.
+
+**Reading guide**
+
+- **Claim and primary material** · State the claim first, then inspect original papers or official operational material and record what was actually accessible.
+- **Distinct evidence categories** · Theory, simulation, real logs and physical execution support different claims. Industrial data do not establish who executed plant actions.
+- **Boundaries of the conclusion** · Record assumptions, controls, regimes, statistics and open questions before choosing wording appropriate to the evidence.
+
+**Exact relationships and boundaries**
+
+Specific claim → primary material → evidence category → assumptions/controls/scope → supported wording and open questions. The branches classify evidence rather than promise a deployment progression; another project’s operational report is not a benefit measured for this project.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 ### 2. Method papers do not directly establish kiln savings
 
@@ -907,7 +967,7 @@ Compare short imagined futures with multiple models and carry uncertainty into t
 - **03** · Short rollouts: candidate actions generate different futures. Fading illustrates accumulating uncertainty, not a numerical confidence interval.
 - **04** · Return to reality: select using predicted objectives, constraints and uncertainty, then correct with new observations after execution.
 
-These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and Mermaid diagrams specify the exact relationships.
+These original concept illustrations are not measured curves, identified models, or engineering drawings. The equations and selectable bilingual reading guides specify the exact relationships.
 
 ### 1. Missing information may matter more than network depth
 
@@ -936,17 +996,26 @@ For a common action sequence, $L$ may bound dynamics sensitivity to state. If th
 
 With normalized $\varepsilon=0.02,L=1.2$, the three-step bound is $0.02(1+1.2+1.44)=0.0728$; the ten-step bound is approximately $0.5192$. These are not measured kiln errors. They explain why longer rollouts can amplify model mismatch. Short branches, ensembles, conservative penalties and stopping rules are candidate designs for limiting exploitation, but require calibration on distributions induced by actions. [MBPO](https://arxiv.org/abs/1906.08253); [MOPO](https://arxiv.org/abs/2005.13239)
 
-~~~mermaid
-flowchart TD
-  D["Temporally separated real logs"] --> M["Action-conditioned model ensemble"]
-  M --> U["Error and uncertainty calibration"]
-  U --> S["Restricted short branched rollouts"]
-  S --> P["Candidate policy learning"]
-  P --> E["Independent regime and fault evaluation"]
-  E --> F["Failure mechanisms and stopping rules"]
-  F --> U
-  D --> E
-~~~
+<a id="figure-research-open-problems-diagram-1"></a>
+
+![Temporally isolated logs support model ensembles and independent evaluation; calibrated models produce restricted short rollouts, whose failures refine calibration and stopping rules.](../images/diagrams/research-open-problems-diagram-1.webp)
+
+**Closed-loop model research: calibration and failure feedback**
+
+Testable next steps for hidden state, offline support, closed-loop model error, rare risk, changing objectives and statistical evaluation.
+
+**Reading guide**
+
+- **Separated data and calibration** · Separate logs temporally, train action-conditioned model ensembles, and assess error and uncertainty on independent data.
+- **Restricted model experience** · Generate restricted short branches from covered starts before learning candidate policies; predictions remain simulated experience.
+- **Regime and fault evaluation** · Development holdouts and fault diagnostics identify failures and refine calibration and stopping rules; the final locked test set cannot be repeatedly used for tuning.
+
+**Exact relationships and boundaries**
+
+Logs → models → calibration → short branches → candidate policy → independent evaluation → failure/stopping rules → recalibration. Real held-out logs also support evaluation. Failure feedback may revise development/calibration; repeatedly tuning after inspecting the final locked test set and reusing it is no longer independent testing. Closed-loop error includes policy responses; one-step accuracy alone does not establish safety or benefit.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 ### 4. Calibrate uncertainty under the conditions that matter
 
@@ -1028,20 +1097,26 @@ Organize the project around state awareness → quality soft sensing and forecas
 
 OAM-Net's reliability-gated multirate fusion and online-information fallback when assays are absent; QC-MTWaveSME's quality/forecasting interface; MC3/OOD monitoring and domain diagnostics; PG-MOEA/D-IEpsilon candidates; and NURBS trajectory representation are treated here as **known project-interface background**. Exact layers, parameters, training recipes and results were not reconstructed. Related public records include [joint soft sensing and forecasting](https://doi.org/10.1109/TII.2026.3664090), [OA-DSTR](https://doi.org/10.1016/j.asoc.2024.111772), [TCNSO-MSL-TD3-related work](https://doi.org/10.1088/2631-8695/ae5ed3) and [TOD-CGAN](https://doi.org/10.1016/j.jfranklin.2026.108704), with access limits documented on the evidence page. The following connections are hypotheses, not claims already established by those publications.
 
-~~~mermaid
-flowchart TD
-  D["Data rebuilt by availability time"] --> S["State, quality and reliability interfaces"]
-  S --> E["Multiobjective trajectory candidates"]
-  S --> R["Offline policy and cost-value learning"]
-  E --> R
-  E --> G["Common five-layer gate"]
-  R --> G
-  G --> V["Paired simulation and held-out regimes"]
-  V --> H["Evidence supporting or refuting hypotheses"]
-  H --> S
-  H --> E
-  H --> R
-~~~
+<a id="figure-research-agenda-diagram-1"></a>
+
+![Availability-aligned data form state/quality/reliability interfaces; multiobjective trajectories and offline policies share gates and paired evaluation of six hypotheses.](../images/diagrams/research-agenda-diagram-1.webp)
+
+**Research agenda: common interfaces and falsifiable tests**
+
+Turn the state–quality–optimization–setpoint chain into explicit data contracts, baselines, ablations, failure criteria and staged deliverables.
+
+**Reading guide**
+
+- **Information contract** · Rebuild availability times and define interfaces for state, quality, reliability and missing information.
+- **Two candidate families** · Multiobjective search proposes trajectories; offline learning produces feedback policies and cost values. Compare or connect them under an explicit data contract.
+- **Common gates and hypothesis tests** · Use the same five gates, paired disturbances and held-out regimes; record evidence supporting or refuting each of the six hypotheses.
+
+**Exact relationships and boundaries**
+
+Available data → state/quality/reliability → optimization or policy → shared gates → paired evaluation → hypothesis evidence. Failures revise interfaces, optimization and learning. Optimization can supply audited learning data, but combining modules does not establish a validated method or field energy savings.
+
+*Original concept illustration. The selectable text explains the short English labels. Equations, assumptions and execution boundaries are specified in the accompanying text; the image is not measured data, engineering wiring or field-performance evidence.*
+
 
 ### 2. Freeze a data contract before comparing modules
 

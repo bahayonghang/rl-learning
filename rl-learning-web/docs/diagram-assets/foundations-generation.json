@@ -1,0 +1,188 @@
+{
+  "task": "11-14-rl-generated-figures",
+  "worker": "foundations",
+  "tool": "built-in imagegen",
+  "status": "complete",
+  "generation_calls": 7,
+  "edit_calls": 5,
+  "tool_failures": 0,
+  "format": {
+    "extension": "webp",
+    "quality": 88,
+    "method": 6,
+    "conversion": "ImageMagick; no crop or content redrawing"
+  },
+  "assets": [
+    {
+      "id": "chapter-01-diagram-1",
+      "status": "accepted",
+      "tool": "built-in imagegen",
+      "prompt": "Use case: scientific-educational.\nAsset type: a compact academic concept plate inside an advanced reinforcement-learning textbook, NOT a cover image.\nVisual system: high-resolution landscape 3:2 composition, ideally 1536 by 1024 pixels; opaque warm-white paper #fffaf2, charcoal text, restrained terracotta #b56746, pale taupe and muted slate accents. Flat two-dimensional vector-like raster shapes, thin consistent rules, generous internal padding, no ornamental gradients, no realistic people, no robots, no decoration. Elegant academic editorial layout, subtle icons only when they explain a mechanism.\nTypography: crisp generously sized English labels, verbatim as requested; short heading and short labels only. Keep all text comfortably inside the canvas.\nScientific boundary: conceptual grouping and sparse broad information/learning arrows only. Do not create exact equations, numerical axes, measurements, performance charts, tensor dimensions or engineering wiring. All precise mathematical relationships are typeset outside this image. No safety guarantees, no industrial performance claims.\nAvoid long single-row or single-column chains, dense crossing wires, tiny text, redundant arrows, watermarks and logos.\n\nHeading: \"INTERACTION & LEARNING\".\nCreate four well-spaced illustrated stations in a balanced clockwise loop, arranged as a compact square: upper left \"Observe\" with a small sensor/observation card, upper right \"Choose action\" with a small decision token, lower right \"Process response\" with a modest abstract dynamic-process motif, lower left \"Reward & new observation\" with two feedback cards. Use exactly four short curved arrows around this loop; reward and next observation clearly arrive after the process response. A quiet central label reads \"One decision step\".\nBelow the loop, a shallow separate grouping labeled \"Recorded experience\" shows a stack of trajectory cards beside a small learning notebook, not a direct live-control connection. Beside it use two small distinct boundary badges, \"True end\" and \"Time limit\". They must look distinct, not equivalent; no claim that learning occurs only when an episode ends. No additional text. Focus on a repeated interaction cycle and experience, not a long sequential flowchart.",
+      "generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-b08dadf1-084d-4ad3-b89c-2d4dbd455690.png",
+      "asset_path": "public/images/diagrams/chapter-01-diagram-1.webp",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "inspection_notes": [
+        "Inspected the generated PNG inline and the saved WebP with view_image. All requested English labels are legible and remain inside the canvas.",
+        "The compact clockwise cycle runs Observe → Choose action → Process response → Reward & new observation; reward is visibly after the action's process response.",
+        "Recorded experience is a separate learning grouping. True end and Time limit use distinct labelled badges; the picture does not claim that a time limit is a true terminal state or that learning occurs only on episode termination.",
+        "No equations, numeric axes, purported measured data or industrial control-authority claims appear. The two small gear arrows are an abstract dynamics icon rather than engineering wiring."
+      ],
+      "file_bytes": 80052
+    },
+    {
+      "id": "chapter-04-diagram-1",
+      "status": "accepted",
+      "tool": "built-in imagegen",
+      "prompt": "Use case: scientific-educational.\nAsset type: a compact academic concept plate inside an advanced reinforcement-learning textbook, NOT a cover image.\nVisual system: high-resolution landscape 3:2 composition, ideally 1536 by 1024 pixels; opaque warm-white paper #fffaf2, charcoal text, restrained terracotta #b56746, pale taupe and muted slate accents. Flat two-dimensional vector-like raster shapes, thin consistent rules, generous internal padding, no ornamental gradients, no realistic people, no robots, no decoration. Elegant academic editorial layout, subtle icons only when they explain a mechanism.\nTypography: crisp generously sized English labels, verbatim as requested; short heading and short labels only. Keep all text comfortably inside the canvas.\nScientific boundary: conceptual grouping and sparse broad information/learning arrows only. Do not create exact equations, numerical axes, measurements, performance charts, tensor dimensions or engineering wiring. All precise mathematical relationships are typeset outside this image. No safety guarantees, no industrial performance claims.\nAvoid long single-row or single-column chains, dense crossing wires, tiny text, redundant arrows, watermarks and logos.\n\nHeading: \"STATE OR HISTORY?\".\nMake a compact three-tier branching plate with two balanced middle panels. At the top, a small illustrated input tray labeled \"Available information\" contains three readable cards: \"Sensors\", \"Released assays\", \"Past actions\". To its side, a faded closed envelope labeled \"Future assays excluded\" sits outside the input tray with no incoming connection to the decision.\nA small central question reads \"Sufficient now?\". Two short branches lead to side-by-side alternatives: a left panel \"State representation\" and a right panel \"History + estimation\". The left panel depicts one compact information card; the right depicts a short overlapping history stack and an estimation lens. Branch captions \"Approximately yes\" and \"Hidden or delayed\" distinguish the alternatives, which must not appear to run together obligatorily.\nBoth alternatives lead into one broad lower grouping titled \"Environment contract\", containing three evenly spaced labels \"Actions\", \"Reward & cost\", \"End vs timeout\". This is a formulation workflow, not a guarantee that a learned history representation is Markov. Use no chain longer than these three tiers, no formulas and no decorative industrial scenes.",
+      "generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-c81058ac-db29-44f4-aac8-c078e9079687.png",
+      "asset_path": "public/images/diagrams/chapter-04-diagram-1.webp",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "inspection_notes": [
+        "Inspected the generated PNG inline and the saved WebP with view_image. English headings, branch captions and input labels are correctly spelled and legible.",
+        "Sensors, released assays and past actions are grouped as available information; Future assays excluded is visibly detached with no decision-input arrow.",
+        "Approximately yes and Hidden or delayed branch into alternative state and history/estimation representations, then join the environment contract. No claim that history compression guarantees the Markov property appears.",
+        "The lower contract separately names Actions, Reward & cost, and End vs timeout. Layout is a compact landscape branch, not an elongated chain; there are no formulas, data plots or quantitative network claims."
+      ],
+      "file_bytes": 90082
+    },
+    {
+      "id": "chapter-09-diagram-1",
+      "status": "accepted",
+      "tool": "built-in imagegen",
+      "prompt": "Use case: scientific-educational.\nAsset type: a compact academic concept plate inside an advanced reinforcement-learning textbook, NOT a cover image.\nVisual system: high-resolution landscape 3:2 composition, ideally 1536 by 1024 pixels; opaque warm-white paper #fffaf2, charcoal text, restrained terracotta #b56746, pale taupe and muted slate accents. Flat two-dimensional vector-like raster shapes, thin consistent rules, generous internal padding, no ornamental gradients, no realistic people, no robots, no decoration. Elegant academic editorial layout, subtle icons only when they explain a mechanism.\nTypography: crisp generously sized English labels, verbatim as requested; short heading and short labels only. Keep all text comfortably inside the canvas.\nScientific boundary: conceptual grouping and sparse broad information/learning arrows only. Do not create exact equations, numerical axes, measurements, performance charts, tensor dimensions or engineering wiring. All precise mathematical relationships are typeset outside this image. No safety guarantees, no industrial performance claims.\nAvoid long single-row or single-column chains, dense crossing wires, tiny text, redundant arrows, watermarks and logos.\n\nHeading: \"THE DEADLY TRIAD\".\nCreate an elegant triangular, three-petal conceptual composition. Three equally important lobes surround one shared central region. Exact outer labels: \"Function approximation\", \"Bootstrapping\", \"Off-policy learning\". Use simple motifs of shared parameters, prediction reuse, and two differing data/policy cards. The common central region reads \"Instability risk\". The overlap must communicate interaction, not a theorem that any one ingredient always diverges.\nBelow this triangular composition, separate a modest practical-tools strip with two distinct cards: \"Replay\" with the short descriptor \"Sample reuse\", and \"Target network\" with \"Slower targets\". A small footer reads \"Monitor & evaluate\". The tools must be visually separate from the triad: no arrow that claims replay removes off-policy learning, no shield, no check mark, no cured/stable outcome, no cure-all implication. The purpose is to distinguish risk factors from partial practical mitigations. No numerical plots, equations or measured curves.",
+      "generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-29ef47f9-0288-4e08-987f-2985afd60d20.png",
+      "asset_path": "public/images/diagrams/chapter-09-diagram-1.webp",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "inspection_notes": [
+        "Inspected initial and revised PNGs and final WebP with image tools. Initial bootstrap labels Prediction (now) → Prediction (later) were ambiguous and were corrected through a targeted built-in imagegen edit.",
+        "Accepted image reads Existing estimate → Learning target within Bootstrapping, while the three interacting lobes are Function approximation, Bootstrapping and Off-policy learning around Instability risk.",
+        "Replay / Sample reuse and Target network / Slower targets remain in a separate practical-tools strip with Monitor & evaluate. There is no arrow, guarantee, shield or check mark claiming that replay cures off-policy instability.",
+        "All labels are legible within a compact landscape triangular composition. No numeric plots, formulas, purported exact architectures or performance claims appear."
+      ],
+      "initial_generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-4e931b40-24ba-41a5-912a-91f15c2de3cd.png",
+      "revisions": [
+        {
+          "prompt": "Edit the supplied academic plate with ONE targeted scientific wording correction. In the Bootstrapping lobe, replace \"Prediction (now)\" with \"Existing estimate\" and replace \"Prediction (later)\" with \"Learning target\". Keep the short arrow pointing from Existing estimate to Learning target and keep \"Prediction reuse\". This clarifies that an existing prediction informs a learning target; it is not a claim about a prediction arriving in the future. Preserve all other text exactly, the three overlapping lobes, central \"Instability risk\", the separate Replay / Sample reuse and Target network / Slower targets cards, and Monitor & evaluate. Preserve the whole 1536x1024 warm paper/terracotta composition; no cropping, added formulas, extra arrows or other changes.",
+          "input_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-4e931b40-24ba-41a5-912a-91f15c2de3cd.png",
+          "output_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-29ef47f9-0288-4e08-987f-2985afd60d20.png"
+        }
+      ],
+      "file_bytes": 91670
+    },
+    {
+      "id": "chapter-12-diagram-1",
+      "status": "accepted",
+      "tool": "built-in imagegen",
+      "prompt": "Use case: scientific-educational.\nAsset type: a compact academic concept plate inside an advanced reinforcement-learning textbook, NOT a cover image.\nVisual system: high-resolution landscape 3:2 composition, ideally 1536 by 1024 pixels; opaque warm-white paper #fffaf2, charcoal text, restrained terracotta #b56746, pale taupe and muted slate accents. Flat two-dimensional vector-like raster shapes, thin consistent rules, generous internal padding, no ornamental gradients, no realistic people, no robots, no decoration. Elegant academic editorial layout, subtle icons only when they explain a mechanism.\nTypography: crisp generously sized English labels, verbatim as requested; short heading and short labels only. Keep all text comfortably inside the canvas.\nScientific boundary: conceptual grouping and sparse broad information/learning arrows only. Do not create exact equations, numerical axes, measurements, performance charts, tensor dimensions or engineering wiring. All precise mathematical relationships are typeset outside this image. No safety guarantees, no industrial performance claims.\nAvoid long single-row or single-column chains, dense crossing wires, tiny text, redundant arrows, watermarks and logos.\n\nHeading: \"REINFORCE WITH A BASELINE\".\nCreate a compact, balanced learning cycle with four conceptual groups, rather than a long pipeline. Upper left \"Sample trajectories\" uses a small stack of episodic action/reward cards. Upper right is a spacious \"Learning signal\" group with two separate input cards \"Reward-to-go\" and \"State baseline\"; they meet at a small comparison motif and produce a clearly labeled \"Advantage\" card. Make baseline independent of the currently sampled action; do not draw an action feeding the baseline.\nLower right \"Weight log probabilities\" shows the advantage card weighting a sampled-action ticket, without a formula. Lower left \"Policy update\" shows a compact parameter dial and policy card. Sparse curved arrows connect sampling to learning signal, learning signal to weighting, weighting to update, and update back to sampling. The label at the weighting group must make clear that ADVANTAGE is the weight after baseline subtraction, not that the raw baseline itself is a weight. No extra Critic network is required here, no equations, plots or safety imagery.",
+      "generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-6e872400-74d5-4abe-844a-e9a3c2e41970.png",
+      "asset_path": "public/images/diagrams/chapter-12-diagram-1.webp",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "inspection_notes": [
+        "Inspected initial and edited PNGs and final WebP with image tools. Rejected the first draft because it inserted a policy formula and depicted Advantage multiplied by the sampled physical action; a targeted built-in edit removed these.",
+        "Accepted lower-right panel clearly reads Advantage —weights→ Action log probability. The baseline is compared with reward-to-go to produce the advantage; the baseline is not itself the learning weight.",
+        "Action-independent state baseline is explicitly labelled; no sampled-action input is drawn into it. Sampling, learning signal, weighted log probabilities and policy update form a compact four-group cycle.",
+        "The accepted image has no algebraic equation, multiplication/equals sign, Greek variable, numerical chart or industrial safety claim. All complete labels and the whole composition survive WebP conversion."
+      ],
+      "initial_generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-90be3b27-818e-4c15-bcc8-e66d1d90e2a7.png",
+      "revisions": [
+        {
+          "prompt": "Edit the supplied REINFORCE academic plate to remove the generator-added equations and fix one incorrect learning relation. Preserve the four-group compact cycle, heading, colors, typography and positions.\nCRITICAL CORRECTION in the lower-right \"Weight log probabilities\" panel: replace the right-hand \"Sampled action a\" card with a card whose ONLY text is \"Action log probability\" (no variable or equation). Keep the left \"Advantage\" card. Remove the multiplication circle and its two incoming arrows. Instead use ONE clean conceptual arrow from Advantage to Action log probability, labeled \"weights\". Do not multiply advantage by the physical sampled action. Delete the entire subtitle \"Advantage = weight after baseline subtraction\"; leave comfortable white space, or use only the short words \"Advantage-weighted learning\".\nIn lower-left Policy update, replace the \"Policy pi(a|s)\" formula card with the words \"Policy distribution\" and a tiny neutral sampling-token icon, with no symbols/equation.\nIn upper-left trajectory cards, replace s / a / r mathematical letters with plain colored tokens (retain the short Episode/trajectory label and broad sequence cue).\nIn upper-right Learning signal, preserve \"Reward-to-go\", \"State baseline\", \"(independent of the action)\" and \"Advantage\", but replace the subtraction-symbol circle with a small comparison icon or the word \"Compare\". Exact subtraction is explained in external textbook text.\nNo equation, equals sign, multiplication sign, Greek variable or new mathematical expression anywhere. No additional content changes. Keep the original full 3:2 composition and preserve all labels within the canvas.",
+          "input_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-90be3b27-818e-4c15-bcc8-e66d1d90e2a7.png",
+          "output_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-6e872400-74d5-4abe-844a-e9a3c2e41970.png"
+        }
+      ],
+      "file_bytes": 109330
+    },
+    {
+      "id": "chapter-13-diagram-1",
+      "status": "accepted",
+      "tool": "built-in imagegen",
+      "prompt": "Use case: scientific-educational.\nAsset type: a compact academic concept plate inside an advanced reinforcement-learning textbook, NOT a cover image.\nVisual system: high-resolution landscape 3:2 composition, ideally 1536 by 1024 pixels; opaque warm-white paper #fffaf2, charcoal text, restrained terracotta #b56746, pale taupe and muted slate accents. Flat two-dimensional vector-like raster shapes, thin consistent rules, generous internal padding, no ornamental gradients, no realistic people, no robots, no decoration. Elegant academic editorial layout, subtle icons only when they explain a mechanism.\nTypography: crisp generously sized English labels, verbatim as requested; short heading and short labels only. Keep all text comfortably inside the canvas.\nScientific boundary: conceptual grouping and sparse broad information/learning arrows only. Do not create exact equations, numerical axes, measurements, performance charts, tensor dimensions or engineering wiring. All precise mathematical relationships are typeset outside this image. No safety guarantees, no industrial performance claims.\nAvoid long single-row or single-column chains, dense crossing wires, tiny text, redundant arrows, watermarks and logos.\n\nHeading: \"ACTOR–CRITIC LEARNING\".\nBuild a balanced two-lane plate. A slim upper band labeled \"Shared trajectories\" shows experience cards and a small secondary label \"Rewards & episode flags\". Below it are two equally sized panels: left \"Actor\" with the subtitle \"Action distribution\", right \"Critic\" with the subtitle \"State values\". Use modest abstract motifs, not actual neural-network architectures.\nBetween and below these panels is one shared teaching-signal area containing two short labels \"TD residuals\" and \"GAE advantages\". A sparse broad arrow from the critic's estimates toward this signal, and from this signal toward the actor, indicates how evaluation informs policy learning. The shared trajectory band visibly supplies the two lanes. Show the critic's own distinct value-learning notebook within its panel, labeled \"Value learning\"; the actor panel has a separate notebook labeled \"Policy learning\".\nThis is a conceptual division of roles, not exact gradient plumbing. Do not draw losses, formulas, stop-gradient markers or value-target definitions, which are explained outside the image. Do not imply actor and critic share an interchangeable objective or that an advantage is itself a value target. Keep arrows sparse and noncrossing.",
+      "generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-c568fc59-88d1-456d-ac2f-53e8366a4964.png",
+      "asset_path": "public/images/diagrams/chapter-13-diagram-1.webp",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "inspection_notes": [
+        "Inspected the generated PNG inline and final WebP with view_image. Shared trajectories feed distinct Actor and Critic panels; every heading and added label is legible and scientifically appropriate.",
+        "Actor is labelled Action distribution and Policy learning; Critic is labelled State values and Value learning. Broad critic-to-learning-signal-to-actor arrows convey role separation without claiming identical objectives.",
+        "TD residuals and GAE advantages are grouped names for the learning signal, not an exact computational/gradient graph. No stop-gradient marker, value-target equation or target-loss definition is drawn.",
+        "The small unnumbered distribution bars and trajectory/value symbols are conceptual icons, not measured data or specified tensor sizes. No production or safety claim appears."
+      ],
+      "file_bytes": 71696
+    },
+    {
+      "id": "chapter-15-diagram-1",
+      "status": "accepted",
+      "tool": "built-in imagegen",
+      "prompt": "Use case: scientific-educational.\nAsset type: a compact academic concept plate inside an advanced reinforcement-learning textbook, NOT a cover image.\nVisual system: high-resolution landscape 3:2 composition, ideally 1536 by 1024 pixels; opaque warm-white paper #fffaf2, charcoal text, restrained terracotta #b56746, pale taupe and muted slate accents. Flat two-dimensional vector-like raster shapes, thin consistent rules, generous internal padding, no ornamental gradients, no realistic people, no robots, no decoration. Elegant academic editorial layout, subtle icons only when they explain a mechanism.\nTypography: crisp generously sized English labels, verbatim as requested; short heading and short labels only. Keep all text comfortably inside the canvas.\nScientific boundary: conceptual grouping and sparse broad information/learning arrows only. Do not create exact equations, numerical axes, measurements, performance charts, tensor dimensions or engineering wiring. All precise mathematical relationships are typeset outside this image. No safety guarantees, no industrial performance claims.\nAvoid long single-row or single-column chains, dense crossing wires, tiny text, redundant arrows, watermarks and logos.\n\nHeading: \"PPO: COLLECT, THEN UPDATE\".\nCreate two broad side-by-side lanes on a landscape canvas. Left lane \"Collect\" contains a policy snapshot labeled \"Frozen policy\" and a neat stack labeled \"Trajectory batch\", connected by one small arrow. At the lane boundary a compact card reads \"Returns & advantages\". Right lane \"Optimize\" contains a compact three-station loop: \"Minibatches\", a grouped pair \"Clipped policy objective\" and \"Value learning\", then \"KL / epoch check\". The check can lead back to minibatches for limited repeated optimization or exit to a small \"Finish batch\" card. A broad unobtrusive return cue from the finished batch back toward collection is labeled \"Next batch\".\nThe two phases should be visually unmistakable and approximately equal in area. Use a snapshot icon and batch cards, not a long serpentine row of boxes. Clipping belongs ONLY to the policy objective: no action clamp, actuator, safety shield or bound around physical actions. No exact clipping formula, numeric curve, performance result or claim that KL is necessarily hard-bounded. Short verbatim English labels only.",
+      "generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-9b937d32-3e98-4122-9007-3ca684ad3cf0.png",
+      "asset_path": "public/images/diagrams/chapter-15-diagram-1.webp",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "inspection_notes": [
+        "Inspected initial and both edited PNGs, then final WebP with view_image. The initial cross-panel horizontal chain was replaced by a compact left collection column and right triangular optimization loop.",
+        "A second targeted imagegen edit removed an unintended Minibatches → KL/epoch check bypass. The accepted optimization path is minibatches → grouped policy/value objectives → check, with distinct Continue and Stop branches.",
+        "Frozen policy, trajectory batch and returns/advantages belong to collection; Clipped policy objective is explicitly distinct from Value learning. Finish batch returns to collection via Next batch.",
+        "No action clamp, physical actuator, safety shield, hard-KL guarantee, equation or quantitative performance plot appears. All labels remain legible and within the 3:2 canvas."
+      ],
+      "initial_generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-f166ed8b-581f-4dba-b1b2-a1e66c5114d9.png",
+      "revisions": [
+        {
+          "prompt": "Edit the supplied PPO plate to correct its composition: the current long horizontal chain across both panels must become a compact TWO-LANE layout with an internal triangle loop. Preserve the warm paper, terracotta/slate palette, heading and academic typography.\nLEFT \"Collect\" panel: arrange three compact stations VERTICALLY within its existing area: \"Frozen policy\" at top, \"Trajectory batch\" in the middle, and \"Returns & advantages\" below. Use a snapshot/card motif and only two short downward arrows. Remove the huge pi symbol and s/a/r letters; use neutral cards/tokens without mathematical symbols. This left column occupies less than three quarters of image height.\nRIGHT \"Optimize\" panel: arrange three stations in a compact triangle, not a horizontal row: \"Minibatches\" at top center; a paired card at lower left reading \"Clipped policy objective\" and \"Value learning\"; a card at lower right reading \"KL / epoch check\". Sparse arrows go from Minibatches to the paired objectives, then to the check. A curved arrow labelled \"Continue\" returns from the check to Minibatches. A short separate arrow labelled \"Stop\" goes from the check to \"Finish batch\" near the panel bottom.\nOne clean bridge carries Returns & advantages from the left panel to Minibatches in the right panel, routed through the clear gap without crossing text. One broad lower return cue labelled \"Next batch\" runs from Finish batch back to the Collect phase.\nNo row may contain more than three stations. Do not add formulas, numeric curves, action clamps, safety shields or guarantees. Clipping belongs exclusively to the policy objective. Keep every label comfortably readable and the complete image landscape 3:2 without cropping.",
+          "input_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-f166ed8b-581f-4dba-b1b2-a1e66c5114d9.png",
+          "output_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-6be78b09-350c-43a5-81fd-b184c3bcb92c.png",
+          "inspection": "The long chain was successfully replaced with a two-lane compact layout, but an unintended Minibatches → KL/epoch check bypass arrow requires removal."
+        },
+        {
+          "prompt": "Make exactly ONE targeted arrow correction to the supplied PPO image. In the Optimize panel, DELETE the diagonal arrow that runs directly from the lower-right side of \"Minibatches\" to the upper-left side of \"KL / epoch check\". This is an unintended bypass. Keep the diagonal Minibatches → Clipped policy objective arrow, the horizontal objective → KL/epoch check arrow, the curved KL check → Minibatches arrow labelled Continue, and the Stop → Finish batch exit. Preserve every label, all positions, all other arrows, the compact two-lane layout, palette, margins, image dimensions and background. Add nothing. The intended optimization cycle is Minibatches → objective/value learning → KL/epoch check → Continue back to Minibatches or Stop to Finish batch.",
+          "input_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-6be78b09-350c-43a5-81fd-b184c3bcb92c.png",
+          "output_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-9b937d32-3e98-4122-9007-3ca684ad3cf0.png"
+        }
+      ],
+      "file_bytes": 79580
+    },
+    {
+      "id": "chapter-17-diagram-1",
+      "status": "accepted",
+      "tool": "built-in imagegen",
+      "prompt": "Use case: scientific-educational.\nAsset type: a compact academic concept plate inside an advanced reinforcement-learning textbook, NOT a cover image.\nVisual system: high-resolution landscape 3:2 composition, ideally 1536 by 1024 pixels; opaque warm-white paper #fffaf2, charcoal text, restrained terracotta #b56746, pale taupe and muted slate accents. Flat two-dimensional vector-like raster shapes, thin consistent rules, generous internal padding, no ornamental gradients, no realistic people, no robots, no decoration. Elegant academic editorial layout, subtle icons only when they explain a mechanism.\nTypography: crisp generously sized English labels, verbatim as requested; short heading and short labels only. Keep all text comfortably inside the canvas.\nScientific boundary: conceptual grouping and sparse broad information/learning arrows only. Do not create exact equations, numerical axes, measurements, performance charts, tensor dimensions or engineering wiring. All precise mathematical relationships are typeset outside this image. No safety guarantees, no industrial performance claims.\nAvoid long single-row or single-column chains, dense crossing wires, tiny text, redundant arrows, watermarks and logos.\n\nHeading: \"SAC: LEARNING IN SIMULATION\".\nCreate a compact upper interaction band and lower two-lane learning group. The upper band has \"Simulation\" on the left with a small abstract environment motif and \"Replay\" on the right with a tray of transition cards; a short arrow carries experience from simulation to replay. Below, a large learning group contains left \"Stochastic actor\" and right \"Twin critics\". Depict the actor as a sampling card with several action tokens, and the twin critics as two equal evaluation cards, not exact neural-network tensors.\nReplay supplies both learning lanes with a clean split. A sparse broad evaluation arrow points from twin critics toward the actor. An outer curved arrow from the actor back to Simulation indicates proposed actions in a SIMULATED environment. Two restrained satellite notes sit inside the lower group: by the actor, \"Entropy temperature\"; by the critics, \"Target critics\" with the descriptor \"Slow update\". These are different roles, not safety components. If a target-related cue is used it stays within the critic area, with no crossing wires.\nFooter, verbatim: \"Simulation only\". No live plant scene, no production-control claims, no safety shield, no measured curves, formulas, log-density equation, exact target loss or numerical performance. Prioritize the replay / actor / twin-critic relationship and distinct temperature and target-network functions.",
+      "generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-6de08613-9c40-4a03-b21b-54a0cb0e8fc3.png",
+      "asset_path": "public/images/diagrams/chapter-17-diagram-1.webp",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "inspection_notes": [
+        "Inspected initial and edited PNGs and final WebP with view_image. Simulation is explicit in the heading, Simulation panel, Proposed actions (simulated) cue and Simulation only footer.",
+        "Replay supplies actor and twin-critic learning; critic evaluation informs the stochastic actor; proposed actions return only to simulation. Entropy temperature and Target critics / Slow update remain separate concepts.",
+        "A targeted edit removed the generator-added transition tuple and action subscripts. The accepted plate uses Transitions and neutral Action samples tokens, with no exact action-space size or tensor specification.",
+        "Critic 1 and Critic 2 are deliberate conceptual twin evaluators; no target formula, density equation, measured data plot, live kiln operation or safety guarantee is drawn. The full compact two-tier composition survives WebP conversion."
+      ],
+      "initial_generated_source_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-22911f09-70b5-4d9d-9558-cb705024505d.png",
+      "revisions": [
+        {
+          "prompt": "Edit only two small content details in the supplied SAC academic concept plate, preserving the complete layout, colors, typography, all arrows, title and Simulation only footer. In the Replay tray, replace the mathematical tuple \"(s, a, r, s')\" with the plain English word \"Transitions\". In the Stochastic actor panel, replace \"Sample action\" with \"Action samples\" and remove the a1, a2, a3 mathematical labels from the three colored tokens, leaving the neutral tokens without symbols. The tokens represent illustrative random samples, not a specified three-action discrete space. Do not add any formulas, tensor dimensions, charts, new words or wiring. Preserve the labels Simulation, Experience, Replay, Proposed actions (simulated), Stochastic actor, Entropy temperature, Twin critics, Critic 1, Critic 2, Evaluation, Target critics, Slow update, and Simulation only. No other changes, no cropping.",
+          "input_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-22911f09-70b5-4d9d-9558-cb705024505d.png",
+          "output_path": "/workspace/scratch/f3c5a68994fd/generated_images/exec-6de08613-9c40-4a03-b21b-54a0cb0e8fc3.png"
+        }
+      ],
+      "file_bytes": 92082
+    }
+  ]
+}

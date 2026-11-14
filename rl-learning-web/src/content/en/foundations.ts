@@ -41,16 +41,7 @@ In this tutorial’s industrial case, the agent proposes **bounded increments to
 
 We use $S_t,A_t,R_{t+1},S_{t+1}$ throughout: observe $S_t$, choose $A_t$, then receive $R_{t+1}$ and $S_{t+1}$ from the environment. Some papers call the same reward $r_t$. That is a different indexing convention, so align the entire convention when transferring equations.
 
-${FENCE}mermaid
-flowchart TD
-    S["Read observation and current state"] --> P["Policy selects an action"]
-    P --> E["Environment advances one step"]
-    E --> R["Receive reward and new observation"]
-    R --> D{"Has the task truly ended"}
-    D -- "No" --> S
-    D -- "Yes" --> U["Record trajectory and update policy"]
-    U --> S
-${FENCE}
+![The interaction loop: action and feedback](./images/diagrams/chapter-01-diagram-1.webp)
 
 A policy update can happen at every step or after collecting a batch. Interaction and learning have different clocks: sampling the environment once does not restrict a neural network to one update.
 
@@ -309,17 +300,7 @@ When the true state $S_t$ is unavailable, the agent receives observation $O_t$. 
 
 The repository’s industrial observation contract retains 120 minutes of history, current setpoints, soft-sensor estimates, the latest assay and its age, and raw-material moduli. If an assay has not been released at time $t$, using its retrospectively backfilled value to improve prediction introduces temporal leakage. Excellent training performance under that input cannot be reproduced online.
 
-${FENCE}mermaid
-flowchart TD
-    Q["Define the operating problem and decision interval"] --> O["List information actually available then"]
-    O --> M{"Does the observation adequately describe the process"}
-    M -- "Approximately" --> S["Construct a state representation"]
-    M -- "Delays or hidden variables remain" --> H["Add history and state estimation"]
-    H --> S
-    S --> A["Define action bounds and reward and cost"]
-    A --> T["Define termination and truncation"]
-    T --> C["Check the environment with a random policy"]
-${FENCE}
+![MDPs and POMDPs: information before state design](./images/diagrams/chapter-04-diagram-1.webp)
 
 ## A complete small modeling example
 
@@ -755,17 +736,7 @@ $$y_t=R_{t+1}+\gamma(1-d_t)\max_{a'}Q_{\bar\theta}(S_{t+1},a').$$
 
 Changing parameters changes targets, while changing the policy changes the sampling distribution. Distribution, predictions and targets form a feedback system. Placing a supervised network directly in a Q-learning loop can produce decreasing local loss without an improving policy.
 
-${FENCE}mermaid
-flowchart TD
-    F["Function approximation shares parameters"] --> C["One update affects many states"]
-    B["Bootstrap targets depend on predictions"] --> C
-    O["Data policy differs from target policy"] --> C
-    C --> U["Error feedback can become unstable"]
-    U --> R["Replay improves sample reuse"]
-    U --> T["Target networks slow target changes"]
-    R --> V["Check value scales and independent evaluation"]
-    T --> V
-${FENCE}
+![Instability in value learning and its mitigations](./images/diagrams/chapter-09-diagram-1.webp)
 
 The combination of function approximation, bootstrapping and off-policy learning is the **deadly triad**. It identifies an instability risk, not inevitable divergence whenever all three occur. [Jiang and colleagues’ research](https://proceedings.mlr.press/v139/jiang21j.html) and [target-network theory](https://proceedings.mlr.press/v202/fellows23a.html) offer more precise discussion.
 
@@ -1019,16 +990,7 @@ $$\nabla_\theta J=\mathbb E\left[\sum_t\gamma^t\nabla_\theta\log\pi_\theta(A_t\m
 
 The crucial zero-mean identity is $\sum_a\pi(a\mid s)\nabla\log\pi(a\mid s)=\nabla\sum_a\pi(a\mid s)=0$. A baseline can reduce variance, but arbitrary choices are not necessarily optimal. Hidden action dependence or inappropriate gradients flowing back to the Actor through the weights violate the derivation’s conditions.
 
-${FENCE}mermaid
-flowchart TD
-    P["Sample actions from the policy"] --> T["Collect complete task trajectories"]
-    T --> G["Compute reward-to-go at each step"]
-    G --> B["Subtract a state baseline"]
-    B --> L["Weight action log probabilities by return"]
-    L --> U["Update policy parameters"]
-    U --> P
-    B --> C["Next chapter: learn the baseline with a Critic"]
-${FENCE}
+![REINFORCE: returns, baselines and policy updates](./images/diagrams/chapter-12-diagram-1.webp)
 
 ## Which probability does one update increase?
 

@@ -83,17 +83,7 @@ The actor minimizes $-\mathbb E[\log\pi_\theta(a_t\mid s_t)\,\operatorname{stopg
 
 This is the common surrogate loss written under the training batch's sampling distribution. If you strictly use Chapter 12's finite-trajectory objective discounted from the initial time and directly sum over all timesteps in complete trajectories, retain that chapter's $\gamma^t$ weights. Common implementations that omit them use a different sampling convention or an approximate objective; these conventions must not be silently mixed within a derivation.
 
-~~~mermaid
-flowchart TD
-    S["Same trajectory batch"] --> V["Critic estimates state values"]
-    S --> R["Rewards and termination flags"]
-    V --> D["TD residuals"]
-    R --> D
-    D --> A["GAE advantages"]
-    A --> P["Update actor"]
-    A --> T["Construct value targets"]
-    T --> C["Update critic"]
-~~~
+![Actor–critic: one batch, two learning objectives](./images/diagrams/chapter-13-diagram-1.webp)
 
 ## What to inspect in experiments
 
@@ -243,17 +233,7 @@ For a good action, increasing its probability beyond a certain point earns no fu
 
 ## The stages of a complete update
 
-~~~mermaid
-flowchart TD
-    P["Freeze collection policy"] --> R["Collect the current trajectory batch"]
-    R --> G["Compute returns and GAE"]
-    G --> B["Shuffle and sample minibatches"]
-    B --> L["Clipped policy loss and value loss"]
-    L --> K{"Is KL too large"}
-    K -- "No" --> B
-    K -- "Yes or epochs complete" --> N["Finish this batch update"]
-    N --> P
-~~~
+![PPO: a frozen rollout batch and limited updates](./images/diagrams/chapter-15-diagram-1.webp)
 
 During collection, record observations, actions, rewards, old_log_prob, values, and both kinds of boundary flag. After computing advantages, normally freeze these targets and perform a limited number of minibatch epochs on the same data. Then discard that old rollout for policy optimization and collect fresh interaction.
 
@@ -445,17 +425,7 @@ With fixed $\alpha$, multiplying rewards by ten weakens entropy's relative influ
 
 Target networks commonly use $\bar\phi\leftarrow(1-\tau)\bar\phi+\tau\phi$. Here $\tau$ is the fraction of new parameters absorbed per update. Some implementations use polyak for the fraction of old parameters retained; the two are complements. Copying 0.995 or 0.005 by parameter name alone can produce the opposite update speed.
 
-~~~mermaid
-flowchart TD
-    E["Simulated environment interaction"] --> D["Experience replay"]
-    D --> Q["Twin critics fit soft targets"]
-    D --> A["Actor generates differentiable actions"]
-    Q --> A
-    A --> H["Entropy and temperature adjustment"]
-    A --> E
-    Q --> T["Slow target-critic update"]
-    T --> Q
-~~~
+![SAC: replay, twin critics and entropy temperature](./images/diagrams/chapter-17-diagram-1.webp)
 
 ## When does an implementation begin to be credible?
 
@@ -527,19 +497,7 @@ The existing PG-MOEA/D-IEpsilon method is a required comparison, but this tutori
 
 ## A decision tree helps you ask questions
 
-~~~mermaid
-flowchart TD
-    Q["Does the action affect future states"] --> S{"Long-term effects"}
-    S -- "No" --> B["Supervised prediction or bandit baseline"]
-    S -- "Yes" --> D{"Can interaction data be obtained"}
-    D -- "Historical logs only" --> O["BC and offline RL"]
-    D -- "Simulation interaction permitted" --> A{"Action space"}
-    A -- "Finite discrete" --> V["Tabular methods or DQN"]
-    A -- "Continuous" --> P["Compare PPO, SAC, or TD3"]
-    O --> C["Coverage, constraints, and independent evaluation"]
-    P --> C
-    V --> C
-~~~
+![Algorithm selection: consequences and data access](./images/diagrams/chapter-18-diagram-1.webp)
 
 The tree narrows the candidate set. You must still consider whether a model is known, memory requirements, action constraints, and interpretability. It has no branch that guarantees the best choice.
 
@@ -778,20 +736,7 @@ The project's quality band is f-CaO $[0.5,1.5]\%$, and its oxygen boundary is $O
 
 ## Five-layer gating: explain each layer independently
 
-~~~mermaid
-flowchart TD
-    A["Candidate setpoint increment"] --> G1{"1 Data validity"}
-    G1 -- "Pass" --> G2{"2 Current-state boundaries"}
-    G2 -- "Pass" --> G3{"3 Model credibility and OOD"}
-    G3 -- "Pass" --> G4{"4 Rate and curvature feasibility"}
-    G4 -- "Pass" --> G5{"5 Absolute bounds and authorization"}
-    G5 -- "Pass" --> S["Accept candidate in simulation only"]
-    G1 -- "Fail" --> F["Fall back and record reason"]
-    G2 -- "Fail" --> F
-    G3 -- "Fail" --> F
-    G4 -- "Fail" --> F
-    G5 -- "Fail" --> F
-~~~
+![Five gates: requests, rejection and execution](./images/diagrams/chapter-21-diagram-1.webp)
 
 The first layer checks NaN, Inf, and measurement anomalies in observations and actions. The second checks critical states. The third checks support, with the project's illustrative threshold requiring standardized deviation no greater than 4. The fourth retains the convention that changes in normalized increments do not exceed 1.5. The fifth checks absolute target-setpoint ranges and APC authorization. Any failure records the specific layer and falls back to the project's $Y_{\mathrm{safe}}$.
 
@@ -869,16 +814,7 @@ Calculate it: with $\tau=0.7$, a +2 residual has loss $0.7\times4=2.8$, while a 
 
 Save observations, executed actions, rewards, next observations, natural termination, and truncation. If a safety gate rejects a policy proposal, distinguish the candidate action from the action actually executed; attribute the physical transition to the latter. Data should also trace control modes, operator changes, abnormal shutdowns, sensor quality, and when action information was available. Otherwise, an algorithm may wrongly credit human corrective action to its own candidate.
 
-~~~mermaid
-flowchart TD
-    D["Historical logs"] --> T["Construct transitions by time and visibility"]
-    T --> S["Separate training, validation, and testing"]
-    S --> B["Behavioral cloning baseline"]
-    S --> R["Conservative offline policy"]
-    B --> E["Support and independent evaluation"]
-    R --> E
-    E --> F["Record payoff, costs, and uncertainty"]
-~~~
+![Offline policies: from logs to independent evidence](./images/diagrams/chapter-22-diagram-1.webp)
 
 ## Offline evaluation has assumptions too
 
@@ -945,16 +881,7 @@ Low one-step MSE on an independent test set therefore does not prove suitability
 
 [MBPO](https://arxiv.org/abs/1906.08253) emphasizes short model trajectories starting from states in real data, treating rollout length as a way to control error. Real states provide frequent anchors instead of allowing one virtual trajectory to extend indefinitely.
 
-~~~mermaid
-flowchart TD
-    D["Real historical state bank"] --> S["Sample covered initial states"]
-    S --> M["Short model and policy rollouts"]
-    M --> U{"Uncertainty and boundary checks"}
-    U -- "Credible" --> B["Add to model replay buffer"]
-    U -- "Not credible" --> X["Stop branch and record reason"]
-    B --> P["Improve policy with mixed experience"]
-    P --> M
-~~~
+![Short model branches: real anchors, imagined experience](./images/diagrams/chapter-23-diagram-1.webp)
 
 Treat model-data proportion, branch length, and initial-state selection as experimental variables. Longer rollouts are not necessarily better. More model samples in a buffer do not imply a proportional increase in information.
 
