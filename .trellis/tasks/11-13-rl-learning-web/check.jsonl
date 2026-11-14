@@ -1,0 +1,3 @@
+{"file":"AGENTS.md","reason":"Review domain constraints and preserve project contracts"}
+{"file":".trellis/spec/algorithms/safe-constrained-rl.md","reason":"Review CMDP and safety gate explanations"}
+{"file":".trellis/spec/experiments/reproducibility-and-safety.md","reason":"Review simulation labeling and reproducibility"}

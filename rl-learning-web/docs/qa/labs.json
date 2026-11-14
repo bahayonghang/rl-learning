@@ -1,0 +1,114 @@
+[
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "return",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "bandit",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "bellman",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 0,
+    "id": "gridworld",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "td",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "cliff",
+    "overflow": false,
+    "stats": 2
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "replay",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": false,
+    "charts": 1,
+    "id": "overestimation",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 2,
+    "id": "policy-gradient",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "gae",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "ppo",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "gaussian",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": true,
+    "charts": 1,
+    "id": "seeds",
+    "overflow": false,
+    "stats": 3
+  },
+  {
+    "badNumbers": false,
+    "changed": false,
+    "charts": 0,
+    "id": "safety",
+    "overflow": false,
+    "stats": 3
+  }
+]

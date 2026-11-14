@@ -1,0 +1,6 @@
+# Only advanced_toy_env.py needs third-party Python packages.
+# The website and the other two teaching scripts do not use this file.
+# Verified with Python 3.12.14, Gymnasium 1.4.0 and NumPy 2.5.4.
+# NumPy is range-constrained so pip can select a compatible wheel on Python 3.11.
+gymnasium==1.4.0
+numpy>=1.26,<3

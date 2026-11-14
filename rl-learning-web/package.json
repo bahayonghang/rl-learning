@@ -1,0 +1,33 @@
+{
+  "name": "rl-learning-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "export:book": "node --import tsx scripts/export-book.ts"
+  },
+  "dependencies": {
+    "dompurify": "3.3.0",
+    "katex": "0.19.1",
+    "lucide": "1.72.0",
+    "marked": "18.2.0",
+    "mermaid": "12.3.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^30.0.0",
+    "@types/katex": "^0.16.8",
+    "@types/node": "^24.0.0",
+    "jsdom": "^31.0.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "8.3.8"
+  }
+}
