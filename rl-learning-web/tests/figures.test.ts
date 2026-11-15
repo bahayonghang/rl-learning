@@ -42,7 +42,8 @@ test('the original 40 localized occurrences, legacy occurrence and two roadmap e
   }
   assert.deepEqual(imageLinks(researchBody), ['./images/diagrams/research-agenda-diagram-1.webp']);
   assert.doesNotMatch(researchBody, /mermaid/i);
-  assert.match(readFileSync('src/main.ts', 'utf8'), /conceptPlateReference\('roadmap-learning'\)/);
+  assert.match(readFileSync('src/main.ts', 'utf8'), /renderRoadmapPage\(host,id,state.completed\)/);
+  assert.match(readFileSync('src/roadmap.ts', 'utf8'), /conceptPlateReference\('roadmap-learning'\)/);
   t.diagnostic(`Covered ${count} active locale occurrences plus the retired research occurrence with ${conceptPlates.length} stable assets.`);
 });
 

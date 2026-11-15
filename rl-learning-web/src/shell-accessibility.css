@@ -1,0 +1,317 @@
+/* Shared navigation and controls. Homepage composition lives in home.css. */
+:root {
+  --muted: #6d6359;
+  --brand: #a14b30;
+  --ui-font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+
+/* atlas.css's more specific dark tokens remain authoritative. These light
+   tokens exceed 4.5:1 on bg, surface, surface-soft and brand-soft. */
+.sidebar,
+.topbar,
+.site-footer {
+  font-family: var(--ui-font);
+}
+
+.sidebar {
+  overscroll-behavior-y: contain;
+  scroll-padding-block: 16px;
+}
+
+/* Keep the complete grouped navigation scrollable on short viewports instead
+   of compressing its labels or footer inside the fixed flex column. */
+.sidebar > * {
+  flex-shrink: 0;
+}
+
+.brand small {
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: .25px;
+}
+
+.workspace-label {
+  margin: 18px 5px 17px;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.nav-caption {
+  padding-bottom: 6px;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: .7px;
+  color: var(--muted);
+}
+
+.nav-group + .nav-group {
+  margin-top: 14px;
+}
+
+.nav-link {
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.nav-link > span {
+  min-width: 0;
+}
+
+.nav-count {
+  font-size: 12px;
+}
+
+.nav-divider {
+  margin: 14px 9px 5px;
+}
+
+.sidebar-footer {
+  padding-top: 24px;
+}
+
+.sidebar-footer > a {
+  min-height: 40px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sidebar-footer > a svg,
+.sidebar-footer > a svg:last-child {
+  width: 14px;
+  height: 14px;
+}
+
+.sidebar-footer > div,
+.sidebar-footer > p {
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.sidebar-footer > div > span {
+  font-size: 11px;
+  letter-spacing: .4px;
+  color: var(--muted);
+}
+
+.breadcrumb,
+.breadcrumb > span:last-child {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.breadcrumb-parent {
+  min-width: 0;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.topbar .icon-button,
+.search-dialog .icon-button {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.search-trigger {
+  width: auto;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 9px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 8px;
+}
+
+.search-trigger kbd {
+  font-size: 11px;
+  line-height: 1.5;
+  margin-left: 6px;
+}
+
+.locale-switch,
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+}
+
+.locale-switch svg,
+.theme-switch svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.locale-switch select,
+.theme-switch select {
+  min-height: 40px;
+  max-width: 120px;
+  padding: 7px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--ui-font);
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.locale-switch option,
+.theme-switch option {
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.site-footer {
+  font-size: 12px;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  flex-shrink: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.site-footer a svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.search-dialog-top input {
+  min-height: 44px;
+  font-size: 16px;
+}
+
+.search-meta,
+.search-help {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.search-result b {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.search-result small {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sidebar :focus-visible,
+.topbar :focus-visible,
+.site-footer :focus-visible,
+.search-dialog :focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  background: var(--brand);
+  color: #fffaf5;
+}
+
+:root[data-theme=dark] .skip-link {
+  color: #2b1c13;
+}
+
+@media (max-width: 1100px) {
+  .search-trigger > span,
+  .search-trigger > kbd {
+    display: none;
+  }
+
+  .search-trigger {
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    min-height: 64px;
+    height: auto;
+    padding: 10px 16px;
+    gap: 8px;
+  }
+
+  .topbar-actions {
+    gap: 6px;
+  }
+
+  .locale-switch svg,
+  .theme-switch svg {
+    display: none;
+  }
+
+  .locale-switch select,
+  .theme-switch select {
+    max-width: 110px;
+    font-size: 12px;
+  }
+
+  .breadcrumb {
+    gap: 6px;
+    flex: 1 1 auto;
+  }
+
+  .breadcrumb > span:last-child {
+    min-width: 0;
+    max-width: 150px;
+    font-size: 12px;
+  }
+
+  .breadcrumb-parent {
+    max-width: 120px;
+  }
+
+  .site-footer {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding-inline: 12px;
+  }
+
+  .breadcrumb-parent,
+  .breadcrumb > span:last-child,
+  .breadcrumb > svg {
+    display: none;
+  }
+
+  .topbar-actions {
+    gap: 5px;
+  }
+
+  .locale-switch select,
+  .theme-switch select {
+    max-width: 102px;
+    padding-inline: 6px;
+  }
+}
