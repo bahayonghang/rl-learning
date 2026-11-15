@@ -1,10 +1,10 @@
-# RL Atlas · Reinforcement learning through cement calcination
+# RL Atlas · Reinforcement learning for process decisions
 
 [中文 README](README.md) · [Localization maintenance guide](docs/i18n.md)
 
-RL Atlas is a complete Chinese and English learning site for researchers working on industrial process decisions. It assumes no systematic background in reinforcement learning or probability. Numerical examples introduce probability, expectation and gradients before applying Bellman equations, DQN, PPO, SAC, offline learning and constrained decisions to a cement kiln.
+RL Atlas is a complete Chinese and English learning site for industrial process researchers with a machine-learning or process-control background. It provides entry paths for readers who are new to reinforcement learning and probability, as well as readers who already know RL. Numerical examples introduce probability, expectation and gradients before applying Bellman equations, DQN, PPO, SAC, offline learning and constrained decisions to a cement kiln.
 
-Both editions contain the complete chapters, derivations, code explanations, exercises, answers and research articles. The interface combines a warm orange light/dark theme with mathematical calculators, algorithm experiments and a delayed-process workbench.
+Both editions contain the complete chapters, derivations, code explanations, exercises, answers and research articles. The interface combines warm orange light and dark themes, including a system appearance option, with mathematical calculators, algorithm experiments and a delayed-process workbench.
 
 **7 modules · 24 chapters · 154 derivation steps · 8 mathematical primer units · 14 experiments · 1 kiln workbench · 36 glossary entries**
 
@@ -43,7 +43,17 @@ Production files appear in `dist/`. The preview normally runs at **http://127.0.
 
 ## How to learn with the site
 
-Start with the mathematical primer. Predict a calculator's result, change one input and explain the difference. Then open the kiln workbench and make a setpoint proposal: distinguish a requested action from the action that passes the gates, the changing physical process, an immediate soft-sensor estimate and a laboratory result released later.
+Open **Start here** (`#/roadmap`) near the top of the sidebar and choose an entry session that fits your background. The paths use the same formal curriculum and prerequisites, with different first activities:
+
+| Entry route | Prior knowledge | First activities and outcome | Estimated first session |
+|---|---|---|---|
+| `#/roadmap/ml` | Neural networks; new to RL | Conditional probability → expectation → three-step return case; calculate an expectation and explain discounting and bootstrap | About 45 minutes |
+| `#/roadmap/control` | SP/PV and feedback control | Notation and time → setpoint-response case → cement decision workbench; distinguish requests, execution and dynamics | About 50 minutes |
+| `#/roadmap/rl` | Bellman, Actor–Critic and continuous-action policies | Control hierarchy → objectives and constraints → MDP/POMDP/CMDP; draft an industrial decision problem | About 85 minutes |
+
+These are planning estimates for the first reading and practice session. The first two paths then connect to Chapters 01–08. The experienced-RL path connects to Chapters 19–24 and explicitly assumes the relevant foundations in Chapters 01–18. Recommended chapters retain their difficulty, reading estimate and original prerequisite links. Path choice lives in the URL, without a separate profile or reading-history record.
+
+In the mathematical primer, predict a calculator's result, change one input and explain the difference. In the cement decision workbench, make a setpoint proposal: distinguish a requested action from the action that passes the gates, the changing physical process, an immediate soft-sensor estimate and a laboratory result released later.
 
 Each chapter starts with a kiln scenario, a decision question, a symbol table and a sequence of derivation steps. Every step explains the equality or update, substitutes numbers and states why it is useful. Checkpoints give feedback for every option; answering one does not automatically mark a chapter complete. The full chapter follows with definitions, algorithms, examples, exercises and sources.
 
@@ -57,7 +67,21 @@ Each chapter starts with a kiln scenario, a decision question, a symbol table an
 | Modeling and credible experiments | 19–21 | Specify environment contracts, baselines, gates and evaluation |
 | Offline, model-based and constrained decisions | 22–24 | Design a narrow reproducible research question |
 
-The eight primer units cover notation and units, conditional probability, expectation, variance, discounting, gradients, log probabilities and continuous densities. The roadmap offers six-week and eight-week schedules with downloadable checklists. These schedules and reading times are planning estimates.
+The eight primer units cover notation and units, conditional probability, expectation, variance, discounting, gradients, log probabilities and continuous densities. Start here offers six-week and eight-week schedules, each covering all 24 chapters once. The checklist filename and body reflect the selected schedule and current language. When a path is selected, the download also includes its first activities, prerequisites and outcome, together with existing manual completion marks. Schedules and reading times are planning estimates; allow additional time for derivations, coding and experiments. The week selection belongs to the current page and resets to eight weeks when the page is re-entered or the language changes.
+
+### Navigation and overview
+
+One registry supplies the navigation labels, purposes and groups:
+
+| Group | Contents | Purpose |
+|---|---|---|
+| Start & learn | Overview, Start here, RL curriculum, Math primer | Choose a goal and entry point, then follow the prerequisite sequence |
+| Practice | Worked formula cases, Algorithm labs, Cement decision workbench | Check numerical substitutions, investigate algorithm behavior and combine the concepts in a process simulation |
+| Research & reference | Industrial decision research, Concepts & symbols, Papers & resources, Visual library | Read the research synthesis and look up definitions, original evidence and figures |
+
+The overview identifies **880°C as the teaching calciner-outlet temperature setpoint**. It retains the generated hierarchy illustration and labels its actual top-to-bottom order: **04 Information → 03 Decisions → 02 Control → 01 Process**. Mouse, touch and keyboard controls switch the explanation and related learning link. At widths up to 760 CSS pixels, the illustration starts collapsed behind “Explore the four decision layers”; desktop layouts start expanded. The overview links directly to foundational sources, and the sidebar links to the source repository and [citation and reuse guidance](docs/reuse-and-citation.md).
+
+See the [experience review and optimization plan](docs/experience-review-plan.md) for verified findings, priorities and scope, and the [experience verification record](docs/experience-review-verification.md) for the recorded acceptance checks.
 
 ## Research, figures and resources
 
@@ -91,7 +115,11 @@ Textbook, review and individual-chapter exports include the corresponding comple
 
 The language selector switches between `zh-CN` and `en`. Both editions include the full learning and research content plus interactive explanations. English content loads from a local build chunk, without a translation API. See the [localization guide](docs/i18n.md) before adding another language: complete content bundles and UI text are both required.
 
-Switching keeps the current route and attempts to restore scroll position, but **remounts the current page**. Temporary calculator inputs, experiment parameters, simulation histories and the workbench clock may reset. Record seeds and parameters before switching if you want to repeat a comparison.
+Switching keeps the current route and attempts to restore scroll position, but **remounts the current page**. Temporary calculator inputs, experiment parameters, simulation histories, the workbench clock and the selected week schedule may reset. Record seeds and parameters before switching if you want to repeat a comparison.
+
+Appearance preferences are `system`, `light` and `dark`. New visitors follow the system appearance; existing explicit light/dark preferences remain explicit. System appearance changes apply automatically while `system` is selected. **Changing the theme updates appearance without remounting the page**, so it does not reset a calculator, experiment or workbench in use.
+
+Chapter completion is marked or undone explicitly in chapter pages. Start here shows the course total and, for a selected path, the recommended chapter group's count. Page visits, role choices and calculator interactions do not mark chapters complete.
 
 Only chapter completion, theme, text size and locale are saved in the browser under `rl-atlas-preferences-v2`. When that key is absent, supported preferences can be read from `rl-atlas-learning-v1`. The old key is not deleted; old notes, bookmarks and last-read fields are ignored and are neither displayed nor written into the new state. Notes, bookmarks, resume-learning widgets and study-data JSON import/export are removed. Chapter, textbook, roadmap and figure downloads remain available.
 
@@ -153,13 +181,17 @@ Edit the canonical content, not these generated files. `npm run build` only chec
 | `src/render.ts`, `src/figure-view.ts` | Sanitized Markdown, KaTeX, reading guides, native image viewer and code tools |
 | `src/concept-plates.ts`, `src/content-download.ts` | Stable concept-plate registry, bilingual semantics and portable chapter downloads |
 | `src/storage.ts` | Versioned local preferences and completion |
-| `src/main.ts`, `src/style.css`, `src/atlas.css` | Routing, shell, themes and responsive layout |
+| `src/theme.ts`, `src/shell-accessibility.css` | System/explicit theme resolution and readable shell controls |
+| `src/navigation.ts` | Shared bilingual navigation labels, purposes, groups and search shortcut hints |
+| `src/home.ts`, `src/home.css` | Overview, interactive hierarchy, entry paths and tool explanations |
+| `src/learning-paths.ts`, `src/learning-path-view.ts`, `src/learning-paths.css`, `src/roadmap.ts` | URL entry paths, manual progress, prerequisites and six/eight-week checklists |
+| `src/main.ts`, `src/style.css`, `src/atlas.css` | Routing, preference application, shared shell and base styles |
 | `scripts/export-book.ts` | Complete bilingual exports |
 | `justfile`, `scripts/ensure-deps.mjs` | Cross-platform startup and dependency preparation |
 
 The site uses Vite, TypeScript, Marked, DOMPurify, KaTeX and Lucide. Mathematical and illustration assets are provided locally by the build. Only registered local images receive trusted reading-guide and viewer controls. Mermaid is no longer imported or run; the existing dependency versions are retained. Keep chapter, lab, research and source IDs stable. Changes to meaning, numbers or exercises must be reflected in both editions.
 
-`just check` refreshes exports, runs numerical/content checks and builds with strict type checking. Tests do not launch a browser. Use a real browser to verify locale switching, feedback, cleanup, search, diagrams, narrow layouts and both themes; consult [v2 verification records](docs/verification-v2.md) for their recorded scope. Translation records cover [foundations](docs/translation-foundations.md) and [advanced material](docs/translation-advanced.md).
+`just check` refreshes exports, runs numerical/content checks and builds with strict type checking. Tests do not launch a browser. Use a real browser to verify locale switching, feedback, cleanup, search, diagrams, narrow layouts and appearance choices. Consult the [experience verification record](docs/experience-review-verification.md) for this iteration and the [v2 verification records](docs/verification-v2.md) for the previous scope. The [optimization plan](docs/experience-review-plan.md) records which review suggestions apply to the source and the user’s earlier decisions. Translation records cover [foundations](docs/translation-foundations.md) and [advanced material](docs/translation-advanced.md).
 
 ## Static hosting
 

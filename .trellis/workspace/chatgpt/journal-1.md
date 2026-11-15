@@ -195,3 +195,43 @@ Expanded the Chinese RL website with beginner mathematical reasoning, cement pro
 ### Next Steps
 
 - 本轮功能与验收已完成；如继续扩展，沿用formula-cases定义、中文图注册规则及真实浏览器验收记录。
+
+
+## Session 6: RL Atlas learning experience review and implementation
+<!-- trellis-session: v=2 fp=d9d81be16fc140b9 -->
+
+**Date**: 2026-11-14
+**Task**: RL Atlas learning experience review and implementation
+**Branch**: `feat/rl-atlas-learning-experience`
+
+### Summary
+
+Verified the supplied screenshot review against current source, completed the prioritized UX improvements and documented their browser and numerical acceptance evidence. Draft PR #1 contains the implementation.
+
+### Main Changes
+
+- Unified navigation, clear bilingual homepage and three background-based URL entry paths with prerequisites, outcomes and estimated first sessions.
+- Six/eight-week checklist exports reflect the selected plan, locale, path and manual chapter completion.
+- System/light/dark theme selection preserves live calculator and workbench state; improved shell contrast, controls and responsive hierarchy.
+- Added verified review plan, citation/reuse guidance, bilingual README updates, screenshots and maintenance contracts.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d24e07d467b8d77a36ac4144dcc5e12e44b3033d` | feat(web): improve learning entry paths and tutorial navigation |
+
+### Testing
+
+- [OK] npm run export:book: six complete bilingual exports refreshed without content changes.
+- [OK] npm test: 75/75 passed; 2279 formulas across 225 documents, 50 figure assets and unchanged 67 content fingerprints / 3 numerical kernels.
+- [OK] npm run build: strict TypeScript checking and production build passed; temporary QA fixture removed.
+- [OK] Chrome preview: bilingual themes, 375/768/1280/1440 responsive frames, keyboard hierarchy, search, plan download, PPO validation and workbench state retention.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Review draft PR #1; additional physical-device, Safari and screen-reader coverage can be a separate acceptance task.

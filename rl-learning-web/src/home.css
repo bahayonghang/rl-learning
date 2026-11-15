@@ -1,0 +1,140 @@
+/* Overview components use their own names so legacy landing styles cannot shrink them. */
+.home-overview { --home-gap: 28px; }
+.home-intro { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 30px; align-items: center; padding: 22px 26px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.home-intro > * { min-width: 0; }
+.home-intro h1 { margin: 0; color: var(--ink); font-family: Georgia, 'Songti SC', 'Noto Serif CJK SC', serif; font-size: clamp(30px, 2.8vw, 42px); line-height: 1.3; font-weight: 500; letter-spacing: -.9px; }
+.home-intro-description { margin: 16px 0 0; color: var(--muted); font-size: 14px; line-height: 1.85; max-width: 560px; }
+.home-intro-actions { display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap; margin-top: 19px; }
+.home-intro-actions .button { min-height: 44px; padding: 10px 15px; font-size: 13px; }
+.home-intro-actions .button svg { width: 16px; height: 16px; }
+.home-running-example { margin: 16px 0 0; padding-left: 12px; border-left: 2px solid var(--brand); color: var(--muted); font-size: 12px; line-height: 1.8; }
+.home-running-example strong { display: block; margin-bottom: 2px; color: var(--ink); font-size: 12px; font-weight: 600; }
+.home-source-strip { display: flex; flex-wrap: wrap; gap: 5px 12px; align-items: center; margin-top: 12px; color: var(--muted); font-size: 11px; line-height: 1.8; }
+.home-source-strip > span { flex-basis: 100%; }
+.home-source-strip a { display: inline-flex; gap: 4px; align-items: center; color: var(--brand); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.home-source-strip a svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+.home-hierarchy-disclosure { min-width: 0; }
+.home-hierarchy-disclosure > summary { display: none; }
+.home-hierarchy { margin: 0; padding: 12px; border-radius: 10px; background: var(--surface-soft); border: 1px solid var(--line); min-width: 0; }
+.home-hierarchy-art { position: relative; overflow: hidden; width: 100%; max-width: 300px; margin-inline: auto; border-radius: 7px; isolation: isolate; }
+.home-hierarchy-art img { display: block; width: 100%; height: auto; aspect-ratio: 1586 / 992; }
+.home-hierarchy-highlight { position: absolute; left: 1%; right: 1%; border: 2px solid #a14b30; border-radius: 7px; box-shadow: 0 0 0 1px #fff8edb3; pointer-events: none; }
+[data-theme=dark] .home-hierarchy-art img { filter: brightness(.76) saturate(.85); }
+[data-theme=dark] .home-hierarchy-highlight { border-color: #f2c29c; box-shadow: 0 0 0 1px #5c352a; }
+.home-hierarchy-caption { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 11px 1px 8px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.home-hierarchy-caption > span { max-width: 70%; }
+.home-hierarchy-caption a { display: inline-flex; gap: 4px; align-items: center; flex-shrink: 0; color: var(--brand); padding: 4px 0; }
+.home-hierarchy-caption a svg { width: 14px; height: 14px; }
+.home-layer-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+.home-layer-controls button { display: flex; align-items: center; justify-content: center; gap: 5px; min-height: 40px; padding: 5px 2px; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; color: var(--ink); font-size: 11px; font-weight: 500; cursor: pointer; line-height: 1.5; }
+.home-layer-controls button > span { color: var(--brand); font-variant-numeric: tabular-nums; font-size: 10px; }
+.home-layer-controls button:hover, .home-layer-controls button[aria-pressed=true] { border-color: var(--brand); background: var(--brand-soft); color: var(--brand); }
+.home-layer-controls button:focus-visible { outline-offset: 2px; }
+.home-layer-explanation { min-height: 98px; padding: 10px 2px 1px; }
+.home-layer-explanation p { color: var(--muted); font-size: 12px; line-height: 1.8; margin: 0; }
+.home-layer-explanation strong { color: var(--ink); font-weight: 600; }
+.home-layer-explanation a { display: inline-flex; align-items: center; gap: 5px; margin-top: 8px; color: var(--brand); font-size: 12px; line-height: 1.7; }
+.home-layer-explanation a svg { flex-shrink: 0; width: 14px; height: 14px; }
+
+.home-start, .home-tools { margin-top: var(--home-gap); }
+.home-section-heading { margin-bottom: 16px; }
+.home-section-heading h2, .home-reference-links h2 { font-family: Georgia, 'Songti SC', 'Noto Serif CJK SC', serif; font-size: 24px; font-weight: 500; line-height: 1.5; color: var(--ink); margin: 0; }
+.home-section-heading p, .home-reference-links p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 5px 0 0; max-width: 850px; }
+.home-tool-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+.home-tool-card { display: flex; flex-direction: column; min-width: 0; padding: 21px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); }
+.home-tool-card:hover { border-color: var(--brand); background: var(--surface-soft); }
+.home-tool-top { display: flex; gap: 9px; align-items: center; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.home-tool-top > svg { width: 19px; height: 19px; flex-shrink: 0; color: var(--brand); }
+.home-tool-card h3 { margin: 13px 0 8px; font-size: 17px; line-height: 1.55; font-weight: 600; }
+.home-tool-card p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 0 0 16px; }
+.home-tool-action { display: flex; align-items: center; gap: 5px; margin-top: auto; color: var(--brand); font-size: 12px; }
+.home-tool-action svg { width: 14px; height: 14px; }
+.home-reference-links { display: flex; gap: 24px; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding-top: 26px; margin-top: 30px; }
+.home-reference-links > div { min-width: 0; }
+.home-reference-links > div:last-child { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.home-reference-links h2 { font-size: 21px; }
+.home-reference-links .button { font-size: 12px; min-height: 40px; }
+.home-reference-links .button svg { width: 15px; height: 15px; }
+
+@media (min-width: 1650px) {
+  .home-intro { padding: 32px; gap: 36px; }
+  .home-intro h1 { font-size: 44px; }
+  .home-intro-description { font-size: 16px; }
+  .home-source-strip { font-size: 12px; }
+  .home-layer-controls button { font-size: 13px; }
+  .home-layer-explanation p { font-size: 13px; }
+  .home-hierarchy-art { max-width: 390px; }
+}
+@media (max-width: 1200px) {
+  .home-intro { gap: 22px; padding: 23px; }
+  .home-intro h1 { font-size: 31px; }
+  .home-intro-description { font-size: 13px; margin-top: 14px; }
+  .home-intro-actions { gap: 8px; margin-top: 18px; }
+  .home-intro-actions .button { padding: 9px 11px; font-size: 12px; }
+  .home-running-example { margin-top: 16px; }
+  .home-source-strip { margin-top: 12px; gap: 4px 9px; }
+  .home-layer-controls button { flex-direction: column; gap: 0; min-height: 44px; }
+  .home-hierarchy-caption > span { max-width: 65%; }
+  .home-layer-explanation { min-height: 110px; }
+  .home-tool-card { padding: 19px; }
+  .home-tool-card h3 { font-size: 16px; }
+}
+@media (max-width: 1000px) and (min-width: 761px) {
+  .home-intro { grid-template-columns: minmax(0, 1fr); }
+  .home-intro h1 br { display: none; }
+  .home-intro-description { max-width: none; font-size: 14px; }
+  .home-hierarchy { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: 15px; align-items: start; }
+  .home-hierarchy-caption { margin-top: 0; }
+  .home-hierarchy-art { align-self: center; }
+  .home-tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-reference-links { flex-direction: column; align-items: stretch; gap: 16px; }
+  .home-reference-links > div:last-child { justify-content: flex-start; }
+}
+@media (max-width: 760px) {
+  .home-overview { --home-gap: 26px; }
+  .home-intro { grid-template-columns: minmax(0, 1fr); padding: 22px; gap: 22px; }
+  .home-intro h1 { font-size: clamp(29px, 6vw, 38px); letter-spacing: -.6px; }
+  .home-intro-description { font-size: 14px; line-height: 1.85; }
+  .home-intro-actions .button { font-size: 13px; }
+  .home-running-example, .home-running-example strong { font-size: 13px; }
+  .home-source-strip { font-size: 12px; }
+  .home-hierarchy-disclosure > summary { display: flex; gap: 9px; align-items: center; min-height: 48px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-soft); color: var(--brand); font-size: 13px; line-height: 1.6; list-style: none; cursor: pointer; }
+  .home-hierarchy-disclosure > summary::-webkit-details-marker { display: none; }
+  .home-hierarchy-disclosure > summary > svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .home-hierarchy-disclosure > summary > svg:last-child { margin-left: auto; }
+  .home-hierarchy-disclosure[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .home-hierarchy-disclosure[open] > summary > svg:last-child { transform: rotate(180deg); }
+  .home-hierarchy-disclosure .home-hierarchy { margin: 0; border-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+  .home-hierarchy { padding: 10px; }
+  .home-layer-controls { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-layer-controls button { flex-direction: row; gap: 5px; min-height: 44px; }
+  .home-layer-explanation { min-height: 120px; }
+  .home-layer-explanation p, .home-layer-explanation a { font-size: 13px; }
+  .home-section-heading h2 { font-size: 23px; }
+  .home-tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-reference-links { flex-direction: column; align-items: stretch; gap: 16px; }
+  .home-reference-links > div:last-child { justify-content: flex-start; }
+}
+@media (max-width: 480px) {
+  .home-intro { padding: 21px 18px 18px; gap: 22px; }
+  .home-intro h1 { font-size: 29px; }
+  .home-intro-actions { flex-direction: column; align-items: stretch; }
+  .home-intro-actions .button { justify-content: space-between; }
+  .home-hierarchy { margin-left: -6px; margin-right: -6px; }
+  .home-hierarchy-caption { font-size: 11px; align-items: start; }
+  .home-layer-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-layer-controls button { font-size: 12px; gap: 7px; }
+  .home-layer-controls button > span { font-size: 11px; }
+  .home-layer-explanation { min-height: 148px; }
+  .home-tool-grid { grid-template-columns: minmax(0, 1fr); }
+  .home-tool-card { padding: 21px; }
+  .home-tool-card h3 { font-size: 18px; }
+  .home-reference-links .button { min-height: 44px; }
+}
+@media print {
+  .home-intro { display: block; }
+  .home-hierarchy { max-width: 600px; margin: 20px 0; }
+  .home-tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-tool-card { break-inside: avoid; }
+}
